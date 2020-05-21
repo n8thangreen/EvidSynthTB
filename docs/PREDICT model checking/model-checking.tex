@@ -1,0 +1,563 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={PREDICT model checking},
+            pdfauthor={Nathan Green (Imperial College London},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{PREDICT model checking}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Nathan Green (Imperial College London}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{28/02/2020}
+
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(readr)}
+\KeywordTok{library}\NormalTok{(R2jags)}
+\KeywordTok{library}\NormalTok{(R2WinBUGS)}
+\KeywordTok{library}\NormalTok{(purrr)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(forcats)}
+\KeywordTok{library}\NormalTok{(lattice)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{load}\NormalTok{(}\DataTypeTok{file =}\NormalTok{ here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"docs"}\NormalTok{, }\StringTok{"PREDICT main"}\NormalTok{, }\StringTok{"dat.RData"}\NormalTok{))              }\CommentTok{# design array with strings}
+\KeywordTok{load}\NormalTok{(}\DataTypeTok{file =}\NormalTok{ here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"docs"}\NormalTok{, }\StringTok{"PREDICT main"}\NormalTok{, }\StringTok{"jags_dat_input.RData"}\NormalTok{))   }\CommentTok{# jags input}
+\KeywordTok{load}\NormalTok{(}\DataTypeTok{file =}\NormalTok{ here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"data output"}\NormalTok{, }\StringTok{"out_regn.RData"}\NormalTok{))                  }\CommentTok{# jags output}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{tables}{%
+\subsection{Tables}\label{tables}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# extract just prevalence results}
+\NormalTok{prev_rows <-}\StringTok{ }\KeywordTok{grepl}\NormalTok{(}\StringTok{"p_"}\NormalTok{, }\KeywordTok{rownames}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{summary))}
+\NormalTok{p_latent <-}\StringTok{ }\NormalTok{out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{summary[prev_rows, ]}
+
+\CommentTok{# join with groups names}
+\NormalTok{p_latent <-}\StringTok{ }
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(dat[ ,}\KeywordTok{c}\NormalTok{(}\StringTok{"age_grp"}\NormalTok{,}
+                     \StringTok{"ethnicity"}\NormalTok{,}
+                     \StringTok{"inc_cob_participant2"}\NormalTok{,}
+                     \StringTok{"reasonforscreening"}\NormalTok{)],}
+             \DataTypeTok{mean =} \KeywordTok{round}\NormalTok{(p_latent[,}\StringTok{"mean"}\NormalTok{], }\DecValTok{3}\NormalTok{),}
+             \DataTypeTok{sd =} \KeywordTok{round}\NormalTok{(p_latent[,}\StringTok{"sd"}\NormalTok{], }\DecValTok{3}\NormalTok{), }\DataTypeTok{row.names =} \OtherTok{NULL}\NormalTok{)}
+
+\CommentTok{# head(p_latent)}
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(p_latent)}
+
+\KeywordTok{write.csv}\NormalTok{(p_latent, }\DataTypeTok{file =} \StringTok{"../../data output/p_latent.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# extract just prevalence results}
+\NormalTok{prev_rows <-}\StringTok{ }\KeywordTok{grepl}\NormalTok{(}\StringTok{"pp"}\NormalTok{, }\KeywordTok{rownames}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{summary))}
+\NormalTok{p_latent <-}\StringTok{ }\NormalTok{out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{summary[prev_rows, ]}
+
+\CommentTok{# match up codes (levels) with names}
+\NormalTok{lookup <-}
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(}
+    \DataTypeTok{rfs =} \DecValTok{1}\OperatorTok{:}\KeywordTok{nlevels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{reasonforscreening) }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{,}
+    \DataTypeTok{reasonforscreening =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{reasonforscreening))}
+
+\CommentTok{# join with groups names}
+\NormalTok{p_latent <-}\StringTok{ }
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(dat_regn[ ,}\StringTok{"rfs"}\NormalTok{],}
+             \DataTypeTok{mean =} \KeywordTok{round}\NormalTok{(p_latent[ ,}\StringTok{"mean"}\NormalTok{], }\DecValTok{3}\NormalTok{),}
+             \DataTypeTok{sd =} \KeywordTok{round}\NormalTok{(p_latent[ ,}\StringTok{"sd"}\NormalTok{], }\DecValTok{3}\NormalTok{),}
+             \DataTypeTok{row.names =} \OtherTok{NULL}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{merge}\NormalTok{(lookup, .)}
+
+\CommentTok{# head(p_latent)}
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(p_latent)}
+
+\KeywordTok{write.csv}\NormalTok{(p_latent, }\DataTypeTok{file =} \StringTok{"../../data output/ppred.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# regression model: all covariates}
+
+\CommentTok{# make sure these match up with ppred}
+\CommentTok{# i.e. is the order the same as jags output}
+\NormalTok{all_groups <-}
+\StringTok{  }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{rfs =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{reasonforscreening),}
+              \DataTypeTok{inc =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{inc_cob_participant2),}
+              \DataTypeTok{eth =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{ethnicity),}
+              \DataTypeTok{age =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{age_grp),}
+              \DataTypeTok{bcg =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{prevbcg),}
+              \DataTypeTok{yse =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{yearssinceentry_grp)}
+\NormalTok{  )}
+
+\NormalTok{BUGSsummary <-}\StringTok{ }\NormalTok{out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{summary}
+
+\CommentTok{# extract just prevalence results}
+\NormalTok{prev_rows <-}\StringTok{ }\KeywordTok{grepl}\NormalTok{(}\StringTok{"pp"}\NormalTok{, }\KeywordTok{rownames}\NormalTok{(BUGSsummary))}
+\NormalTok{p_latent <-}\StringTok{ }\NormalTok{BUGSsummary[prev_rows, ]}
+
+\CommentTok{# match up codes (levels) with names}
+\NormalTok{lookup_rfs <-}
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{rfs =} \DecValTok{1}\OperatorTok{:}\KeywordTok{nlevels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{reasonforscreening) }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{,}
+             \DataTypeTok{reasonforscreening =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{reasonforscreening))}
+\NormalTok{lookup_inc <-}\StringTok{ }
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{inc =} \DecValTok{1}\OperatorTok{:}\KeywordTok{nlevels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{inc_cob_participant2),}
+             \DataTypeTok{inc_cob_participant2 =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{inc_cob_participant2))}
+\NormalTok{lookup_eth <-}\StringTok{ }
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{eth =} \DecValTok{1}\OperatorTok{:}\KeywordTok{nlevels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{ethnicity),}
+             \DataTypeTok{ethnicity =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{ethnicity))}
+\NormalTok{lookup_age <-}\StringTok{ }
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{age =} \DecValTok{1}\OperatorTok{:}\KeywordTok{nlevels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{age_grp),}
+             \DataTypeTok{age_grp =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{age_grp))}
+\NormalTok{lookup_bcg <-}\StringTok{ }
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{bcg =} \DecValTok{1}\OperatorTok{:}\KeywordTok{nlevels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{prevbcg),}
+             \DataTypeTok{prevbcg =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{prevbcg))}
+\NormalTok{lookup_yse <-}\StringTok{ }
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{yse =} \DecValTok{1}\OperatorTok{:}\KeywordTok{nlevels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{yearssinceentry_grp),}
+             \DataTypeTok{yearssinceentry_grp =} \KeywordTok{levels}\NormalTok{(dat}\OperatorTok{$}\NormalTok{yearssinceentry_grp))}
+
+
+\CommentTok{##TODO: this is a more robust approach}
+\CommentTok{## determine programatically}
+\CommentTok{#}
+\CommentTok{# group indicies}
+\CommentTok{# gsub(pattern = "ppred", "", rownames(p_latent)) %>% }
+\CommentTok{#   gsub("\textbackslash{}\textbackslash{}[", "", .) %>% }
+\CommentTok{#   gsub("\textbackslash{}\textbackslash{}]", "", .) %>% }
+\CommentTok{#   strsplit(",") %>% }
+\CommentTok{#   do.call(rbind, .)}
+
+\CommentTok{# join with groups names}
+\CommentTok{# latent_tab <-}
+\CommentTok{#   data.frame(dat_regn[ ,c("rfs", "inc", "eth", "age")]) %>% }
+\CommentTok{#   arrange(age, eth, inc, rfs) %>% }
+\CommentTok{#   mutate(mean = round(p_latent[ ,"mean"], 3),}
+\CommentTok{#          sd = round(p_latent[ ,"sd"], 3),}
+\CommentTok{#          row.names = NULL) %>%}
+\CommentTok{#   merge(lookup_rfs, ., by = "rfs") %>% }
+\CommentTok{#   merge(lookup_inc, ., by = "inc") %>% }
+\CommentTok{#   merge(lookup_eth, ., by = "eth") %>% }
+\CommentTok{#   merge(lookup_age, ., by = "age") %>% }
+\CommentTok{#   arrange(age, eth, inc, rfs)}
+
+
+\NormalTok{latent_tab <-}\StringTok{ }
+\StringTok{  }\NormalTok{all_groups }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{round}\NormalTok{(p_latent[ ,}\StringTok{"mean"}\NormalTok{], }\DecValTok{3}\NormalTok{),}
+         \DataTypeTok{sd =} \KeywordTok{round}\NormalTok{(p_latent[ ,}\StringTok{"sd"}\NormalTok{], }\DecValTok{3}\NormalTok{),}
+         \CommentTok{# index = rownames(p_latent),  #check matches with jags code}
+         \DataTypeTok{row.names =} \OtherTok{NULL}\NormalTok{)}
+
+\KeywordTok{head}\NormalTok{(latent_tab) }\OperatorTok{%>%}\StringTok{ }\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllrr@{}}
+\toprule
+rfs & inc & eth & age & bcg & yse & mean & sd\tabularnewline
+\midrule
+\endhead
+Contact & \textless40 & White & (15,35{]} & No & (0,5{]} & 0.235 &
+0.027\tabularnewline
+Migrant & \textless40 & White & (15,35{]} & No & (0,5{]} & 0.171 &
+0.031\tabularnewline
+Contact & 41-100 & White & (15,35{]} & No & (0,5{]} & 0.322 &
+0.031\tabularnewline
+Migrant & 41-100 & White & (15,35{]} & No & (0,5{]} & 0.241 &
+0.035\tabularnewline
+Contact & 100-300 & White & (15,35{]} & No & (0,5{]} & 0.451 &
+0.028\tabularnewline
+Migrant & 100-300 & White & (15,35{]} & No & (0,5{]} & 0.354 &
+0.040\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{write.csv}\NormalTok{(latent_tab, }\DataTypeTok{file =}\NormalTok{ here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"data output"}\NormalTok{, }\StringTok{"ppred.csv"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{other_rows <-}\StringTok{ }\KeywordTok{rownames}\NormalTok{(BUGSsummary) }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"lambda"}\NormalTok{, }\StringTok{"sens"}\NormalTok{, }\StringTok{"spec"}\NormalTok{)}
+\NormalTok{othersummary <-}\StringTok{ }\NormalTok{BUGSsummary[other_rows, ]}
+
+\NormalTok{other_tab <-}
+\StringTok{  }\NormalTok{othersummary }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as.data.frame}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{transmute}\NormalTok{(}\DataTypeTok{param =} \KeywordTok{rownames}\NormalTok{(.),}
+            \DataTypeTok{mean =} \KeywordTok{round}\NormalTok{(mean, }\DecValTok{3}\NormalTok{),}
+            \DataTypeTok{sd =} \KeywordTok{round}\NormalTok{(sd, }\DecValTok{3}\NormalTok{),}
+            \DataTypeTok{row.names =} \OtherTok{NULL}\NormalTok{)}
+
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(other_tab)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrr@{}}
+\toprule
+param & mean & sd\tabularnewline
+\midrule
+\endhead
+lambda & 0.040 & 0.004\tabularnewline
+sens & 0.739 & 0.032\tabularnewline
+spec & 0.990 & 0.005\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{write.csv}\NormalTok{(other_tab, }\DataTypeTok{file =}\NormalTok{ here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"data output"}\NormalTok{, }\StringTok{"other_tab.csv"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{predictive-checks}{%
+\subsection{Predictive checks}\label{predictive-checks}}
+
+We use ideas from Gabry et al. (2017).
+
+\hypertarget{prior-predictive-distributions}{%
+\subsubsection{Prior predictive
+distributions}\label{prior-predictive-distributions}}
+
+For LTBI there are when we use flat priors on the coefficients there are
+some very large counts generated from the prior. The prior produces a
+bowl-shaped distribution. To address this we use weakly informative
+priors.
+
+For a random selection of groups plot the prior predictive distributions
+and the observed data value.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{501}\OperatorTok{:}\DecValTok{516}\NormalTok{) \{}
+  
+  \KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{prior_X_latent[, i]}\OperatorTok{/}\NormalTok{jags_dat_input}\OperatorTok{$}\NormalTok{Xm[i],}
+       \DataTypeTok{main =} \StringTok{""}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{""}\NormalTok{, }\DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+  \KeywordTok{abline}\NormalTok{(}\DataTypeTok{v =}\NormalTok{ jags_dat_input}\OperatorTok{$}\NormalTok{Xp[i]}\OperatorTok{/}\NormalTok{jags_dat_input}\OperatorTok{$}\NormalTok{Xm[i], }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/ltbi prior pred-1.pdf}
+\includegraphics{model-checking_files/figure-latex/ltbi prior pred-2.pdf}
+\includegraphics{model-checking_files/figure-latex/ltbi prior pred-3.pdf}
+\includegraphics{model-checking_files/figure-latex/ltbi prior pred-4.pdf}
+
+Pool across all groups.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{prior_X_latent,}
+     \DataTypeTok{main =} \StringTok{"LTBI"}\NormalTok{, }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{""}\NormalTok{,}
+     \DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.005}\NormalTok{), }\DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{400}\NormalTok{))}
+\KeywordTok{hist}\NormalTok{(jags_dat_input}\OperatorTok{$}\NormalTok{Xp, }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Prior"}\NormalTok{, }\StringTok{"Observed data"}\NormalTok{),}
+       \DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{,}\StringTok{"red"}\NormalTok{), }\DataTypeTok{pch =} \DecValTok{15}\NormalTok{, }\DataTypeTok{bty =} \StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/pooled ltbi prior pred-1.pdf}
+
+For TB, the distributions seem better in terms of capturing the data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{501}\OperatorTok{:}\DecValTok{516}\NormalTok{) \{}
+  
+  \KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{prior_Xtb[, i], }\DataTypeTok{main =} \StringTok{""}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{""}\NormalTok{)}
+  \KeywordTok{abline}\NormalTok{(}\DataTypeTok{v =}\NormalTok{ jags_dat_input}\OperatorTok{$}\NormalTok{Xtb[}\DecValTok{1}\NormalTok{], }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/tb prior pred-1.pdf}
+\includegraphics{model-checking_files/figure-latex/tb prior pred-2.pdf}
+\includegraphics{model-checking_files/figure-latex/tb prior pred-3.pdf}
+\includegraphics{model-checking_files/figure-latex/tb prior pred-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{prior_Xtb,}
+     \DataTypeTok{main =} \StringTok{""}\NormalTok{, }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.005}\NormalTok{), }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{""}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(jags_dat_input}\OperatorTok{$}\NormalTok{Xtb, }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Prior"}\NormalTok{, }\StringTok{"Observed data"}\NormalTok{),}
+       \DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{,}\StringTok{"red"}\NormalTok{), }\DataTypeTok{pch =} \DecValTok{15}\NormalTok{, }\DataTypeTok{bty =} \StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/pooled tb prior pred-1.pdf}
+
+\hypertarget{posterior-predictive-distributions}{%
+\subsubsection{Posterior predictive
+distributions}\label{posterior-predictive-distributions}}
+
+Check the posterior simulated data. Pick a single category of
+individual. Generate number of active TB cases per 100 individuals.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{pred_Xtb }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{table}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{prop.table}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{barchart}\NormalTok{(}\DataTypeTok{horizontal =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/post pred-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# indiv <- map_df(jags_dat_input, 1)}
+\CommentTok{# indiv$Xtb/indiv$Xm}
+
+\CommentTok{# pooled}
+\KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{pred_X_latent,}
+     \DataTypeTok{main =} \StringTok{"LTBI"}\NormalTok{, }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.005}\NormalTok{), }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(jags_dat_input}\OperatorTok{$}\NormalTok{Xp, }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Posterior"}\NormalTok{, }\StringTok{"Observed data"}\NormalTok{),}
+       \DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{,}\StringTok{"red"}\NormalTok{), }\DataTypeTok{pch =} \DecValTok{15}\NormalTok{, }\DataTypeTok{bty =} \StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/post pred-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{pred_Xtb,}
+     \DataTypeTok{main =} \StringTok{"TB"}\NormalTok{, }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.1}\NormalTok{), }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(jags_dat_input}\OperatorTok{$}\NormalTok{Xtb, }\DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Posterior"}\NormalTok{, }\StringTok{"Observed data"}\NormalTok{),}
+       \DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{,}\StringTok{"red"}\NormalTok{), }\DataTypeTok{pch =} \DecValTok{15}\NormalTok{, }\DataTypeTok{bty =} \StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/post pred-3.pdf}
+
+For a single group check prior, posterior and observed data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# plot(density(out$BUGSoutput$sims.list$prior_X_latent[, 1], bw = 10, from = 0),}
+\CommentTok{#      main = "LTBI", freq = FALSE)}
+\CommentTok{# lines(density(out$BUGSoutput$sims.list$pred_X_latent, bw = 10, from = 0),}
+\CommentTok{#      freq = FALSE, col = "red")}
+
+\NormalTok{i <-}\StringTok{ }\DecValTok{229}
+\KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{prior_X_latent[, i]}\OperatorTok{/}\NormalTok{jags_dat_input}\OperatorTok{$}\NormalTok{Xm[i],}
+     \DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{,}
+     \DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{),}
+     \DataTypeTok{main =} \StringTok{""}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"LTBI prev"}\NormalTok{, }\DataTypeTok{breaks =} \DecValTok{20}\NormalTok{)}
+\KeywordTok{hist}\NormalTok{(out}\OperatorTok{$}\NormalTok{BUGSoutput}\OperatorTok{$}\NormalTok{sims.list}\OperatorTok{$}\NormalTok{pred_X_latent[, i]}\OperatorTok{/}\NormalTok{jags_dat_input}\OperatorTok{$}\NormalTok{Xm[i],}
+     \DataTypeTok{freq =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(}\DataTypeTok{v =}\NormalTok{ jags_dat_input}\OperatorTok{$}\NormalTok{Xp[i]}\OperatorTok{/}\NormalTok{jags_dat_input}\OperatorTok{$}\NormalTok{Xm[i], }\DataTypeTok{lwd =} \DecValTok{3}\NormalTok{, }\DataTypeTok{col =} \StringTok{"blue"}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Prior"}\NormalTok{, }\StringTok{"Posterior"}\NormalTok{, }\StringTok{"Observed data"}\NormalTok{),}
+       \DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{,}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{), }\DataTypeTok{pch =} \DecValTok{15}\NormalTok{, }\DataTypeTok{bty =} \StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{model-checking_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\hypertarget{prior-sensitivity-analysis}{%
+\subsubsection{Prior sensitivity
+analysis}\label{prior-sensitivity-analysis}}
+
+\hypertarget{gelman2008}{%
+\paragraph{Gelman et al. (2008)}\label{gelman2008}}
+
+Following Gelman et al. (2008), we first standardised the input
+variables by shifting them to have mean 0 and standard deviation 0.5.
+Lets use the data with \texttt{rfs} only to demonstrate.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat_regn}\OperatorTok{$}\NormalTok{rfs_std <-}\StringTok{ }\KeywordTok{c}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{pop[}\DecValTok{2}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{pop),}
+                      \OperatorTok{-}\StringTok{ }\NormalTok{dat_regn}\OperatorTok{$}\NormalTok{pop[}\DecValTok{1}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{pop))}
+
+\CommentTok{# dat_regn$bcg_std <- dat_regn$rfs_std}
+
+\NormalTok{dat_regn}
+\end{Highlighting}
+\end{Shaded}
+
+We assume a student-\(t\) Cauchy distributions on the binary variables
+as recommended by Gelman et al. (2008).
+
+\hypertarget{pareek2006}{%
+\paragraph{Pareek et al. (2011)}\label{pareek2006}}
+
+We used the odds ratio statistics from Pareek et al. (2011) to estimate
+semi-informative priors with sensible ranges of values.
+
+The grouping in Pareek are different to that used here. However, if we
+assume that the OR between groups are similar then we can obtain some
+orders of magnitute for the priors.
+
+For example, for the sex variable with female as baseline, the adjusted
+OR is 1.3 (95\% CI 1.0-1.8), which is \(\beta = exp(1.3)\). So
+\(\sigma^2 = ((exp(1.8) - exp(1.3) )/1.96)^2 =\) 1.4749245.
+
+Therefore, we could set conservative but informative prior distributions
+of \(N(0, 2)\) on the coefficients. In fact, variance 2.71 correspond to
+a uniform probaility (see BUGS book Lunn et al. (n.d.)) so we used this.
+
+\hypertarget{references}{%
+\subsubsection*{References}\label{references}}
+\addcontentsline{toc}{subsubsection}{References}
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-Gabry2017}{}%
+Gabry, Jonah, Daniel Simpson, Aki Vehtari, Michael Betancourt, and
+Andrew Gelman. 2017. ``Visualization in Bayesian workflow,'' 389--402.
+\url{https://doi.org/10.1109/NAFIPS.2004.1337440}.
+
+\leavevmode\hypertarget{ref-Gelman2008}{}%
+Gelman, Andrew, Aleks Jakulin, Maria Grazia Pittau, and Yu Sung Su.
+2008. ``A weakly informative default prior distribution for logistic and
+other regression models.'' \emph{Annals of Applied Statistics} 2 (4):
+1360--83. \url{https://doi.org/10.1214/08-AOAS191}.
+
+\leavevmode\hypertarget{ref-Lunn}{}%
+Lunn, D J, Christopher H. Jackson, Nicky Best, and D. J. Spiegelhalter.
+n.d. \emph{The BUGS book}.
+
+\leavevmode\hypertarget{ref-Pareek2006}{}%
+Pareek, Manish, John P Watson, L Peter Ormerod, Onn Min Kon, Gerrit
+Woltmann, Peter J. White, Ibrahim Abubakar, and Ajit Lalvani. 2011.
+``Screening of immigrants in the UK for imported latent tuberculosis : a
+multicentre cohort study and cost-effectiveness analysis.'' \emph{The
+Lancet Infectious Diseases} 11 (6): 435--44.
+\url{https://doi.org/10.1016/S1473-3099(11)70069-X}.
+
+
+\end{document}

@@ -1,0 +1,41 @@
+---
+title: "PREDICT results"
+author: "Nathan Green"
+date: "24/02/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, message=FALSE}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+```
+
+
+```{r warning=FALSE, message=FALSE}
+dat <- read_csv(here::here("data output/ppred.csv"))
+
+head(dat)
+```
+
+```{r warning=FALSE, message=FALSE}
+dat1 <-
+  dat %>%
+  mutate(
+    rfs = as.factor(rfs),
+    eth_rfs = paste(eth, rfs),
+    inc = factor(inc, levels = c("<40", "41-100","100-300",">300","(Missing)"))) %>% 
+  filter(
+    # eth == "White",
+    age == "(15,35]")
+  
+ggplot(dat1, aes(x = inc, y = mean, col = eth_rfs)) +
+  geom_point() +
+  ylim(0, 0.2) +
+  theme_bw()
+```

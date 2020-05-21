@@ -1,0 +1,253 @@
+---
+title: "LTBI Bayesian MPES with PREDICT data"
+author: "Nathan Green (Imperial College London)"
+date: "14/02/2020"
+output:
+  pdf_document:
+    keep_tex: yes
+  html_document:
+    df_print: paged
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Introduction
+
+We will fit the MPES model detailed elsewhere to a PREDICT study data extract.
+
+
+### Analysis in R
+
+We used vague normal priors for the LTBI prevalence and TB progression.
+A prior sensitivity analysis is given at the end of this document.
+
+The data have been grouped so that they are sufficiently coarse for anonymisation and relevant for the DES model.
+
+```{r warning=FALSE, message=FALSE}
+library(readr)
+library(R2jags)
+library(R2WinBUGS)
+library(purrr)
+library(dplyr)
+library(forcats)
+```
+
+```{r warning=FALSE, message=FALSE}
+data0 <- read_csv(here::here("raw-data", "aggregated_data.csv"),
+                  col_types = list(X1 = col_integer(),
+                                   age_grp  = col_factor(levels =
+                                                           c("(15,35]",
+                                                             "(35,55]",
+                                                             "(55,100]")),
+                                   sex  = col_factor(levels =
+                                                       c("Female",
+                                                         "Male")),
+                                   ethnicity  = col_factor(levels =
+                                                             c("White",
+                                                               "Black African or Caribbean",
+                                                               "South Asian",
+                                                               "Other")),
+                                   inc_cob_participant2 = col_factor(levels =
+                                                                       c('<40',
+                                                                         '41-100',
+                                                                         '100-300',
+                                                                         '>300')),
+                                   yearssinceentry_grp = col_factor(levels =
+                                                                      c('(0,5]',
+                                                                        '(5,10]',
+                                                                        '(10,100]')),
+                                   prevbcg = col_factor(levels =
+                                                          c("No", "Yes")),
+                                   reasonforscreening = col_factor(levels =
+                                                                     c("Contact",
+                                                                       "Migrant")),
+                                   pop = col_double(),
+                                   tb = col_double(),
+                                   ltbi = col_double()))
+```
+
+```{r eval=FALSE}
+# inspect the raw relationships in the data
+library(scales)
+
+data0 <-
+  data0 %>% 
+  mutate(ltbi_prev = round(ltbi/pop, 3),
+         prog_rate = round(tb/ltbi, 3))
+
+# ltbi vs tb counts by grouping
+# add some jitter
+plot(data0$ltbi + rnorm(nrow(data0),0,0.1), data0$tb + rnorm(nrow(data0),0,0.1),
+     col = alpha(as.numeric(data0$reasonforscreening), 0.2), pch = 19,
+     xlab = "LTBI", ylab = "TB", main = "reason for screening")
+
+legend("bottomright", legend = c("Contact", "Migrant"),
+       col = 1:2, pch = 19, bty = "n")
+
+hist(data0$ltbi_prev[data0$pop > 20],
+     breaks = 30,
+     main = "",
+     xlab = "LTBI prevalence (sample size over 20 people)")
+```
+
+```{r}
+head(data0)
+
+# dat <- data0[1:100, ]
+
+## aggregate some groups
+dat <- 
+  data0 %>%
+  mutate(
+    inc_cob_participant2 = fct_explicit_na(inc_cob_participant2),
+    yearssinceentry_grp  = fct_explicit_na(yearssinceentry_grp),
+    prevbcg = fct_explicit_na(prevbcg)) %>% 
+  group_by(age_grp,
+           ethnicity,
+           inc_cob_participant2,
+           reasonforscreening,
+           prevbcg,
+           yearssinceentry_grp) %>% 
+  summarise(pop = sum(pop),
+            tb  = sum(tb),
+            ltbi = sum(ltbi))
+
+save(dat, file = "dat.RData")
+```
+
+```{r eval=FALSE}
+# stratified model
+
+jags_dat_input <-
+  list(
+    len_gp = nrow(dat),  # number of groups
+    Xm  = dat$pop,       # number of migrants/contacts
+    Xp  = dat$ltbi,      # number of positive test results
+    Xtb = dat$tb         # number of observed active tb cases
+  )
+
+jags_dat_input
+
+params <-
+  c("sens", "spec",
+    "lambda",
+    "p_latent")
+
+BUGS_file_name <- "BUGS_code_Xl_fn.txt"
+```
+
+```{r eval=TRUE}
+# regression model
+
+# transform to levels to integers
+# aggregate by covariates of interest
+dat_regn <-
+  dat %>%
+  mutate(
+    rfs = as.numeric(reasonforscreening) - 1,
+    inc = as.numeric(inc_cob_participant2),
+    eth = as.numeric(ethnicity),
+    age = as.numeric(age_grp),
+    bcg = as.numeric(prevbcg),
+    yse = as.numeric(yearssinceentry_grp)
+  ) %>%  # transform to level integer
+  group_by(rfs,
+           inc,
+           eth,
+           age,
+           bcg,
+           yse
+  ) %>% 
+  summarise(pop = sum(pop),
+            tb  = sum(tb),
+            ltbi = sum(ltbi))
+
+##TODO:
+# remove error row
+# why is this causing an error?
+# pop = ltbi = tb = 1
+# maybe its because its prob = 1?
+dat_regn <- dat_regn[-235, ]
+```
+
+BUGS inputs.
+
+```{r}
+# create list of input data
+jags_dat_input <-
+  list(
+    len_gp = nrow(dat_regn),  # number of groups
+    len_rfs = max(dat_regn$rfs) + 1,
+    len_inc = max(dat_regn$inc),
+    len_eth = max(dat_regn$eth),
+    len_age = max(dat_regn$age),
+    len_bcg = max(dat_regn$bcg),
+    len_yse = max(dat_regn$yse),
+    rfs = dat_regn$rfs,
+    inc = dat_regn$inc,
+    eth = dat_regn$eth,
+    age = dat_regn$age,
+    bcg = dat_regn$bcg,
+    yse = dat_regn$yse,
+    Xm  = dat_regn$pop,       # number of migrants/contacts
+    Xp  = dat_regn$ltbi,      # number of positive test results
+    Xtb = dat_regn$tb         # number of observed active tb cases
+  )
+
+jags_dat_input
+
+save(jags_dat_input, file = "jags_dat_input.RData")
+
+params <- 
+  c("sens", "spec",                # test performance
+    "lambda",                      # progression proportion
+    "ppred",
+    "pred_Xtb", "pred_X_latent",   # posterior predictive distns
+    "prior_Xtb", "prior_X_latent"  # prior posterior distns
+    # "p_contact", "p_migrant"     # marginalised
+  )
+
+BUGS_file_name <- "BUGS_code_regn.txt"
+```
+
+```{r}
+# n_iter <- 1e6
+# n_burnin <- 1e3
+# n_thin <- 1e2
+
+n_iter <- 1000#0
+n_burnin <- 10#0
+n_thin <- 1
+```
+
+The BUGS code is
+
+```{r echo=FALSE, comment=NA}
+file_loc <- here::here("scripts", BUGS_file_name)
+
+cat(
+  readLines(file_loc),
+  sep = '\n')
+```
+
+```{r message=FALSE, results=FALSE, cache=TRUE}
+out <- jags(jags_dat_input,
+            parameters.to.save = params,
+            model.file = file_loc,
+            n.chains = 2,
+            n.iter = n_iter,
+            n.burnin = n_burnin,
+            n.thin = n_thin,
+            DIC = TRUE,
+            working.directory = here::here("scripts"),
+            progress.bar = "text")
+
+save(out, file = "../../data output/out_regn.RData")
+```
+
+
+### References
+

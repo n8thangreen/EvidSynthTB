@@ -1,0 +1,762 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={LTBI Bayesian MPES with PREDICT data},
+            pdfauthor={Nathan Green (Imperial College London)},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{LTBI Bayesian MPES with PREDICT data}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Nathan Green (Imperial College London)}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{14/02/2020}
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{introduction}{%
+\subsubsection{Introduction}\label{introduction}}
+
+We will fit the MPES model detailed elsewhere to a PREDICT study data
+extract.
+
+\hypertarget{analysis-in-r}{%
+\subsubsection{Analysis in R}\label{analysis-in-r}}
+
+We used vague normal priors for the LTBI prevalence and TB progression.
+A prior sensitivity analysis is given at the end of this document.
+
+The data have been grouped so that they are sufficiently coarse for
+anonymisation and relevant for the DES model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(readr)}
+\KeywordTok{library}\NormalTok{(R2jags)}
+\KeywordTok{library}\NormalTok{(R2WinBUGS)}
+\KeywordTok{library}\NormalTok{(purrr)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(forcats)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data0 <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"raw-data"}\NormalTok{, }\StringTok{"aggregated_data.csv"}\NormalTok{),}
+                  \DataTypeTok{col_types =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{X1 =} \KeywordTok{col_integer}\NormalTok{(),}
+                                   \DataTypeTok{age_grp  =} \KeywordTok{col_factor}\NormalTok{(}\DataTypeTok{levels =}
+                                                           \KeywordTok{c}\NormalTok{(}\StringTok{"(15,35]"}\NormalTok{,}
+                                                             \StringTok{"(35,55]"}\NormalTok{,}
+                                                             \StringTok{"(55,100]"}\NormalTok{)),}
+                                   \DataTypeTok{sex  =} \KeywordTok{col_factor}\NormalTok{(}\DataTypeTok{levels =}
+                                                       \KeywordTok{c}\NormalTok{(}\StringTok{"Female"}\NormalTok{,}
+                                                         \StringTok{"Male"}\NormalTok{)),}
+                                   \DataTypeTok{ethnicity  =} \KeywordTok{col_factor}\NormalTok{(}\DataTypeTok{levels =}
+                                                             \KeywordTok{c}\NormalTok{(}\StringTok{"White"}\NormalTok{,}
+                                                               \StringTok{"Black African or Caribbean"}\NormalTok{,}
+                                                               \StringTok{"South Asian"}\NormalTok{,}
+                                                               \StringTok{"Other"}\NormalTok{)),}
+                                   \DataTypeTok{inc_cob_participant2 =} \KeywordTok{col_factor}\NormalTok{(}\DataTypeTok{levels =}
+                                                                       \KeywordTok{c}\NormalTok{(}\StringTok{'<40'}\NormalTok{,}
+                                                                         \StringTok{'41-100'}\NormalTok{,}
+                                                                         \StringTok{'100-300'}\NormalTok{,}
+                                                                         \StringTok{'>300'}\NormalTok{)),}
+                                   \DataTypeTok{yearssinceentry_grp =} \KeywordTok{col_factor}\NormalTok{(}\DataTypeTok{levels =}
+                                                                      \KeywordTok{c}\NormalTok{(}\StringTok{'(0,5]'}\NormalTok{,}
+                                                                        \StringTok{'(5,10]'}\NormalTok{,}
+                                                                        \StringTok{'(10,100]'}\NormalTok{)),}
+                                   \DataTypeTok{prevbcg =} \KeywordTok{col_factor}\NormalTok{(}\DataTypeTok{levels =}
+                                                          \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{)),}
+                                   \DataTypeTok{reasonforscreening =} \KeywordTok{col_factor}\NormalTok{(}\DataTypeTok{levels =}
+                                                                     \KeywordTok{c}\NormalTok{(}\StringTok{"Contact"}\NormalTok{,}
+                                                                       \StringTok{"Migrant"}\NormalTok{)),}
+                                   \DataTypeTok{pop =} \KeywordTok{col_double}\NormalTok{(),}
+                                   \DataTypeTok{tb =} \KeywordTok{col_double}\NormalTok{(),}
+                                   \DataTypeTok{ltbi =} \KeywordTok{col_double}\NormalTok{()))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# inspect the raw relationships in the data}
+\KeywordTok{library}\NormalTok{(scales)}
+
+\NormalTok{data0 <-}
+\StringTok{  }\NormalTok{data0 }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{ltbi_prev =} \KeywordTok{round}\NormalTok{(ltbi}\OperatorTok{/}\NormalTok{pop, }\DecValTok{3}\NormalTok{),}
+         \DataTypeTok{prog_rate =} \KeywordTok{round}\NormalTok{(tb}\OperatorTok{/}\NormalTok{ltbi, }\DecValTok{3}\NormalTok{))}
+
+\CommentTok{# ltbi vs tb counts by grouping}
+\CommentTok{# add some jitter}
+\KeywordTok{plot}\NormalTok{(data0}\OperatorTok{$}\NormalTok{ltbi }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(data0),}\DecValTok{0}\NormalTok{,}\FloatTok{0.1}\NormalTok{), data0}\OperatorTok{$}\NormalTok{tb }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(data0),}\DecValTok{0}\NormalTok{,}\FloatTok{0.1}\NormalTok{),}
+     \DataTypeTok{col =} \KeywordTok{alpha}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(data0}\OperatorTok{$}\NormalTok{reasonforscreening), }\FloatTok{0.2}\NormalTok{), }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"LTBI"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"TB"}\NormalTok{, }\DataTypeTok{main =} \StringTok{"reason for screening"}\NormalTok{)}
+
+\KeywordTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Contact"}\NormalTok{, }\StringTok{"Migrant"}\NormalTok{),}
+       \DataTypeTok{col =} \DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{bty =} \StringTok{"n"}\NormalTok{)}
+
+\KeywordTok{hist}\NormalTok{(data0}\OperatorTok{$}\NormalTok{ltbi_prev[data0}\OperatorTok{$}\NormalTok{pop }\OperatorTok{>}\StringTok{ }\DecValTok{20}\NormalTok{],}
+     \DataTypeTok{breaks =} \DecValTok{30}\NormalTok{,}
+     \DataTypeTok{main =} \StringTok{""}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"LTBI prevalence (sample size over 20 people)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(data0)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 11
+##      X1 age_grp sex   ethnicity inc_cob_partici~ yearssinceentry~ prevbcg
+##   <int> <fct>   <fct> <fct>     <fct>            <fct>            <fct>  
+## 1     1 (15,35] Fema~ Black Af~ <40              (0,5]            <NA>   
+## 2     2 (15,35] Fema~ Black Af~ <40              (0,5]            No     
+## 3     3 (15,35] Fema~ Black Af~ <40              (0,5]            Yes    
+## 4     4 (15,35] Fema~ Black Af~ <40              (10,100]         Yes    
+## 5     5 (15,35] Fema~ Black Af~ <40              (10,100]         Yes    
+## 6     6 (15,35] Fema~ Black Af~ <40              (5,10]           <NA>   
+## # ... with 4 more variables: reasonforscreening <fct>, pop <dbl>,
+## #   tb <dbl>, ltbi <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# dat <- data0[1:100, ]}
+
+\CommentTok{## aggregate some groups}
+\NormalTok{dat <-}\StringTok{ }
+\StringTok{  }\NormalTok{data0 }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{inc_cob_participant2 =} \KeywordTok{fct_explicit_na}\NormalTok{(inc_cob_participant2),}
+    \DataTypeTok{yearssinceentry_grp  =} \KeywordTok{fct_explicit_na}\NormalTok{(yearssinceentry_grp),}
+    \DataTypeTok{prevbcg =} \KeywordTok{fct_explicit_na}\NormalTok{(prevbcg)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(age_grp,}
+\NormalTok{           ethnicity,}
+\NormalTok{           inc_cob_participant2,}
+\NormalTok{           reasonforscreening,}
+\NormalTok{           prevbcg,}
+\NormalTok{           yearssinceentry_grp) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{pop =} \KeywordTok{sum}\NormalTok{(pop),}
+            \DataTypeTok{tb  =} \KeywordTok{sum}\NormalTok{(tb),}
+            \DataTypeTok{ltbi =} \KeywordTok{sum}\NormalTok{(ltbi))}
+
+\KeywordTok{save}\NormalTok{(dat, }\DataTypeTok{file =} \StringTok{"dat.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# stratified model}
+
+\NormalTok{jags_dat_input <-}
+\StringTok{  }\KeywordTok{list}\NormalTok{(}
+    \DataTypeTok{len_gp =} \KeywordTok{nrow}\NormalTok{(dat),  }\CommentTok{# number of groups}
+    \DataTypeTok{Xm  =}\NormalTok{ dat}\OperatorTok{$}\NormalTok{pop,       }\CommentTok{# number of migrants/contacts}
+    \DataTypeTok{Xp  =}\NormalTok{ dat}\OperatorTok{$}\NormalTok{ltbi,      }\CommentTok{# number of positive test results}
+    \DataTypeTok{Xtb =}\NormalTok{ dat}\OperatorTok{$}\NormalTok{tb         }\CommentTok{# number of observed active tb cases}
+\NormalTok{  )}
+
+\NormalTok{jags_dat_input}
+
+\NormalTok{params <-}
+\StringTok{  }\KeywordTok{c}\NormalTok{(}\StringTok{"sens"}\NormalTok{, }\StringTok{"spec"}\NormalTok{,}
+    \StringTok{"lambda"}\NormalTok{,}
+    \StringTok{"p_latent"}\NormalTok{)}
+
+\NormalTok{BUGS_file_name <-}\StringTok{ "BUGS_code_Xl_fn.txt"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# regression model}
+
+\CommentTok{# transform to levels to integers}
+\CommentTok{# aggregate by covariates of interest}
+\NormalTok{dat_regn <-}
+\StringTok{  }\NormalTok{dat }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{rfs =} \KeywordTok{as.numeric}\NormalTok{(reasonforscreening) }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{,}
+    \DataTypeTok{inc =} \KeywordTok{as.numeric}\NormalTok{(inc_cob_participant2),}
+    \DataTypeTok{eth =} \KeywordTok{as.numeric}\NormalTok{(ethnicity),}
+    \DataTypeTok{age =} \KeywordTok{as.numeric}\NormalTok{(age_grp),}
+    \DataTypeTok{bcg =} \KeywordTok{as.numeric}\NormalTok{(prevbcg),}
+    \DataTypeTok{yse =} \KeywordTok{as.numeric}\NormalTok{(yearssinceentry_grp)}
+\NormalTok{  ) }\OperatorTok{%>%}\StringTok{  }\CommentTok{# transform to level integer}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(rfs,}
+\NormalTok{           inc,}
+\NormalTok{           eth,}
+\NormalTok{           age,}
+\NormalTok{           bcg,}
+\NormalTok{           yse}
+\NormalTok{  ) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{pop =} \KeywordTok{sum}\NormalTok{(pop),}
+            \DataTypeTok{tb  =} \KeywordTok{sum}\NormalTok{(tb),}
+            \DataTypeTok{ltbi =} \KeywordTok{sum}\NormalTok{(ltbi))}
+
+\CommentTok{##TODO:}
+\CommentTok{# remove error row}
+\CommentTok{# why is this causing an error?}
+\CommentTok{# pop = ltbi = tb = 1}
+\CommentTok{# maybe its because its prob = 1?}
+\NormalTok{dat_regn <-}\StringTok{ }\NormalTok{dat_regn[}\OperatorTok{-}\DecValTok{235}\NormalTok{, ]}
+\end{Highlighting}
+\end{Shaded}
+
+BUGS inputs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# create list of input data}
+\NormalTok{jags_dat_input <-}
+\StringTok{  }\KeywordTok{list}\NormalTok{(}
+    \DataTypeTok{len_gp =} \KeywordTok{nrow}\NormalTok{(dat_regn),  }\CommentTok{# number of groups}
+    \DataTypeTok{len_rfs =} \KeywordTok{max}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{rfs) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{,}
+    \DataTypeTok{len_inc =} \KeywordTok{max}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{inc),}
+    \DataTypeTok{len_eth =} \KeywordTok{max}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{eth),}
+    \DataTypeTok{len_age =} \KeywordTok{max}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{age),}
+    \DataTypeTok{len_bcg =} \KeywordTok{max}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{bcg),}
+    \DataTypeTok{len_yse =} \KeywordTok{max}\NormalTok{(dat_regn}\OperatorTok{$}\NormalTok{yse),}
+    \DataTypeTok{rfs =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{rfs,}
+    \DataTypeTok{inc =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{inc,}
+    \DataTypeTok{eth =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{eth,}
+    \DataTypeTok{age =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{age,}
+    \DataTypeTok{bcg =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{bcg,}
+    \DataTypeTok{yse =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{yse,}
+    \DataTypeTok{Xm  =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{pop,       }\CommentTok{# number of migrants/contacts}
+    \DataTypeTok{Xp  =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{ltbi,      }\CommentTok{# number of positive test results}
+    \DataTypeTok{Xtb =}\NormalTok{ dat_regn}\OperatorTok{$}\NormalTok{tb         }\CommentTok{# number of observed active tb cases}
+\NormalTok{  )}
+
+\NormalTok{jags_dat_input}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $len_gp
+## [1] 586
+## 
+## $len_rfs
+## [1] 2
+## 
+## $len_inc
+## [1] 5
+## 
+## $len_eth
+## [1] 4
+## 
+## $len_age
+## [1] 3
+## 
+## $len_bcg
+## [1] 3
+## 
+## $len_yse
+## [1] 4
+## 
+## $rfs
+##   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+##  [36] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+##  [71] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [106] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [141] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [176] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [211] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [246] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [281] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [316] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [351] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [386] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [421] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [456] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [491] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [526] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [561] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## 
+## $inc
+##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [71] 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [106] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [141] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [176] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [211] 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+## [246] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+## [281] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+## [316] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [351] 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [386] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3
+## [421] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [456] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [491] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+## [526] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+## [561] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+## 
+## $eth
+##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+##  [36] 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+##  [71] 4 4 4 4 4 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3
+## [106] 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1 1 1 1 1 1 1 2 2 2 2 2
+## [141] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [176] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+## [211] 4 4 4 4 4 4 4 4 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [246] 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [281] 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [316] 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 3
+## [351] 3 3 3 3 3 3 3 4 4 4 4 4 4 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+## [386] 2 2 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1
+## [421] 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3
+## [456] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4
+## [491] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+## [526] 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+## [561] 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4
+## 
+## $age
+##   [1] 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 3 3 3 3 3 1 1 1 1 1 1 1 1 1 2
+##  [36] 2 2 3 3 3 1 1 1 1 1 1 1 1 1 1 2 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2
+##  [71] 2 3 3 3 3 1 1 1 1 1 1 1 1 2 2 2 2 3 1 1 1 1 1 1 1 1 2 2 2 3 3 3 1 1 2
+## [106] 2 3 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 3 3 3 3 1 1 1 1 1 2 2 2 1 1 1 1 1
+## [141] 1 1 1 1 1 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2
+## [176] 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+## [211] 2 3 3 3 3 3 3 3 1 1 1 2 2 2 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 3 3 3 3 3
+## [246] 2 2 2 2 3 3 1 1 1 1 1 1 1 2 2 2 2 3 3 3 3 1 1 1 1 1 1 1 1 1 2 2 2 2 2
+## [281] 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 3 3 3 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2
+## [316] 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 3 3 3 1 1 1 1 1 2 2 2 3 3 1 1 1 1 2 2 1
+## [351] 1 1 1 2 2 2 3 1 1 1 1 2 2 1 1 1 1 1 1 2 2 2 2 2 3 3 1 1 1 1 1 2 2 2 2
+## [386] 3 3 1 2 2 2 2 3 3 3 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 1
+## [421] 3 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1 1 1
+## [456] 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 2 2 2 2
+## [491] 2 2 2 2 2 2 3 3 3 3 3 3 3 3 1 1 1 2 2 2 1 1 1 1 1 1 1 1 2 2 2 2 2 2 3
+## [526] 1 1 2 2 2 2 3 3 1 1 1 1 1 1 2 2 2 3 3 1 1 1 1 2 2 3 1 1 1 1 1 1 2 2 2
+## [561] 2 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 3 3 3 3 3 1 1 1 2 2
+## 
+## $bcg
+##   [1] 1 1 1 1 2 2 2 2 3 3 3 1 1 2 2 2 2 3 3 3 1 2 2 3 3 1 1 2 2 2 2 3 3 3 2
+##  [36] 2 3 1 2 3 1 1 1 2 2 2 3 3 3 3 3 1 3 1 1 1 2 2 2 2 3 3 3 1 2 2 2 2 3 3
+##  [71] 3 1 1 2 3 1 1 2 2 2 3 3 3 2 2 2 3 2 1 1 1 2 2 2 3 3 1 2 2 1 2 2 2 2 2
+## [106] 3 2 1 1 2 2 2 3 3 3 1 1 1 2 2 2 3 3 1 2 2 3 1 2 2 2 3 2 2 3 1 1 1 2 2
+## [141] 2 2 3 3 3 1 1 1 2 2 2 2 3 3 1 2 2 2 3 3 1 1 1 1 2 2 2 2 3 3 3 3 1 1 1
+## [176] 2 2 2 2 3 3 3 1 1 2 2 2 2 3 3 3 1 1 1 2 2 2 3 3 3 1 1 1 2 2 2 2 3 3 3
+## [211] 3 1 1 2 2 2 3 3 2 2 3 1 2 2 1 1 2 2 2 3 3 3 3 1 2 2 2 2 3 3 1 2 2 2 3
+## [246] 1 2 2 3 2 3 1 1 2 2 2 3 3 2 2 2 3 1 2 3 3 1 1 2 2 2 2 3 3 3 1 2 2 3 3
+## [281] 1 2 3 1 1 1 2 2 2 2 3 3 3 1 2 2 3 2 2 3 1 1 1 1 2 2 2 2 3 3 3 3 1 2 3
+## [316] 2 3 1 1 1 2 2 2 2 3 3 3 1 2 2 2 3 3 1 1 2 2 3 1 2 2 2 3 1 1 2 2 2 2 1
+## [351] 1 2 3 1 2 2 2 1 2 2 3 1 2 1 1 2 2 3 3 1 2 2 2 3 1 2 1 1 2 2 3 2 2 3 3
+## [386] 2 3 2 1 2 2 3 1 2 3 1 1 2 2 2 3 3 3 3 1 1 1 2 2 2 2 3 3 3 2 2 3 3 3 3
+## [421] 2 1 1 2 2 2 2 3 3 3 1 2 2 2 3 3 3 1 2 2 2 3 3 1 1 1 1 2 2 2 2 3 3 3 3
+## [456] 1 1 1 2 2 2 2 3 3 3 3 1 1 1 2 2 2 2 3 3 3 3 1 1 1 2 2 2 3 3 3 1 1 1 2
+## [491] 2 2 2 3 3 3 1 1 2 2 2 3 3 3 1 2 3 1 1 2 1 1 2 2 2 3 3 3 1 1 2 2 2 3 2
+## [526] 1 2 1 2 3 3 2 3 1 1 2 2 2 3 1 2 2 2 3 1 2 2 3 2 3 2 1 2 2 2 3 3 1 2 3
+## [561] 3 1 1 1 1 2 2 2 3 3 1 2 2 2 3 3 1 2 2 3 3 1 1 2 1 2
+## 
+## $yse
+##   [1] 1 2 3 4 1 2 3 4 1 2 3 1 3 1 2 3 4 1 2 4 3 1 3 2 3 2 3 1 2 3 4 1 2 4 2
+##  [36] 3 3 3 3 3 2 3 4 1 2 3 1 2 3 4 3 3 3 1 2 3 1 2 3 4 1 2 3 3 1 2 3 4 1 2
+##  [71] 3 1 3 3 3 1 2 1 2 3 1 2 3 1 2 3 3 3 1 2 3 1 2 3 1 2 3 2 3 3 2 3 1 2 3
+## [106] 3 3 1 3 1 2 3 1 2 3 1 2 3 1 2 3 2 3 1 2 3 3 3 1 2 3 3 2 3 2 1 2 3 1 2
+## [141] 3 4 1 2 3 1 2 3 1 2 3 4 1 3 3 1 2 3 2 3 1 2 3 4 1 2 3 4 1 2 3 4 1 2 3
+## [176] 1 2 3 4 1 2 3 1 3 1 2 3 4 1 3 4 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 4 1 2 3
+## [211] 4 2 3 1 3 4 1 3 2 3 1 3 2 3 1 2 1 2 3 1 2 3 4 1 1 2 3 4 2 3 2 1 2 3 3
+## [246] 3 3 4 3 3 3 1 2 1 2 3 1 2 1 2 3 3 2 3 1 3 1 4 1 2 3 4 1 2 4 4 3 4 3 4
+## [281] 4 4 4 1 3 4 1 2 3 4 1 3 4 4 3 4 4 3 4 3 1 2 3 4 1 2 3 4 1 2 3 4 4 4 4
+## [316] 4 4 1 2 4 1 2 3 4 1 2 4 4 3 4 4 3 4 1 2 1 2 1 2 2 3 1 1 1 3 2 3 1 3 1
+## [351] 3 1 1 3 1 3 4 1 1 2 1 1 3 1 2 1 2 1 2 1 1 2 3 1 1 2 1 2 1 2 1 1 2 1 2
+## [386] 3 2 1 1 1 3 3 3 3 3 1 2 1 2 3 1 2 3 4 1 2 4 1 2 3 4 1 2 3 1 3 1 2 3 1
+## [421] 1 1 2 1 2 3 4 1 2 3 1 1 2 3 1 2 3 1 1 2 3 3 4 1 2 3 4 1 2 3 4 1 2 3 4
+## [456] 1 2 3 1 2 3 4 1 2 3 4 1 2 3 1 2 3 4 1 2 3 4 1 2 3 1 2 3 1 2 3 1 2 3 1
+## [491] 2 3 4 1 2 3 1 3 1 2 3 1 2 3 1 1 1 1 3 1 1 2 1 2 4 1 2 3 1 3 1 2 3 1 1
+## [526] 2 3 2 3 1 3 3 3 1 2 1 2 4 1 1 1 3 1 1 4 2 4 4 4 4 4 4 1 3 4 1 4 1 4 1
+## [561] 4 1 2 3 4 1 2 4 1 4 4 1 3 4 3 4 4 3 4 3 4 1 4 4 4 4
+## 
+## $Xm
+##   [1]  12   7   1   2  33  27  22   2   9   5   6   3   6   5  14  39   1
+##  [18]   2   3   1   2   1  16   1   6   1   2   6   8  19   3   2   2   1
+##  [35]   3  22   1   4  26   6   1   2   1   3   4   3   1   2   1   1   1
+##  [52]   1   2   4   3   1   5  10   9   1   4   1   2   1   3   3  20   1
+##  [69]   1   1   1   1   1   5   2   3   1  27  16   4   4   1   1   9   5
+##  [86]  12   1   2   2   4   2  13   8   5   4   2   1   4  12   1   1   2
+## [103]   1   1   2   1   5   2   4  32  18  18   4   4   4   1   1   2   2
+## [120]   8  23   1   5   1   3   7   1   1   2   2   1   1   3   5   1   6
+## [137]   4   9  30  34  84   1   3   4   5   2   2   9  10  24  91   1   2
+## [154]   8   2   1   6  11   1   2  64  19  12   3 276 140 103  10  58  31
+## [171]  16   1   7   8  14  40  71 205   3   5   7  36   1   6   5   8 108
+## [188]   3   1  32   1  11   5   4  73  40  32   9   1   6   1   1   4  14
+## [205]  17  45   1   1   4   4   1   2   2   4  11   1   1   5   1   1   1
+## [222]   1   1   1   2   2  14  18  28   5   2   4   1   1   5   8  43   1
+## [239]   1   7   1   1   2  11   1   2   6   1   2   4   4   1   1  10  10
+## [256]   5   1   2   2   7  11   3   1   6   1   1   2  47   5   6   2 174
+## [273]   3   2  16  24   1 140   2  18  12  56   8   2   5  27  11   7   9
+## [290]  93   3   3  20   4   1  47  10   2   2   2  10   7   1  36  45  21
+## [307]   8 285  10   2   2  44   2  48   3   3   1   5   3  27  12   6   4
+## [324] 118   2   2  18   2   1  31   2   1   1   3   1   5   1   3   1   2
+## [341]   3   1   1   2   1   1   1   1   1   1   1   2   1   1   1   1   1
+## [358]   1   3   1   2   1   1  14   3  78  10  11   3   5  23   6   2   4
+## [375]   1   1   1   1  18   1  13   1   1   1   1   1   1   3   1   2   3
+## [392]   1   3   5   3  17   1  64   4   1  12   1   1   1   2   1   1  24
+## [409]   4   3   1   1   1   1   4   4   1   2   4   2   1  18   4  76   5
+## [426]   5   2  17   4   1   7  22   4   7   3   2   1   2   8   2   3   1
+## [443]   1 397  32  11   6 882  82  35  20 274  26   7   4  57   5  41 227
+## [460]  52 209  12  52   8  72   2  14   3 114  31   6 366   9   9   1 143
+## [477]   5  15   2   4  31   6   3   8   1   1   2   1   4   9   5  12   1
+## [494]   5   2   2   5   2   2   3   1   2   1   3   1   2   1   1   1   1
+## [511]  10   1  40   3   1   9   5   1   2   1  15   2   4   4   1   1   1
+## [528]   2   2   2   4  24   2   1   1  14   1   1   2   1   4   4   1   1
+## [545]   3   1   6   1   5   1   4   1   4   1   5   2   1   1   2   1   2
+## [562]   3   1   1   9  11   3  42   2   5   3   1   1  23   2   2   2   4
+## [579]   9   1   3   2   6   5   1   3
+## 
+## $Xp
+##   [1]   1   0   0   0   6   1   3   0   2   2   1   1   1   4   7   9   0
+##  [18]   1   0   0   0   0   5   0   1   0   1   1   1   5   0   0   0   1
+##  [35]   1   3   1   0   6   0   1   1   1   0   0   0   0   1   0   0   0
+##  [52]   1   1   0   0   0   0   4   1   1   2   0   1   0   1   1   4   0
+##  [69]   0   0   0   1   0   0   0   1   1   7   5   3   2   0   0   3   4
+##  [86]   4   0   0   1   3   0   3   5   0   1   0   0   1   5   0   1   1
+## [103]   0   1   0   0   2   0   0   4   5   3   0   1   0   1   0   1   1
+## [120]   4   9   0   3   0   2   3   0   0   1   0   0   1   0   1   1   1
+## [137]   1   1   7  11  22   0   0   3   3   1   0   5   2  13  43   0   1
+## [154]   5   2   0   4   5   1   0  24   7   1   1  66  34  13   2  15  13
+## [171]   7   0   5   3   5  19  31  63   2   1   1  15   0   3   2   5  33
+## [188]   0   1  14   1   5   3   1  28  12   5   3   0   2   0   1   0  11
+## [205]   7  22   0   1   3   2   1   0   1   4   6   0   0   3   0   0   0
+## [222]   0   0   1   1   0   4   3  10   2   2   1   0   1   3   4  16   0
+## [239]   1   3   0   0   2   6   0   0   1   0   1   1   2   1   0   2   4
+## [256]   3   0   1   1   0   3   1   1   4   0   0   2   7   5   5   1  27
+## [273]   2   2   6   6   0  18   0   5   4  11   5   2   5   6  10   6   9
+## [290]  17   3   3   3   0   1   8   2   0   1   1   9   6   1   8  43  17
+## [307]   7  44   9   2   2   9   0   7   2   1   1   5   3   6  12   6   2
+## [324]  20   2   2   1   0   1   5   1   0   0   0   0   0   0   0   0   0
+## [341]   0   1   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0
+## [358]   0   0   0   0   0   0   1   0  13   2   2   0   3  10   3   1   2
+## [375]   0   0   1   0   6   0   4   0   0   1   1   1   0   0   0   2   1
+## [392]   0   0   1   0   3   0   7   1   0   1   0   0   0   0   0   0   6
+## [409]   1   0   0   0   0   0   1   2   0   0   0   0   1   6   1  28   2
+## [426]   2   0   4   2   0   2  10   1   1   2   1   1   0   3   0   2   1
+## [443]   1  98   8   2   2 220  18   6   7  69   4   0   1  18   3  10  84
+## [460]  14  48   1  16   3  15   1   8   1  20  15   2  79   1   0   0  40
+## [477]   0   5   1   2   5   1   0   5   1   0   1   0   2   4   1   4   0
+## [494]   4   1   2   2   2   1   1   0   2   0   1   0   1   0   0   0   0
+## [511]   3   0  10   1   0   4   1   1   2   0   3   1   1   3   0   0   0
+## [528]   0   0   0   1   3   0   1   1   4   0   1   0   0   1   1   0   1
+## [545]   0   0   0   0   1   0   0   0   1   1   2   2   0   1   0   1   0
+## [562]   2   1   1   2   8   3   6   2   1   0   0   1   3   0   0   0   2
+## [579]   2   0   2   2   1   0   0   0
+## 
+## $Xtb
+##   [1]  0  0  0  0  0  0  1  0  0  0  1  0  0  1  1  2  0  0  0  0  0  0  0
+##  [24]  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0
+##  [47]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+##  [70]  0  0  0  0  1  0  0  0  1  0  0  0  0  0  1  1  0  0  0  0  0  0  0
+##  [93]  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  0
+## [116]  0  0  0  0  0  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0
+## [139]  0  2  2  0  0  0  0  0  0  0  0  0  2  0  0  0  0  0  0  0  0  0  1
+## [162]  0  0  0 10  9  0  0  0  1  1  0  0  0  1  1  2  3  0  0  0  1  0  0
+## [185]  0  0  1  0  0  0  0  0  0  0  2  0  0  1  0  0  0  0  0  1  0  0  0
+## [208]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0
+## [231]  0  0  0  0  0  0  1  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [254]  0  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  1  0  0  0  1
+## [277]  0  1  0  1  0  1  0  0  0  3  0  1  0  1  0  0  0  0  0  1  0  0  0
+## [300]  0  0  0  0  1  1  1  0  3  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [323]  0  3  0  0  0  0  0  2  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [346]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [369]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [392]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [415]  0  0  0  0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [438]  0  0  0  0  0  0  5  0  0  1 15  0  0  1  2  1  0  0  1  0  0  3  2
+## [461]  0  0  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0
+## [484]  2  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [507]  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [530]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [553]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+## [576]  0  0  0  0  0  0  0  0  0  0  0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{save}\NormalTok{(jags_dat_input, }\DataTypeTok{file =} \StringTok{"jags_dat_input.RData"}\NormalTok{)}
+
+\NormalTok{params <-}\StringTok{ }
+\StringTok{  }\KeywordTok{c}\NormalTok{(}\StringTok{"sens"}\NormalTok{, }\StringTok{"spec"}\NormalTok{,                }\CommentTok{# test performance}
+    \StringTok{"lambda"}\NormalTok{,                      }\CommentTok{# progression proportion}
+    \StringTok{"ppred"}\NormalTok{,}
+    \StringTok{"pred_Xtb"}\NormalTok{, }\StringTok{"pred_X_latent"}\NormalTok{,   }\CommentTok{# posterior predictive distns}
+    \StringTok{"prior_Xtb"}\NormalTok{, }\StringTok{"prior_X_latent"}  \CommentTok{# prior posterior distns}
+    \CommentTok{# "p_contact", "p_migrant"     # marginalised}
+\NormalTok{  )}
+
+\NormalTok{BUGS_file_name <-}\StringTok{ "BUGS_code_regn.txt"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# n_iter <- 1e6}
+\CommentTok{# n_burnin <- 1e3}
+\CommentTok{# n_thin <- 1e2}
+
+\NormalTok{n_iter <-}\StringTok{ }\DecValTok{1000}\CommentTok{#0}
+\NormalTok{n_burnin <-}\StringTok{ }\DecValTok{10}\CommentTok{#0}
+\NormalTok{n_thin <-}\StringTok{ }\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+The BUGS code is
+
+\begin{verbatim}
+## LTBI screening evidence synthesis model ----
+
+model {
+
+  for (j in 1:len_gp) {
+
+      X_latent[j] <- trunc(p_latent[j] * Xm[j])            # functional relationship
+
+      p_pos[j] <- (p_latent[j]*sens) + (1 - p_latent[j])*(1 - spec)
+
+      Xp[j] ~ dbin(p_pos[j], Xm[j])
+
+      Xtb[j] ~ dbin(lambda, X_latent[j])                   # time independent
+
+      logit(p_latent[j]) <- alpha + betas*rfs[j] + beta_inc[inc[j]] + beta_eth[eth[j]] +
+                            beta_age[age[j]] + beta_bcg[bcg[j]] + beta_yse[yse[j]]
+    }
+
+  ## prior distributions for inference
+
+  alpha ~ dnorm(0, 0.368)
+  betas ~ dnorm(0, 0.368)
+
+  #beta_inc[1] = 0           # set as baseline
+  for (i in 1:len_inc) {
+    beta_inc[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_eth) {
+    beta_eth[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_age) {
+    beta_age[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_bcg) {
+    beta_bcg[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_yse) {
+    beta_yse[i] ~ dnorm(0, 0.368)
+  }
+
+  sens ~ dbeta(100, 5)   # good: mean~=0.9
+  spec ~ dbeta(100, 5)
+  lambda ~ dbeta(5, 100) # mean~= 0.1
+
+  ## priors used in prior predictive distn
+
+  prior_alpha ~ dnorm(0, 0.368)
+  prior_s ~ dnorm(0, 0.368)
+  for (i in 1:len_inc) {
+    prior_inc[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_eth) {
+    prior_eth[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_age) {
+    prior_age[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_bcg) {
+    prior_bcg[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_yse) {
+    prior_yse[i] ~ dnorm(0, 0.368)
+  }
+  prior_lambda ~ dbeta(5, 100)
+
+  ## prior predictive distn
+  ## for sample covariates
+  ##TODO: include positivity, sens, spec
+  for (j in 1:len_gp) {
+    logit(prior_ltbi[j]) <- prior_alpha + prior_s*rfs[j] + prior_inc[inc[j]] + prior_eth[eth[j]] +
+                            prior_age[age[j]] + prior_bcg[bcg[j]] + prior_yse[yse[j]]
+    prior_X_latent[j] <- trunc(prior_ltbi[j] * Xm[j])
+    prior_Xtb[j] ~ dbin(prior_lambda, prior_X_latent[j])
+  }
+
+
+  ## posterior predictions
+
+  ## complete grid of covariate values
+  for (i in 1:len_rfs) {
+    for (k in 1:len_inc) {
+      for (m in 1:len_eth) {
+        for (a in 1:len_age) {
+          for (b in 1:len_bcg) {
+            for (y in 1:len_yse) {
+              logit(ppred[i,k,m,a,b,y]) <- alpha + betas*i + beta_inc[k] + beta_eth[m] +
+                                            beta_age[a] + beta_bcg[b] + beta_yse[y]
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ## for sample covariates
+  for (j in 1:len_gp) {
+    logit(ppred_grp[j]) <- alpha + betas*rfs[j] + beta_inc[inc[j]] + beta_eth[eth[j]] +
+                            beta_age[age[j]] + beta_bcg[bcg[j]] + beta_yse[yse[j]]
+    pred_X_latent[j] <- trunc(ppred_grp[j] * Xm[j])
+    pred_Xtb[j] ~ dbin(lambda, pred_X_latent[j])
+  }
+
+  ## posterior predictive distn
+  #c <- 1   # pick an individual to replicate; ##TODO: loop over whole sample?
+  #pred_X_latent <- trunc(ppred[rfs[c] + 1, inc[c], eth[c], age[c], bcg[c], yse[c]] * Xm[c])
+
+  ## marginalise
+  ##TODO: how to do this?
+  #p_contact <- sum(ppred[1, , , , , ])
+  #p_migrant <- 1 - p_contact
+
+}
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{out <-}\StringTok{ }\KeywordTok{jags}\NormalTok{(jags_dat_input,}
+            \DataTypeTok{parameters.to.save =}\NormalTok{ params,}
+            \DataTypeTok{model.file =}\NormalTok{ file_loc,}
+            \DataTypeTok{n.chains =} \DecValTok{2}\NormalTok{,}
+            \DataTypeTok{n.iter =}\NormalTok{ n_iter,}
+            \DataTypeTok{n.burnin =}\NormalTok{ n_burnin,}
+            \DataTypeTok{n.thin =}\NormalTok{ n_thin,}
+            \DataTypeTok{DIC =} \OtherTok{TRUE}\NormalTok{,}
+            \DataTypeTok{working.directory =}\NormalTok{ here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"scripts"}\NormalTok{),}
+            \DataTypeTok{progress.bar =} \StringTok{"text"}\NormalTok{)}
+
+\KeywordTok{save}\NormalTok{(out, }\DataTypeTok{file =} \StringTok{"../../data output/out_regn.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{references}{%
+\subsubsection{References}\label{references}}
+
+
+\end{document}
