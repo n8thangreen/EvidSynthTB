@@ -1,0 +1,17 @@
+## LTBI screening evidence synthesis model ----
+
+model {
+
+  for (j in 1:len_gp) {
+
+      logitp_latent[j] ~ dnorm(0, 0.001)
+      p_latent[j] <- exp(logitp_latent[j]) / (1 + exp(logitp_latent[j]))
+
+      p_TB[j] <- lambda*p_latent[j]
+      Xtb[j] ~ dbin(p_TB[j], Xm[j])
+    }
+
+  ## prior distributions
+  lambda ~ dbeta(5, 100)
+}
+

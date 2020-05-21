@@ -1,0 +1,31 @@
+## LTBI screening evidence synthesis model
+
+model {
+
+  for (j in 1:len_gp) {
+
+      X_latent[j] ~ dbin(p_latent[j], Xm[j])
+      #X_latent[j] <- p_latent[j] * Xm[j]
+
+      #logitp_latent[j] ~ dnorm(0,0.001)
+      #p_latent[j] <- exp(logitp_latent[j]) / (1 + exp(logitp_latent[j]))
+      #Xp[j] <- (p_latent[j]*sens) + (1 - p_latent[j])*(1 - spec)
+
+      p_latent[j] <- (Xp[j]/Xm[j] + spec - 1)/(sens + spec - 1)
+
+      Xmax[j] <- floor(X_latent[j])
+      fup[j] <- time[(len_t[j-1] + 1):len_t[j]]
+      t_total[j] <- sum(fup[j][1:Xmax[j]])
+      Xtb[j] ~ dpois(lambda*t_total[j])
+    }
+
+  ## prior distributions
+
+    #sens ~ dbeta(5, 100)   #poor: mean~=0.1
+    #spec ~ dbeta(5, 100)
+    sens ~ dbeta(100, 5)   #good: mean~=0.9
+    spec ~ dbeta(100, 5)
+    mu ~ dnorm(0, 0.001)
+    log(lambda) <- mu
+}
+

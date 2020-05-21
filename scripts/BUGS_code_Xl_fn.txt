@@ -1,0 +1,30 @@
+## LTBI screening evidence synthesis model ----
+
+model {
+
+  for (j in 1:len_gp) {
+
+      X_latent[j] <- trunc(p_latent[j] * Xm[j])                  # functional relationship
+
+      logitp_latent[j] ~ dnorm(0, 0.001)
+
+      p_latent[j] <- exp(logitp_latent[j]) / (1 + exp(logitp_latent[j]))
+
+      p_pos[j] <- (p_latent[j]*sens) + (1 - p_latent[j])*(1 - spec)
+
+      Xp[j] ~ dbin(p_pos[j], Xm[j])
+
+      #p_latent[j] <- (Xp[j]/Xm[j] + spec - 1)/(sens + spec - 1)  # functional pos-prev relationship
+
+      Xtb[j] ~ dbin(lambda, X_latent[j])                   # time independent
+    }
+
+  ## prior distributions
+
+    #sens ~ dbeta(5, 100)   #poor: mean~=0.1
+    #spec ~ dbeta(5, 100)
+    sens ~ dbeta(100, 5)   #good: mean~=0.9
+    spec ~ dbeta(100, 5)
+    lambda ~ dbeta(5, 100)
+}
+

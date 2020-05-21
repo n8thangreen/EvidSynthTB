@@ -1,0 +1,927 @@
+"","age_grp","sex","ethnicity","inc_cob_participant2","yearssinceentry_grp","prevbcg","reasonforscreening","pop","tb","ltbi"
+"1","(15,35]","Female","Black African or Caribbean","<40","(0,5]","NA","Contact",1,0,0
+"2","(15,35]","Female","Black African or Caribbean","<40","(0,5]","No","Migrant",2,0,0
+"3","(15,35]","Female","Black African or Caribbean","<40","(0,5]","Yes","Contact",3,0,0
+"4","(15,35]","Female","Black African or Caribbean","<40","(10,100]","Yes","Contact",12,0,4
+"5","(15,35]","Female","Black African or Caribbean","<40","(10,100]","Yes","Migrant",1,0,0
+"6","(15,35]","Female","Black African or Caribbean","<40","(5,10]","NA","Contact",1,0,0
+"7","(15,35]","Female","Black African or Caribbean","<40","(5,10]","Yes","Contact",5,0,0
+"8","(15,35]","Female","Black African or Caribbean","<40","(5,10]","Yes","Migrant",1,0,0
+"9","(15,35]","Female","Black African or Caribbean","<40","NA","Yes","Contact",1,0,0
+"10","(15,35]","Female","Black African or Caribbean",">300","(0,5]","NA","Contact",2,0,1
+"11","(15,35]","Female","Black African or Caribbean",">300","(0,5]","NA","Migrant",7,1,4
+"12","(15,35]","Female","Black African or Caribbean",">300","(0,5]","No","Contact",1,0,1
+"13","(15,35]","Female","Black African or Caribbean",">300","(0,5]","No","Migrant",6,0,1
+"14","(15,35]","Female","Black African or Caribbean",">300","(0,5]","Yes","Contact",7,0,1
+"15","(15,35]","Female","Black African or Caribbean",">300","(0,5]","Yes","Migrant",19,0,5
+"16","(15,35]","Female","Black African or Caribbean",">300","(10,100]","NA","Contact",1,0,0
+"17","(15,35]","Female","Black African or Caribbean",">300","(10,100]","Yes","Contact",17,0,6
+"18","(15,35]","Female","Black African or Caribbean",">300","(5,10]","NA","Contact",1,0,1
+"19","(15,35]","Female","Black African or Caribbean",">300","(5,10]","NA","Migrant",5,0,1
+"20","(15,35]","Female","Black African or Caribbean",">300","(5,10]","No","Contact",1,0,0
+"21","(15,35]","Female","Black African or Caribbean",">300","(5,10]","No","Migrant",1,0,0
+"22","(15,35]","Female","Black African or Caribbean",">300","(5,10]","Yes","Contact",15,0,2
+"23","(15,35]","Female","Black African or Caribbean",">300","(5,10]","Yes","Migrant",2,0,1
+"24","(15,35]","Female","Black African or Caribbean","100-300","(0,5]","NA","Contact",2,0,0
+"25","(15,35]","Female","Black African or Caribbean","100-300","(0,5]","NA","Migrant",9,0,3
+"26","(15,35]","Female","Black African or Caribbean","100-300","(0,5]","No","Contact",2,0,0
+"27","(15,35]","Female","Black African or Caribbean","100-300","(0,5]","No","Migrant",3,0,1
+"28","(15,35]","Female","Black African or Caribbean","100-300","(0,5]","Yes","Contact",20,0,4
+"29","(15,35]","Female","Black African or Caribbean","100-300","(0,5]","Yes","Migrant",43,0,17
+"30","(15,35]","Female","Black African or Caribbean","100-300","(10,100]","NA","Contact",3,0,1
+"31","(15,35]","Female","Black African or Caribbean","100-300","(10,100]","No","Contact",7,0,1
+"32","(15,35]","Female","Black African or Caribbean","100-300","(10,100]","Yes","Contact",53,2,12
+"33","(15,35]","Female","Black African or Caribbean","100-300","(10,100]","Yes","Migrant",2,0,2
+"34","(15,35]","Female","Black African or Caribbean","100-300","(5,10]","NA","Contact",3,0,2
+"35","(15,35]","Female","Black African or Caribbean","100-300","(5,10]","NA","Migrant",2,0,2
+"36","(15,35]","Female","Black African or Caribbean","100-300","(5,10]","No","Contact",2,0,1
+"37","(15,35]","Female","Black African or Caribbean","100-300","(5,10]","No","Migrant",2,0,0
+"38","(15,35]","Female","Black African or Caribbean","100-300","(5,10]","Yes","Contact",23,1,8
+"39","(15,35]","Female","Black African or Caribbean","100-300","(5,10]","Yes","Migrant",4,0,1
+"40","(15,35]","Female","Black African or Caribbean","100-300","NA","Yes","Contact",1,0,0
+"41","(15,35]","Female","Black African or Caribbean","100-300","NA","Yes","Migrant",2,0,0
+"42","(15,35]","Female","Black African or Caribbean","41-100","(0,5]","NA","Contact",2,0,1
+"43","(15,35]","Female","Black African or Caribbean","41-100","(0,5]","NA","Migrant",7,0,1
+"44","(15,35]","Female","Black African or Caribbean","41-100","(0,5]","No","Contact",2,0,1
+"45","(15,35]","Female","Black African or Caribbean","41-100","(0,5]","Yes","Contact",7,0,1
+"46","(15,35]","Female","Black African or Caribbean","41-100","(0,5]","Yes","Migrant",7,0,2
+"47","(15,35]","Female","Black African or Caribbean","41-100","(10,100]","No","Contact",2,0,0
+"48","(15,35]","Female","Black African or Caribbean","41-100","(10,100]","Yes","Contact",3,0,0
+"49","(15,35]","Female","Black African or Caribbean","41-100","(5,10]","NA","Contact",1,0,0
+"50","(15,35]","Female","Black African or Caribbean","41-100","(5,10]","No","Contact",2,0,1
+"51","(15,35]","Female","Black African or Caribbean","41-100","(5,10]","Yes","Contact",3,0,2
+"52","(15,35]","Female","Black African or Caribbean","NA","(0,5]","NA","Contact",2,0,2
+"53","(15,35]","Female","Black African or Caribbean","NA","(0,5]","NA","Migrant",2,0,2
+"54","(15,35]","Female","Black African or Caribbean","NA","(0,5]","No","Contact",1,0,1
+"55","(15,35]","Female","Black African or Caribbean","NA","(0,5]","Yes","Contact",4,0,4
+"56","(15,35]","Female","Black African or Caribbean","NA","(0,5]","Yes","Migrant",3,0,1
+"57","(15,35]","Female","Black African or Caribbean","NA","(10,100]","NA","Contact",1,0,1
+"58","(15,35]","Female","Black African or Caribbean","NA","(10,100]","No","Contact",4,0,4
+"59","(15,35]","Female","Black African or Caribbean","NA","(10,100]","Yes","Contact",4,0,4
+"60","(15,35]","Female","Black African or Caribbean","NA","(5,10]","Yes","Contact",4,1,3
+"61","(15,35]","Female","Black African or Caribbean","NA","NA","NA","Contact",6,0,1
+"62","(15,35]","Female","Black African or Caribbean","NA","NA","No","Contact",16,2,4
+"63","(15,35]","Female","Black African or Caribbean","NA","NA","Yes","Contact",55,0,9
+"64","(15,35]","Female","Black African or Caribbean","NA","NA","Yes","Migrant",2,0,0
+"65","(15,35]","Female","Other","<40","(0,5]","NA","Contact",2,0,1
+"66","(15,35]","Female","Other","<40","(0,5]","NA","Migrant",1,0,0
+"67","(15,35]","Female","Other","<40","(0,5]","No","Contact",2,0,0
+"68","(15,35]","Female","Other","<40","(0,5]","No","Migrant",1,0,0
+"69","(15,35]","Female","Other","<40","(0,5]","Yes","Migrant",1,0,0
+"70","(15,35]","Female","Other","<40","(10,100]","No","Contact",1,0,0
+"71","(15,35]","Female","Other","<40","(10,100]","Yes","Contact",6,0,1
+"72","(15,35]","Female","Other","<40","(5,10]","Yes","Contact",5,0,2
+"73","(15,35]","Female","Other",">300","(0,5]","NA","Contact",1,0,0
+"74","(15,35]","Female","Other",">300","(0,5]","NA","Migrant",2,0,0
+"75","(15,35]","Female","Other",">300","(0,5]","No","Migrant",1,0,1
+"76","(15,35]","Female","Other",">300","(0,5]","Yes","Contact",5,0,0
+"77","(15,35]","Female","Other",">300","(0,5]","Yes","Migrant",12,0,2
+"78","(15,35]","Female","Other",">300","(10,100]","Yes","Contact",4,0,2
+"79","(15,35]","Female","Other",">300","(5,10]","NA","Contact",1,0,0
+"80","(15,35]","Female","Other",">300","(5,10]","No","Contact",1,0,0
+"81","(15,35]","Female","Other",">300","(5,10]","Yes","Contact",5,0,2
+"82","(15,35]","Female","Other",">300","(5,10]","Yes","Migrant",1,0,0
+"83","(15,35]","Female","Other","100-300","(0,5]","NA","Contact",3,1,2
+"84","(15,35]","Female","Other","100-300","(0,5]","NA","Migrant",6,2,4
+"85","(15,35]","Female","Other","100-300","(0,5]","No","Contact",6,0,3
+"86","(15,35]","Female","Other","100-300","(0,5]","No","Migrant",6,0,2
+"87","(15,35]","Female","Other","100-300","(0,5]","Yes","Contact",33,1,10
+"88","(15,35]","Female","Other","100-300","(0,5]","Yes","Migrant",20,0,3
+"89","(15,35]","Female","Other","100-300","(10,100]","NA","Contact",2,0,1
+"90","(15,35]","Female","Other","100-300","(10,100]","No","Contact",2,0,1
+"91","(15,35]","Female","Other","100-300","(10,100]","No","Migrant",3,0,2
+"92","(15,35]","Female","Other","100-300","(10,100]","Yes","Contact",20,0,2
+"93","(15,35]","Female","Other","100-300","(10,100]","Yes","Migrant",2,0,0
+"94","(15,35]","Female","Other","100-300","(5,10]","NA","Migrant",1,0,1
+"95","(15,35]","Female","Other","100-300","(5,10]","No","Contact",1,0,0
+"96","(15,35]","Female","Other","100-300","(5,10]","No","Migrant",1,0,1
+"97","(15,35]","Female","Other","100-300","(5,10]","Yes","Contact",21,0,7
+"98","(15,35]","Female","Other","100-300","(5,10]","Yes","Migrant",4,0,0
+"99","(15,35]","Female","Other","41-100","(0,5]","NA","Contact",3,0,0
+"100","(15,35]","Female","Other","41-100","(0,5]","NA","Migrant",5,0,0
+"101","(15,35]","Female","Other","41-100","(0,5]","No","Contact",1,0,0
+"102","(15,35]","Female","Other","41-100","(0,5]","No","Migrant",11,0,3
+"103","(15,35]","Female","Other","41-100","(0,5]","Yes","Contact",16,0,1
+"104","(15,35]","Female","Other","41-100","(0,5]","Yes","Migrant",37,0,5
+"105","(15,35]","Female","Other","41-100","(10,100]","NA","Contact",2,0,0
+"106","(15,35]","Female","Other","41-100","(10,100]","No","Contact",1,0,0
+"107","(15,35]","Female","Other","41-100","(10,100]","Yes","Contact",5,0,0
+"108","(15,35]","Female","Other","41-100","(5,10]","NA","Contact",2,1,1
+"109","(15,35]","Female","Other","41-100","(5,10]","No","Migrant",1,0,0
+"110","(15,35]","Female","Other","41-100","(5,10]","Yes","Contact",11,1,2
+"111","(15,35]","Female","Other","41-100","(5,10]","Yes","Migrant",2,0,0
+"112","(15,35]","Female","Other","41-100","NA","NA","Migrant",1,0,0
+"113","(15,35]","Female","Other","NA","(0,5]","NA","Contact",1,0,1
+"114","(15,35]","Female","Other","NA","(0,5]","No","Contact",3,0,3
+"115","(15,35]","Female","Other","NA","(0,5]","No","Migrant",2,0,2
+"116","(15,35]","Female","Other","NA","(0,5]","Yes","Contact",10,0,10
+"117","(15,35]","Female","Other","NA","(10,100]","Yes","Contact",3,0,1
+"118","(15,35]","Female","Other","NA","(5,10]","NA","Contact",1,0,1
+"119","(15,35]","Female","Other","NA","(5,10]","No","Contact",2,0,2
+"120","(15,35]","Female","Other","NA","(5,10]","Yes","Contact",3,0,3
+"121","(15,35]","Female","Other","NA","NA","NA","Contact",7,0,0
+"122","(15,35]","Female","Other","NA","NA","No","Contact",14,0,2
+"123","(15,35]","Female","Other","NA","NA","No","Migrant",4,0,0
+"124","(15,35]","Female","Other","NA","NA","Yes","Contact",55,2,9
+"125","(15,35]","Female","Other","NA","NA","Yes","Migrant",4,0,0
+"126","(15,35]","Female","South Asian","<40","(0,5]","NA","Contact",1,0,0
+"127","(15,35]","Female","South Asian","<40","(0,5]","NA","Migrant",1,0,0
+"128","(15,35]","Female","South Asian","<40","(0,5]","Yes","Contact",2,0,0
+"129","(15,35]","Female","South Asian","<40","(10,100]","NA","Contact",1,0,0
+"130","(15,35]","Female","South Asian","<40","(10,100]","No","Contact",1,0,0
+"131","(15,35]","Female","South Asian","<40","(10,100]","Yes","Contact",2,0,0
+"132","(15,35]","Female","South Asian","<40","(5,10]","NA","Contact",1,0,1
+"133","(15,35]","Female","South Asian","<40","(5,10]","No","Contact",1,0,1
+"134","(15,35]","Female","South Asian","<40","(5,10]","Yes","Contact",1,0,0
+"135","(15,35]","Female","South Asian","<40","NA","NA","Contact",1,0,0
+"136","(15,35]","Female","South Asian","<40","NA","No","Contact",1,0,1
+"137","(15,35]","Female","South Asian",">300","(10,100]","Yes","Migrant",1,0,0
+"138","(15,35]","Female","South Asian","100-300","(0,5]","NA","Contact",29,0,7
+"139","(15,35]","Female","South Asian","100-300","(0,5]","NA","Migrant",118,0,27
+"140","(15,35]","Female","South Asian","100-300","(0,5]","No","Contact",25,0,7
+"141","(15,35]","Female","South Asian","100-300","(0,5]","No","Migrant",162,3,43
+"142","(15,35]","Female","South Asian","100-300","(0,5]","Yes","Contact",117,4,19
+"143","(15,35]","Female","South Asian","100-300","(0,5]","Yes","Migrant",381,4,81
+"144","(15,35]","Female","South Asian","100-300","(10,100]","NA","Contact",7,1,3
+"145","(15,35]","Female","South Asian","100-300","(10,100]","NA","Migrant",3,0,0
+"146","(15,35]","Female","South Asian","100-300","(10,100]","No","Contact",5,0,0
+"147","(15,35]","Female","South Asian","100-300","(10,100]","No","Migrant",4,0,1
+"148","(15,35]","Female","South Asian","100-300","(10,100]","Yes","Contact",49,0,5
+"149","(15,35]","Female","South Asian","100-300","(10,100]","Yes","Migrant",17,0,4
+"150","(15,35]","Female","South Asian","100-300","(5,10]","NA","Contact",12,0,6
+"151","(15,35]","Female","South Asian","100-300","(5,10]","NA","Migrant",11,0,2
+"152","(15,35]","Female","South Asian","100-300","(5,10]","No","Contact",3,0,1
+"153","(15,35]","Female","South Asian","100-300","(5,10]","No","Migrant",5,0,0
+"154","(15,35]","Female","South Asian","100-300","(5,10]","Yes","Contact",51,5,16
+"155","(15,35]","Female","South Asian","100-300","(5,10]","Yes","Migrant",33,0,5
+"156","(15,35]","Female","South Asian","100-300","NA","NA","Migrant",3,0,1
+"157","(15,35]","Female","South Asian","100-300","NA","No","Migrant",4,0,0
+"158","(15,35]","Female","South Asian","100-300","NA","Yes","Contact",5,0,0
+"159","(15,35]","Female","South Asian","100-300","NA","Yes","Migrant",9,1,3
+"160","(15,35]","Female","South Asian","41-100","(0,5]","Yes","Migrant",1,0,0
+"161","(15,35]","Female","South Asian","NA","(0,5]","NA","Contact",2,0,2
+"162","(15,35]","Female","South Asian","NA","(0,5]","No","Contact",5,0,5
+"163","(15,35]","Female","South Asian","NA","(0,5]","Yes","Contact",13,1,12
+"164","(15,35]","Female","South Asian","NA","(0,5]","Yes","Migrant",8,0,5
+"165","(15,35]","Female","South Asian","NA","(10,100]","Yes","Contact",5,0,4
+"166","(15,35]","Female","South Asian","NA","(5,10]","No","Contact",3,0,2
+"167","(15,35]","Female","South Asian","NA","(5,10]","Yes","Contact",7,1,5
+"168","(15,35]","Female","South Asian","NA","(5,10]","Yes","Migrant",1,0,1
+"169","(15,35]","Female","South Asian","NA","NA","NA","Contact",23,0,2
+"170","(15,35]","Female","South Asian","NA","NA","NA","Migrant",2,0,0
+"171","(15,35]","Female","South Asian","NA","NA","No","Contact",14,0,1
+"172","(15,35]","Female","South Asian","NA","NA","No","Migrant",5,0,2
+"173","(15,35]","Female","South Asian","NA","NA","Yes","Contact",153,3,27
+"174","(15,35]","Female","South Asian","NA","NA","Yes","Migrant",22,0,2
+"175","(15,35]","Female","White","<40","(0,5]","NA","Contact",3,0,1
+"176","(15,35]","Female","White","<40","(0,5]","NA","Migrant",1,0,0
+"177","(15,35]","Female","White","<40","(0,5]","No","Contact",3,0,0
+"178","(15,35]","Female","White","<40","(0,5]","No","Migrant",2,0,0
+"179","(15,35]","Female","White","<40","(0,5]","Yes","Contact",20,0,4
+"180","(15,35]","Female","White","<40","(0,5]","Yes","Migrant",1,0,0
+"181","(15,35]","Female","White","<40","(10,100]","NA","Contact",1,0,0
+"182","(15,35]","Female","White","<40","(10,100]","Yes","Contact",9,1,2
+"183","(15,35]","Female","White","<40","(5,10]","NA","Contact",1,0,1
+"184","(15,35]","Female","White","<40","(5,10]","No","Contact",4,0,0
+"185","(15,35]","Female","White","<40","(5,10]","Yes","Contact",22,0,1
+"186","(15,35]","Female","White","<40","(5,10]","Yes","Migrant",1,0,0
+"187","(15,35]","Female","White","<40","NA","No","Contact",1,0,0
+"188","(15,35]","Female","White","<40","NA","Yes","Contact",1,0,0
+"189","(15,35]","Female","White",">300","(0,5]","NA","Contact",1,0,0
+"190","(15,35]","Female","White",">300","(0,5]","NA","Migrant",1,0,0
+"191","(15,35]","Female","White",">300","(0,5]","No","Migrant",1,0,0
+"192","(15,35]","Female","White",">300","(0,5]","Yes","Migrant",2,0,1
+"193","(15,35]","Female","White","100-300","(0,5]","Yes","Contact",1,0,1
+"194","(15,35]","Female","White","41-100","(0,5]","NA","Contact",2,0,1
+"195","(15,35]","Female","White","41-100","(0,5]","NA","Migrant",6,0,1
+"196","(15,35]","Female","White","41-100","(0,5]","No","Contact",2,0,1
+"197","(15,35]","Female","White","41-100","(0,5]","No","Migrant",11,0,0
+"198","(15,35]","Female","White","41-100","(0,5]","Yes","Contact",19,0,4
+"199","(15,35]","Female","White","41-100","(0,5]","Yes","Migrant",62,0,8
+"200","(15,35]","Female","White","41-100","(10,100]","NA","Contact",1,0,0
+"201","(15,35]","Female","White","41-100","(10,100]","Yes","Contact",2,0,1
+"202","(15,35]","Female","White","41-100","(5,10]","NA","Contact",1,0,0
+"203","(15,35]","Female","White","41-100","(5,10]","NA","Migrant",2,0,0
+"204","(15,35]","Female","White","41-100","(5,10]","No","Migrant",3,0,0
+"205","(15,35]","Female","White","41-100","(5,10]","Yes","Contact",7,0,2
+"206","(15,35]","Female","White","41-100","(5,10]","Yes","Migrant",7,0,1
+"207","(15,35]","Female","White","NA","(0,5]","NA","Contact",2,0,2
+"208","(15,35]","Female","White","NA","(0,5]","No","Contact",2,0,2
+"209","(15,35]","Female","White","NA","(0,5]","Yes","Contact",4,0,4
+"210","(15,35]","Female","White","NA","(10,100]","Yes","Contact",1,0,1
+"211","(15,35]","Female","White","NA","(5,10]","Yes","Contact",4,0,3
+"212","(15,35]","Female","White","NA","NA","NA","Contact",8,0,4
+"213","(15,35]","Female","White","NA","NA","NA","Migrant",1,0,0
+"214","(15,35]","Female","White","NA","NA","No","Contact",29,0,4
+"215","(15,35]","Female","White","NA","NA","Yes","Contact",85,1,7
+"216","(15,35]","Female","White","NA","NA","Yes","Migrant",2,0,0
+"217","(15,35]","Male","Black African or Caribbean","<40","(0,5]","NA","Contact",1,0,0
+"218","(15,35]","Male","Black African or Caribbean","<40","(0,5]","Yes","Contact",3,0,1
+"219","(15,35]","Male","Black African or Caribbean","<40","(10,100]","No","Contact",2,0,1
+"220","(15,35]","Male","Black African or Caribbean","<40","(10,100]","No","Migrant",1,0,0
+"221","(15,35]","Male","Black African or Caribbean","<40","(10,100]","Yes","Contact",7,0,1
+"222","(15,35]","Male","Black African or Caribbean","<40","(5,10]","NA","Contact",1,0,0
+"223","(15,35]","Male","Black African or Caribbean","<40","(5,10]","No","Contact",1,0,0
+"224","(15,35]","Male","Black African or Caribbean","<40","(5,10]","Yes","Contact",3,0,1
+"225","(15,35]","Male","Black African or Caribbean","<40","NA","NA","Contact",1,0,1
+"226","(15,35]","Male","Black African or Caribbean","<40","NA","Yes","Contact",2,0,0
+"227","(15,35]","Male","Black African or Caribbean",">300","(0,5]","NA","Contact",3,0,1
+"228","(15,35]","Male","Black African or Caribbean",">300","(0,5]","NA","Migrant",2,0,0
+"229","(15,35]","Male","Black African or Caribbean",">300","(0,5]","No","Contact",1,0,0
+"230","(15,35]","Male","Black African or Caribbean",">300","(0,5]","No","Migrant",4,0,2
+"231","(15,35]","Male","Black African or Caribbean",">300","(0,5]","Yes","Contact",7,0,3
+"232","(15,35]","Male","Black African or Caribbean",">300","(0,5]","Yes","Migrant",21,0,5
+"233","(15,35]","Male","Black African or Caribbean",">300","(10,100]","NA","Contact",3,0,1
+"234","(15,35]","Male","Black African or Caribbean",">300","(10,100]","NA","Migrant",1,0,1
+"235","(15,35]","Male","Black African or Caribbean",">300","(10,100]","Yes","Contact",11,1,4
+"236","(15,35]","Male","Black African or Caribbean",">300","(5,10]","NA","Contact",1,0,1
+"237","(15,35]","Male","Black African or Caribbean",">300","(5,10]","No","Contact",1,0,0
+"238","(15,35]","Male","Black African or Caribbean",">300","(5,10]","Yes","Contact",3,0,1
+"239","(15,35]","Male","Black African or Caribbean",">300","(5,10]","Yes","Migrant",1,0,0
+"240","(15,35]","Male","Black African or Caribbean",">300","NA","NA","Contact",1,0,0
+"241","(15,35]","Male","Black African or Caribbean",">300","NA","Yes","Migrant",1,0,0
+"242","(15,35]","Male","Black African or Caribbean","100-300","(0,5]","NA","Contact",1,0,0
+"243","(15,35]","Male","Black African or Caribbean","100-300","(0,5]","NA","Migrant",8,0,1
+"244","(15,35]","Male","Black African or Caribbean","100-300","(0,5]","No","Contact",4,0,1
+"245","(15,35]","Male","Black African or Caribbean","100-300","(0,5]","No","Migrant",15,1,5
+"246","(15,35]","Male","Black African or Caribbean","100-300","(0,5]","Yes","Contact",10,0,3
+"247","(15,35]","Male","Black African or Caribbean","100-300","(0,5]","Yes","Migrant",33,1,11
+"248","(15,35]","Male","Black African or Caribbean","100-300","(10,100]","NA","Contact",2,0,2
+"249","(15,35]","Male","Black African or Caribbean","100-300","(10,100]","NA","Migrant",1,0,0
+"250","(15,35]","Male","Black African or Caribbean","100-300","(10,100]","No","Contact",2,0,0
+"251","(15,35]","Male","Black African or Caribbean","100-300","(10,100]","Yes","Contact",31,0,10
+"252","(15,35]","Male","Black African or Caribbean","100-300","(10,100]","Yes","Migrant",3,0,0
+"253","(15,35]","Male","Black African or Caribbean","100-300","(5,10]","NA","Contact",1,0,1
+"254","(15,35]","Male","Black African or Caribbean","100-300","(5,10]","NA","Migrant",2,0,0
+"255","(15,35]","Male","Black African or Caribbean","100-300","(5,10]","No","Contact",2,0,0
+"256","(15,35]","Male","Black African or Caribbean","100-300","(5,10]","No","Migrant",2,0,1
+"257","(15,35]","Male","Black African or Caribbean","100-300","(5,10]","Yes","Contact",11,1,3
+"258","(15,35]","Male","Black African or Caribbean","100-300","(5,10]","Yes","Migrant",1,0,1
+"259","(15,35]","Male","Black African or Caribbean","41-100","(0,5]","NA","Contact",2,0,0
+"260","(15,35]","Male","Black African or Caribbean","41-100","(0,5]","NA","Migrant",6,0,3
+"261","(15,35]","Male","Black African or Caribbean","41-100","(0,5]","No","Migrant",1,0,1
+"262","(15,35]","Male","Black African or Caribbean","41-100","(0,5]","Yes","Contact",6,0,2
+"263","(15,35]","Male","Black African or Caribbean","41-100","(0,5]","Yes","Migrant",11,0,4
+"264","(15,35]","Male","Black African or Caribbean","41-100","(10,100]","Yes","Contact",2,0,0
+"265","(15,35]","Male","Black African or Caribbean","41-100","(5,10]","NA","Contact",1,0,0
+"266","(15,35]","Male","Black African or Caribbean","41-100","(5,10]","No","Contact",2,0,2
+"267","(15,35]","Male","Black African or Caribbean","41-100","(5,10]","No","Migrant",1,0,0
+"268","(15,35]","Male","Black African or Caribbean","41-100","(5,10]","Yes","Contact",5,0,3
+"269","(15,35]","Male","Black African or Caribbean","41-100","(5,10]","Yes","Migrant",1,0,0
+"270","(15,35]","Male","Black African or Caribbean","NA","(0,5]","NA","Contact",1,0,1
+"271","(15,35]","Male","Black African or Caribbean","NA","(0,5]","No","Contact",1,0,1
+"272","(15,35]","Male","Black African or Caribbean","NA","(0,5]","Yes","Contact",7,0,6
+"273","(15,35]","Male","Black African or Caribbean","NA","(0,5]","Yes","Migrant",1,0,0
+"274","(15,35]","Male","Black African or Caribbean","NA","(10,100]","NA","Contact",2,0,2
+"275","(15,35]","Male","Black African or Caribbean","NA","(10,100]","No","Contact",1,0,1
+"276","(15,35]","Male","Black African or Caribbean","NA","(10,100]","Yes","Contact",5,0,5
+"277","(15,35]","Male","Black African or Caribbean","NA","(10,100]","Yes","Migrant",1,0,1
+"278","(15,35]","Male","Black African or Caribbean","NA","(5,10]","Yes","Contact",3,0,3
+"279","(15,35]","Male","Black African or Caribbean","NA","NA","NA","Contact",14,0,2
+"280","(15,35]","Male","Black African or Caribbean","NA","NA","NA","Migrant",1,0,0
+"281","(15,35]","Male","Black African or Caribbean","NA","NA","No","Contact",11,1,2
+"282","(15,35]","Male","Black African or Caribbean","NA","NA","No","Migrant",1,0,0
+"283","(15,35]","Male","Black African or Caribbean","NA","NA","Yes","Contact",38,1,8
+"284","(15,35]","Male","Black African or Caribbean","NA","NA","Yes","Migrant",3,0,2
+"285","(15,35]","Male","Other","<40","(0,5]","NA","Contact",2,0,1
+"286","(15,35]","Male","Other","<40","(0,5]","NA","Migrant",1,0,0
+"287","(15,35]","Male","Other","<40","(0,5]","No","Contact",2,0,0
+"288","(15,35]","Male","Other","<40","(0,5]","Yes","Contact",5,0,0
+"289","(15,35]","Male","Other","<40","(0,5]","Yes","Migrant",2,0,0
+"290","(15,35]","Male","Other","<40","(10,100]","NA","Contact",2,0,1
+"291","(15,35]","Male","Other","<40","(10,100]","Yes","Contact",3,0,0
+"292","(15,35]","Male","Other","<40","(5,10]","NA","Contact",1,0,0
+"293","(15,35]","Male","Other","<40","(5,10]","No","Contact",3,0,0
+"294","(15,35]","Male","Other","<40","(5,10]","Yes","Contact",5,0,2
+"295","(15,35]","Male","Other","<40","(5,10]","Yes","Migrant",1,0,0
+"296","(15,35]","Male","Other","<40","NA","Yes","Contact",1,0,1
+"297","(15,35]","Male","Other",">300","(0,5]","No","Contact",1,0,1
+"298","(15,35]","Male","Other",">300","(0,5]","Yes","Contact",5,0,2
+"299","(15,35]","Male","Other",">300","(0,5]","Yes","Migrant",2,0,2
+"300","(15,35]","Male","Other",">300","(10,100]","Yes","Contact",1,0,1
+"301","(15,35]","Male","Other",">300","(5,10]","NA","Contact",1,0,1
+"302","(15,35]","Male","Other",">300","(5,10]","No","Migrant",1,0,1
+"303","(15,35]","Male","Other",">300","(5,10]","Yes","Contact",5,1,2
+"304","(15,35]","Male","Other",">300","NA","Yes","Migrant",1,0,1
+"305","(15,35]","Male","Other","100-300","(0,5]","NA","Contact",6,0,1
+"306","(15,35]","Male","Other","100-300","(0,5]","NA","Migrant",2,0,1
+"307","(15,35]","Male","Other","100-300","(0,5]","No","Contact",5,0,2
+"308","(15,35]","Male","Other","100-300","(0,5]","No","Migrant",9,0,3
+"309","(15,35]","Male","Other","100-300","(0,5]","Yes","Contact",40,1,18
+"310","(15,35]","Male","Other","100-300","(0,5]","Yes","Migrant",11,0,2
+"311","(15,35]","Male","Other","100-300","(10,100]","NA","Contact",4,0,1
+"312","(15,35]","Male","Other","100-300","(10,100]","NA","Migrant",1,0,0
+"313","(15,35]","Male","Other","100-300","(10,100]","No","Contact",2,0,0
+"314","(15,35]","Male","Other","100-300","(10,100]","No","Migrant",1,0,0
+"315","(15,35]","Male","Other","100-300","(10,100]","Yes","Contact",12,0,3
+"316","(15,35]","Male","Other","100-300","(10,100]","Yes","Migrant",1,0,0
+"317","(15,35]","Male","Other","100-300","(5,10]","NA","Contact",1,0,0
+"318","(15,35]","Male","Other","100-300","(5,10]","No","Contact",4,0,3
+"319","(15,35]","Male","Other","100-300","(5,10]","No","Migrant",1,0,0
+"320","(15,35]","Male","Other","100-300","(5,10]","Yes","Contact",19,0,5
+"321","(15,35]","Male","Other","100-300","(5,10]","Yes","Migrant",2,0,1
+"322","(15,35]","Male","Other","41-100","(0,5]","NA","Contact",1,0,0
+"323","(15,35]","Male","Other","41-100","(0,5]","NA","Migrant",7,0,1
+"324","(15,35]","Male","Other","41-100","(0,5]","No","Contact",1,0,0
+"325","(15,35]","Male","Other","41-100","(0,5]","No","Migrant",6,0,0
+"326","(15,35]","Male","Other","41-100","(0,5]","Yes","Contact",16,0,3
+"327","(15,35]","Male","Other","41-100","(0,5]","Yes","Migrant",27,0,2
+"328","(15,35]","Male","Other","41-100","(10,100]","NA","Contact",2,0,0
+"329","(15,35]","Male","Other","41-100","(10,100]","NA","Migrant",1,0,0
+"330","(15,35]","Male","Other","41-100","(10,100]","No","Contact",3,0,0
+"331","(15,35]","Male","Other","41-100","(10,100]","Yes","Contact",13,0,3
+"332","(15,35]","Male","Other","41-100","(10,100]","Yes","Migrant",1,0,0
+"333","(15,35]","Male","Other","41-100","(5,10]","NA","Contact",2,0,0
+"334","(15,35]","Male","Other","41-100","(5,10]","NA","Migrant",1,0,0
+"335","(15,35]","Male","Other","41-100","(5,10]","Yes","Contact",7,0,3
+"336","(15,35]","Male","Other","41-100","(5,10]","Yes","Migrant",2,0,1
+"337","(15,35]","Male","Other","NA","(0,5]","NA","Contact",1,0,1
+"338","(15,35]","Male","Other","NA","(0,5]","No","Contact",2,0,2
+"339","(15,35]","Male","Other","NA","(0,5]","Yes","Contact",2,0,2
+"340","(15,35]","Male","Other","NA","(10,100]","Yes","Contact",1,0,1
+"341","(15,35]","Male","Other","NA","(5,10]","NA","Contact",1,0,1
+"342","(15,35]","Male","Other","NA","(5,10]","No","Contact",1,0,1
+"343","(15,35]","Male","Other","NA","(5,10]","Yes","Contact",3,0,3
+"344","(15,35]","Male","Other","NA","NA","NA","Contact",11,0,1
+"345","(15,35]","Male","Other","NA","NA","No","Contact",13,0,4
+"346","(15,35]","Male","Other","NA","NA","No","Migrant",2,0,1
+"347","(15,35]","Male","Other","NA","NA","Yes","Contact",63,1,11
+"348","(15,35]","Male","Other","NA","NA","Yes","Migrant",1,0,0
+"349","(15,35]","Male","South Asian","<40","(0,5]","No","Migrant",1,0,0
+"350","(15,35]","Male","South Asian","<40","(0,5]","Yes","Contact",1,0,0
+"351","(15,35]","Male","South Asian","<40","(0,5]","Yes","Migrant",2,0,0
+"352","(15,35]","Male","South Asian","<40","(10,100]","No","Contact",1,0,1
+"353","(15,35]","Male","South Asian","<40","(10,100]","No","Migrant",1,0,0
+"354","(15,35]","Male","South Asian","<40","(10,100]","Yes","Contact",1,0,0
+"355","(15,35]","Male","South Asian","<40","(5,10]","NA","Contact",1,0,0
+"356","(15,35]","Male","South Asian","<40","(5,10]","Yes","Contact",3,0,0
+"357","(15,35]","Male","South Asian",">300","(5,10]","No","Migrant",1,0,0
+"358","(15,35]","Male","South Asian","100-300","(0,5]","NA","Contact",29,0,8
+"359","(15,35]","Male","South Asian","100-300","(0,5]","NA","Migrant",156,2,42
+"360","(15,35]","Male","South Asian","100-300","(0,5]","No","Contact",39,1,17
+"361","(15,35]","Male","South Asian","100-300","(0,5]","No","Migrant",235,2,55
+"362","(15,35]","Male","South Asian","100-300","(0,5]","Yes","Contact",159,6,47
+"363","(15,35]","Male","South Asian","100-300","(0,5]","Yes","Migrant",501,11,139
+"364","(15,35]","Male","South Asian","100-300","(10,100]","NA","Contact",9,0,4
+"365","(15,35]","Male","South Asian","100-300","(10,100]","NA","Migrant",4,0,0
+"366","(15,35]","Male","South Asian","100-300","(10,100]","No","Contact",7,0,1
+"367","(15,35]","Male","South Asian","100-300","(10,100]","No","Migrant",7,0,1
+"368","(15,35]","Male","South Asian","100-300","(10,100]","Yes","Contact",54,0,8
+"369","(15,35]","Male","South Asian","100-300","(10,100]","Yes","Migrant",18,0,2
+"370","(15,35]","Male","South Asian","100-300","(5,10]","NA","Contact",19,1,7
+"371","(15,35]","Male","South Asian","100-300","(5,10]","NA","Migrant",15,1,2
+"372","(15,35]","Male","South Asian","100-300","(5,10]","No","Contact",16,0,6
+"373","(15,35]","Male","South Asian","100-300","(5,10]","No","Migrant",27,0,8
+"374","(15,35]","Male","South Asian","100-300","(5,10]","Yes","Contact",89,4,18
+"375","(15,35]","Male","South Asian","100-300","(5,10]","Yes","Migrant",49,0,13
+"376","(15,35]","Male","South Asian","100-300","NA","NA","Contact",1,0,0
+"377","(15,35]","Male","South Asian","100-300","NA","NA","Migrant",1,0,0
+"378","(15,35]","Male","South Asian","100-300","NA","No","Contact",3,0,1
+"379","(15,35]","Male","South Asian","100-300","NA","No","Migrant",2,1,2
+"380","(15,35]","Male","South Asian","100-300","NA","Yes","Contact",5,0,2
+"381","(15,35]","Male","South Asian","100-300","NA","Yes","Migrant",11,0,4
+"382","(15,35]","Male","South Asian","41-100","(0,5]","Yes","Contact",1,0,0
+"383","(15,35]","Male","South Asian","41-100","(0,5]","Yes","Migrant",2,0,0
+"384","(15,35]","Male","South Asian","41-100","(5,10]","Yes","Contact",1,0,1
+"385","(15,35]","Male","South Asian","NA","(0,5]","NA","Contact",8,0,7
+"386","(15,35]","Male","South Asian","NA","(0,5]","NA","Migrant",2,0,2
+"387","(15,35]","Male","South Asian","NA","(0,5]","No","Contact",5,0,4
+"388","(15,35]","Male","South Asian","NA","(0,5]","No","Migrant",3,0,2
+"389","(15,35]","Male","South Asian","NA","(0,5]","Yes","Contact",32,0,31
+"390","(15,35]","Male","South Asian","NA","(0,5]","Yes","Migrant",3,0,3
+"391","(15,35]","Male","South Asian","NA","(10,100]","NA","Contact",2,0,2
+"392","(15,35]","Male","South Asian","NA","(10,100]","No","Contact",1,0,1
+"393","(15,35]","Male","South Asian","NA","(10,100]","No","Migrant",1,0,1
+"394","(15,35]","Male","South Asian","NA","(10,100]","Yes","Contact",3,0,3
+"395","(15,35]","Male","South Asian","NA","(5,10]","NA","Contact",2,0,2
+"396","(15,35]","Male","South Asian","NA","(5,10]","No","Contact",4,0,4
+"397","(15,35]","Male","South Asian","NA","(5,10]","No","Migrant",1,0,1
+"398","(15,35]","Male","South Asian","NA","(5,10]","Yes","Contact",14,0,12
+"399","(15,35]","Male","South Asian","NA","(5,10]","Yes","Migrant",2,0,2
+"400","(15,35]","Male","South Asian","NA","NA","NA","Contact",21,0,7
+"401","(15,35]","Male","South Asian","NA","NA","NA","Migrant",3,0,1
+"402","(15,35]","Male","South Asian","NA","NA","No","Contact",22,1,7
+"403","(15,35]","Male","South Asian","NA","NA","No","Migrant",4,0,0
+"404","(15,35]","Male","South Asian","NA","NA","Yes","Contact",132,0,17
+"405","(15,35]","Male","South Asian","NA","NA","Yes","Migrant",20,0,4
+"406","(15,35]","Male","White","<40","(0,5]","NA","Contact",6,0,1
+"407","(15,35]","Male","White","<40","(0,5]","NA","Migrant",2,0,0
+"408","(15,35]","Male","White","<40","(0,5]","No","Contact",9,0,1
+"409","(15,35]","Male","White","<40","(0,5]","No","Migrant",1,0,0
+"410","(15,35]","Male","White","<40","(0,5]","Yes","Contact",13,0,2
+"411","(15,35]","Male","White","<40","(0,5]","Yes","Migrant",4,0,0
+"412","(15,35]","Male","White","<40","(10,100]","NA","Contact",5,1,1
+"413","(15,35]","Male","White","<40","(10,100]","No","Contact",1,0,0
+"414","(15,35]","Male","White","<40","(10,100]","Yes","Contact",13,0,1
+"415","(15,35]","Male","White","<40","(5,10]","NA","Contact",4,0,1
+"416","(15,35]","Male","White","<40","(5,10]","No","Contact",3,0,0
+"417","(15,35]","Male","White","<40","(5,10]","No","Migrant",1,0,0
+"418","(15,35]","Male","White","<40","(5,10]","Yes","Contact",5,0,0
+"419","(15,35]","Male","White","<40","NA","No","Contact",1,0,0
+"420","(15,35]","Male","White","<40","NA","Yes","Contact",1,0,0
+"421","(15,35]","Male","White",">300","(10,100]","Yes","Contact",1,0,0
+"422","(15,35]","Male","White",">300","(5,10]","Yes","Contact",1,0,0
+"423","(15,35]","Male","White","100-300","(0,5]","NA","Migrant",2,0,0
+"424","(15,35]","Male","White","100-300","(0,5]","Yes","Contact",1,0,0
+"425","(15,35]","Male","White","100-300","(10,100]","NA","Contact",1,0,1
+"426","(15,35]","Male","White","100-300","(10,100]","No","Contact",1,0,0
+"427","(15,35]","Male","White","100-300","(10,100]","Yes","Contact",1,0,0
+"428","(15,35]","Male","White","100-300","(5,10]","Yes","Contact",2,1,0
+"429","(15,35]","Male","White","41-100","(0,5]","NA","Contact",2,0,1
+"430","(15,35]","Male","White","41-100","(0,5]","NA","Migrant",5,0,1
+"431","(15,35]","Male","White","41-100","(0,5]","No","Contact",1,0,0
+"432","(15,35]","Male","White","41-100","(0,5]","No","Migrant",3,0,1
+"433","(15,35]","Male","White","41-100","(0,5]","Yes","Contact",8,1,3
+"434","(15,35]","Male","White","41-100","(0,5]","Yes","Migrant",16,0,5
+"435","(15,35]","Male","White","41-100","(10,100]","Yes","Contact",2,0,2
+"436","(15,35]","Male","White","41-100","(5,10]","NA","Migrant",1,0,0
+"437","(15,35]","Male","White","41-100","(5,10]","No","Contact",1,0,1
+"438","(15,35]","Male","White","41-100","(5,10]","Yes","Contact",9,0,3
+"439","(15,35]","Male","White","41-100","(5,10]","Yes","Migrant",3,0,1
+"440","(15,35]","Male","White","NA","(0,5]","NA","Contact",1,0,0
+"441","(15,35]","Male","White","NA","(0,5]","Yes","Contact",1,0,1
+"442","(15,35]","Male","White","NA","(10,100]","Yes","Contact",1,0,0
+"443","(15,35]","Male","White","NA","(5,10]","NA","Contact",2,0,2
+"444","(15,35]","Male","White","NA","(5,10]","Yes","Contact",2,0,2
+"445","(15,35]","Male","White","NA","(5,10]","Yes","Migrant",1,0,0
+"446","(15,35]","Male","White","NA","NA","NA","Contact",8,0,2
+"447","(15,35]","Male","White","NA","NA","No","Contact",18,0,3
+"448","(15,35]","Male","White","NA","NA","No","Migrant",3,0,0
+"449","(15,35]","Male","White","NA","NA","Yes","Contact",89,0,20
+"450","(15,35]","Male","White","NA","NA","Yes","Migrant",4,0,0
+"451","(35,55]","Female","Black African or Caribbean","<40","(10,100]","Yes","Contact",15,1,0
+"452","(35,55]","Female","Black African or Caribbean","<40","(10,100]","Yes","Migrant",1,0,0
+"453","(35,55]","Female","Black African or Caribbean","<40","(5,10]","Yes","Contact",1,0,0
+"454","(35,55]","Female","Black African or Caribbean",">300","(0,5]","No","Migrant",2,0,2
+"455","(35,55]","Female","Black African or Caribbean",">300","(0,5]","Yes","Contact",4,0,2
+"456","(35,55]","Female","Black African or Caribbean",">300","(0,5]","Yes","Migrant",8,0,0
+"457","(35,55]","Female","Black African or Caribbean",">300","(10,100]","NA","Contact",5,0,2
+"458","(35,55]","Female","Black African or Caribbean",">300","(10,100]","No","Contact",1,1,1
+"459","(35,55]","Female","Black African or Caribbean",">300","(10,100]","Yes","Contact",27,1,9
+"460","(35,55]","Female","Black African or Caribbean",">300","(10,100]","Yes","Migrant",3,0,0
+"461","(35,55]","Female","Black African or Caribbean",">300","(5,10]","Yes","Contact",6,0,3
+"462","(35,55]","Female","Black African or Caribbean",">300","(5,10]","Yes","Migrant",2,0,1
+"463","(35,55]","Female","Black African or Caribbean",">300","NA","Yes","Contact",1,0,0
+"464","(35,55]","Female","Black African or Caribbean","100-300","(0,5]","NA","Contact",1,0,1
+"465","(35,55]","Female","Black African or Caribbean","100-300","(0,5]","NA","Migrant",3,0,2
+"466","(35,55]","Female","Black African or Caribbean","100-300","(0,5]","No","Contact",2,0,1
+"467","(35,55]","Female","Black African or Caribbean","100-300","(0,5]","No","Migrant",6,0,2
+"468","(35,55]","Female","Black African or Caribbean","100-300","(0,5]","Yes","Contact",4,0,1
+"469","(35,55]","Female","Black African or Caribbean","100-300","(0,5]","Yes","Migrant",13,0,3
+"470","(35,55]","Female","Black African or Caribbean","100-300","(10,100]","NA","Contact",4,0,3
+"471","(35,55]","Female","Black African or Caribbean","100-300","(10,100]","No","Contact",6,0,2
+"472","(35,55]","Female","Black African or Caribbean","100-300","(10,100]","Yes","Contact",55,1,27
+"473","(35,55]","Female","Black African or Caribbean","100-300","(10,100]","Yes","Migrant",3,0,0
+"474","(35,55]","Female","Black African or Caribbean","100-300","(5,10]","NA","Migrant",2,0,1
+"475","(35,55]","Female","Black African or Caribbean","100-300","(5,10]","No","Contact",1,0,0
+"476","(35,55]","Female","Black African or Caribbean","100-300","(5,10]","Yes","Contact",12,0,7
+"477","(35,55]","Female","Black African or Caribbean","41-100","(0,5]","Yes","Migrant",1,0,0
+"478","(35,55]","Female","Black African or Caribbean","41-100","(10,100]","Yes","Contact",7,1,3
+"479","(35,55]","Female","Black African or Caribbean","41-100","(5,10]","Yes","Contact",3,0,0
+"480","(35,55]","Female","Black African or Caribbean","41-100","(5,10]","Yes","Migrant",1,0,0
+"481","(35,55]","Female","Black African or Caribbean","NA","(0,5]","NA","Migrant",1,0,1
+"482","(35,55]","Female","Black African or Caribbean","NA","(0,5]","No","Migrant",1,0,1
+"483","(35,55]","Female","Black African or Caribbean","NA","(10,100]","Yes","Contact",1,0,1
+"484","(35,55]","Female","Black African or Caribbean","NA","NA","NA","Contact",5,0,1
+"485","(35,55]","Female","Black African or Caribbean","NA","NA","NA","Migrant",2,0,0
+"486","(35,55]","Female","Black African or Caribbean","NA","NA","No","Contact",3,0,0
+"487","(35,55]","Female","Black African or Caribbean","NA","NA","Yes","Contact",28,0,5
+"488","(35,55]","Female","Black African or Caribbean","NA","NA","Yes","Migrant",1,0,0
+"489","(35,55]","Female","Other","<40","(0,5]","NA","Contact",1,0,0
+"490","(35,55]","Female","Other","<40","(0,5]","Yes","Contact",3,0,1
+"491","(35,55]","Female","Other","<40","(10,100]","Yes","Contact",12,0,3
+"492","(35,55]","Female","Other","<40","(10,100]","Yes","Migrant",1,0,0
+"493","(35,55]","Female","Other","<40","(5,10]","NA","Contact",1,0,0
+"494","(35,55]","Female","Other","<40","(5,10]","Yes","Contact",1,0,0
+"495","(35,55]","Female","Other",">300","(0,5]","No","Migrant",1,0,0
+"496","(35,55]","Female","Other",">300","(0,5]","Yes","Contact",2,0,1
+"497","(35,55]","Female","Other",">300","(0,5]","Yes","Migrant",4,0,1
+"498","(35,55]","Female","Other",">300","(10,100]","NA","Contact",2,0,1
+"499","(35,55]","Female","Other",">300","(10,100]","Yes","Contact",7,0,2
+"500","(35,55]","Female","Other",">300","(10,100]","Yes","Migrant",2,0,1
+"501","(35,55]","Female","Other",">300","(5,10]","Yes","Contact",3,0,0
+"502","(35,55]","Female","Other","100-300","(0,5]","NA","Migrant",3,0,3
+"503","(35,55]","Female","Other","100-300","(0,5]","No","Contact",1,0,0
+"504","(35,55]","Female","Other","100-300","(0,5]","No","Migrant",1,0,0
+"505","(35,55]","Female","Other","100-300","(0,5]","Yes","Contact",6,0,4
+"506","(35,55]","Female","Other","100-300","(0,5]","Yes","Migrant",3,0,1
+"507","(35,55]","Female","Other","100-300","(10,100]","NA","Contact",3,0,1
+"508","(35,55]","Female","Other","100-300","(10,100]","No","Contact",3,0,0
+"509","(35,55]","Female","Other","100-300","(10,100]","No","Migrant",2,0,0
+"510","(35,55]","Female","Other","100-300","(10,100]","Yes","Contact",21,0,9
+"511","(35,55]","Female","Other","100-300","(10,100]","Yes","Migrant",6,0,3
+"512","(35,55]","Female","Other","100-300","(5,10]","NA","Contact",3,0,3
+"513","(35,55]","Female","Other","100-300","(5,10]","Yes","Contact",9,0,4
+"514","(35,55]","Female","Other","100-300","(5,10]","Yes","Migrant",4,0,1
+"515","(35,55]","Female","Other","100-300","NA","Yes","Migrant",1,0,0
+"516","(35,55]","Female","Other","41-100","(0,5]","No","Migrant",1,0,0
+"517","(35,55]","Female","Other","41-100","(0,5]","Yes","Migrant",12,0,3
+"518","(35,55]","Female","Other","41-100","(10,100]","NA","Contact",2,0,1
+"519","(35,55]","Female","Other","41-100","(10,100]","No","Contact",2,0,1
+"520","(35,55]","Female","Other","41-100","(10,100]","Yes","Contact",9,0,3
+"521","(35,55]","Female","Other","41-100","(10,100]","Yes","Migrant",1,0,0
+"522","(35,55]","Female","Other","41-100","(5,10]","NA","Migrant",1,0,0
+"523","(35,55]","Female","Other","41-100","(5,10]","No","Migrant",1,0,0
+"524","(35,55]","Female","Other","41-100","(5,10]","Yes","Contact",4,0,3
+"525","(35,55]","Female","Other","41-100","(5,10]","Yes","Migrant",1,0,0
+"526","(35,55]","Female","Other","41-100","NA","Yes","Migrant",1,0,0
+"527","(35,55]","Female","Other","NA","(10,100]","Yes","Contact",1,0,1
+"528","(35,55]","Female","Other","NA","NA","No","Contact",2,0,0
+"529","(35,55]","Female","Other","NA","NA","Yes","Contact",19,2,3
+"530","(35,55]","Female","Other","NA","NA","Yes","Migrant",1,0,0
+"531","(35,55]","Female","South Asian","<40","(0,5]","Yes","Migrant",1,0,0
+"532","(35,55]","Female","South Asian","<40","(10,100]","No","Migrant",1,0,0
+"533","(35,55]","Female","South Asian",">300","(0,5]","NA","Migrant",1,0,0
+"534","(35,55]","Female","South Asian",">300","(10,100]","NA","Contact",2,0,1
+"535","(35,55]","Female","South Asian",">300","(10,100]","NA","Migrant",1,0,0
+"536","(35,55]","Female","South Asian",">300","(10,100]","No","Contact",2,0,0
+"537","(35,55]","Female","South Asian",">300","(10,100]","Yes","Contact",1,0,0
+"538","(35,55]","Female","South Asian","100-300","(0,5]","NA","Contact",2,0,1
+"539","(35,55]","Female","South Asian","100-300","(0,5]","NA","Migrant",27,1,7
+"540","(35,55]","Female","South Asian","100-300","(0,5]","No","Contact",2,0,1
+"541","(35,55]","Female","South Asian","100-300","(0,5]","No","Migrant",27,0,3
+"542","(35,55]","Female","South Asian","100-300","(0,5]","Yes","Contact",12,0,3
+"543","(35,55]","Female","South Asian","100-300","(0,5]","Yes","Migrant",84,2,27
+"544","(35,55]","Female","South Asian","100-300","(10,100]","NA","Contact",17,0,6
+"545","(35,55]","Female","South Asian","100-300","(10,100]","NA","Migrant",37,0,6
+"546","(35,55]","Female","South Asian","100-300","(10,100]","No","Contact",8,1,3
+"547","(35,55]","Female","South Asian","100-300","(10,100]","No","Migrant",22,0,5
+"548","(35,55]","Female","South Asian","100-300","(10,100]","Yes","Contact",100,2,26
+"549","(35,55]","Female","South Asian","100-300","(10,100]","Yes","Migrant",134,0,27
+"550","(35,55]","Female","South Asian","100-300","(5,10]","NA","Contact",3,0,1
+"551","(35,55]","Female","South Asian","100-300","(5,10]","NA","Migrant",4,0,1
+"552","(35,55]","Female","South Asian","100-300","(5,10]","No","Contact",3,0,1
+"553","(35,55]","Female","South Asian","100-300","(5,10]","No","Migrant",1,0,1
+"554","(35,55]","Female","South Asian","100-300","(5,10]","Yes","Contact",28,0,8
+"555","(35,55]","Female","South Asian","100-300","(5,10]","Yes","Migrant",25,1,6
+"556","(35,55]","Female","South Asian","100-300","NA","Yes","Contact",1,0,0
+"557","(35,55]","Female","South Asian","100-300","NA","Yes","Migrant",8,0,1
+"558","(35,55]","Female","South Asian","41-100","(0,5]","Yes","Migrant",1,0,1
+"559","(35,55]","Female","South Asian","41-100","(10,100]","NA","Migrant",1,0,0
+"560","(35,55]","Female","South Asian","41-100","(10,100]","Yes","Contact",2,0,0
+"561","(35,55]","Female","South Asian","NA","(0,5]","Yes","Migrant",1,0,0
+"562","(35,55]","Female","South Asian","NA","(10,100]","NA","Migrant",1,0,0
+"563","(35,55]","Female","South Asian","NA","(10,100]","Yes","Migrant",1,0,1
+"564","(35,55]","Female","South Asian","NA","NA","NA","Contact",2,0,1
+"565","(35,55]","Female","South Asian","NA","NA","No","Contact",2,0,0
+"566","(35,55]","Female","South Asian","NA","NA","No","Migrant",1,0,0
+"567","(35,55]","Female","South Asian","NA","NA","Yes","Contact",24,0,3
+"568","(35,55]","Female","South Asian","NA","NA","Yes","Migrant",10,0,1
+"569","(35,55]","Female","White","<40","(0,5]","NA","Contact",2,0,1
+"570","(35,55]","Female","White","<40","(0,5]","Yes","Contact",3,1,2
+"571","(35,55]","Female","White","<40","(10,100]","No","Contact",3,0,1
+"572","(35,55]","Female","White","<40","(10,100]","Yes","Contact",19,2,4
+"573","(35,55]","Female","White","<40","(10,100]","Yes","Migrant",1,0,0
+"574","(35,55]","Female","White","<40","(5,10]","NA","Contact",2,0,0
+"575","(35,55]","Female","White","<40","(5,10]","Yes","Contact",11,0,6
+"576","(35,55]","Female","White",">300","(10,100]","No","Migrant",1,0,0
+"577","(35,55]","Female","White","100-300","(10,100]","Yes","Contact",3,0,1
+"578","(35,55]","Female","White","100-300","(5,10]","NA","Contact",1,0,1
+"579","(35,55]","Female","White","100-300","(5,10]","Yes","Contact",1,0,0
+"580","(35,55]","Female","White","41-100","(0,5]","NA","Migrant",3,0,2
+"581","(35,55]","Female","White","41-100","(0,5]","No","Migrant",2,0,1
+"582","(35,55]","Female","White","41-100","(0,5]","Yes","Contact",5,1,3
+"583","(35,55]","Female","White","41-100","(0,5]","Yes","Migrant",17,0,7
+"584","(35,55]","Female","White","41-100","(10,100]","Yes","Contact",7,0,1
+"585","(35,55]","Female","White","41-100","(10,100]","Yes","Migrant",1,0,0
+"586","(35,55]","Female","White","41-100","(5,10]","Yes","Contact",3,1,3
+"587","(35,55]","Female","White","41-100","(5,10]","Yes","Migrant",2,0,0
+"588","(35,55]","Female","White","NA","(10,100]","NA","Contact",1,0,0
+"589","(35,55]","Female","White","NA","NA","NA","Contact",10,1,3
+"590","(35,55]","Female","White","NA","NA","NA","Migrant",1,0,0
+"591","(35,55]","Female","White","NA","NA","No","Contact",10,0,1
+"592","(35,55]","Female","White","NA","NA","Yes","Contact",79,0,7
+"593","(35,55]","Female","White","NA","NA","Yes","Migrant",3,0,1
+"594","(35,55]","Male","Black African or Caribbean","<40","(0,5]","Yes","Migrant",1,0,1
+"595","(35,55]","Male","Black African or Caribbean","<40","(10,100]","NA","Contact",1,0,1
+"596","(35,55]","Male","Black African or Caribbean","<40","(10,100]","Yes","Contact",7,0,3
+"597","(35,55]","Male","Black African or Caribbean","<40","(5,10]","Yes","Contact",2,0,1
+"598","(35,55]","Male","Black African or Caribbean",">300","(0,5]","NA","Migrant",4,0,3
+"599","(35,55]","Male","Black African or Caribbean",">300","(0,5]","No","Contact",1,0,1
+"600","(35,55]","Male","Black African or Caribbean",">300","(0,5]","Yes","Contact",1,0,1
+"601","(35,55]","Male","Black African or Caribbean",">300","(0,5]","Yes","Migrant",7,0,3
+"602","(35,55]","Male","Black African or Caribbean",">300","(10,100]","NA","Contact",2,1,1
+"603","(35,55]","Male","Black African or Caribbean",">300","(10,100]","No","Migrant",1,0,0
+"604","(35,55]","Male","Black African or Caribbean",">300","(10,100]","Yes","Contact",16,0,7
+"605","(35,55]","Male","Black African or Caribbean",">300","(10,100]","Yes","Migrant",1,0,1
+"606","(35,55]","Male","Black African or Caribbean",">300","(5,10]","NA","Contact",1,0,1
+"607","(35,55]","Male","Black African or Caribbean",">300","(5,10]","Yes","Contact",2,0,1
+"608","(35,55]","Male","Black African or Caribbean","100-300","(0,5]","NA","Contact",1,0,0
+"609","(35,55]","Male","Black African or Caribbean","100-300","(0,5]","No","Migrant",1,0,0
+"610","(35,55]","Male","Black African or Caribbean","100-300","(0,5]","Yes","Contact",6,0,1
+"611","(35,55]","Male","Black African or Caribbean","100-300","(0,5]","Yes","Migrant",9,0,7
+"612","(35,55]","Male","Black African or Caribbean","100-300","(10,100]","NA","Contact",4,0,2
+"613","(35,55]","Male","Black African or Caribbean","100-300","(10,100]","NA","Migrant",1,0,1
+"614","(35,55]","Male","Black African or Caribbean","100-300","(10,100]","No","Contact",3,0,3
+"615","(35,55]","Male","Black African or Caribbean","100-300","(10,100]","Yes","Contact",36,1,16
+"616","(35,55]","Male","Black African or Caribbean","100-300","(10,100]","Yes","Migrant",4,0,1
+"617","(35,55]","Male","Black African or Caribbean","100-300","(5,10]","No","Contact",1,0,0
+"618","(35,55]","Male","Black African or Caribbean","100-300","(5,10]","Yes","Contact",12,0,6
+"619","(35,55]","Male","Black African or Caribbean","100-300","(5,10]","Yes","Migrant",4,0,1
+"620","(35,55]","Male","Black African or Caribbean","100-300","NA","Yes","Contact",1,0,0
+"621","(35,55]","Male","Black African or Caribbean","41-100","(0,5]","NA","Migrant",1,0,1
+"622","(35,55]","Male","Black African or Caribbean","41-100","(10,100]","No","Contact",1,0,0
+"623","(35,55]","Male","Black African or Caribbean","41-100","(10,100]","Yes","Contact",5,0,2
+"624","(35,55]","Male","Black African or Caribbean","41-100","(5,10]","NA","Migrant",1,0,1
+"625","(35,55]","Male","Black African or Caribbean","41-100","(5,10]","Yes","Contact",1,0,1
+"626","(35,55]","Male","Black African or Caribbean","NA","NA","NA","Contact",5,0,1
+"627","(35,55]","Male","Black African or Caribbean","NA","NA","No","Contact",1,0,0
+"628","(35,55]","Male","Black African or Caribbean","NA","NA","Yes","Contact",19,1,3
+"629","(35,55]","Male","Black African or Caribbean","NA","NA","Yes","Migrant",1,0,0
+"630","(35,55]","Male","Other","<40","(0,5]","No","Migrant",1,0,0
+"631","(35,55]","Male","Other","<40","(10,100]","NA","Contact",1,0,0
+"632","(35,55]","Male","Other","<40","(10,100]","No","Contact",1,0,0
+"633","(35,55]","Male","Other","<40","(10,100]","Yes","Contact",8,0,1
+"634","(35,55]","Male","Other","<40","(5,10]","Yes","Contact",2,0,1
+"635","(35,55]","Male","Other","<40","NA","Yes","Contact",1,0,0
+"636","(35,55]","Male","Other",">300","(10,100]","NA","Contact",1,0,0
+"637","(35,55]","Male","Other",">300","(10,100]","Yes","Contact",4,0,1
+"638","(35,55]","Male","Other",">300","(10,100]","Yes","Migrant",2,0,0
+"639","(35,55]","Male","Other",">300","(5,10]","Yes","Contact",4,0,0
+"640","(35,55]","Male","Other","100-300","(0,5]","NA","Contact",1,0,1
+"641","(35,55]","Male","Other","100-300","(0,5]","NA","Migrant",2,0,1
+"642","(35,55]","Male","Other","100-300","(0,5]","No","Migrant",1,0,1
+"643","(35,55]","Male","Other","100-300","(0,5]","Yes","Contact",8,1,7
+"644","(35,55]","Male","Other","100-300","(0,5]","Yes","Migrant",6,0,3
+"645","(35,55]","Male","Other","100-300","(10,100]","NA","Contact",1,0,1
+"646","(35,55]","Male","Other","100-300","(10,100]","NA","Migrant",2,0,2
+"647","(35,55]","Male","Other","100-300","(10,100]","No","Contact",1,0,0
+"648","(35,55]","Male","Other","100-300","(10,100]","No","Migrant",2,0,2
+"649","(35,55]","Male","Other","100-300","(10,100]","Yes","Contact",24,0,13
+"650","(35,55]","Male","Other","100-300","(10,100]","Yes","Migrant",6,0,1
+"651","(35,55]","Male","Other","100-300","(5,10]","NA","Contact",1,0,0
+"652","(35,55]","Male","Other","100-300","(5,10]","NA","Migrant",2,0,1
+"653","(35,55]","Male","Other","100-300","(5,10]","No","Contact",1,0,1
+"654","(35,55]","Male","Other","100-300","(5,10]","No","Migrant",1,0,0
+"655","(35,55]","Male","Other","100-300","(5,10]","Yes","Contact",8,0,3
+"656","(35,55]","Male","Other","100-300","(5,10]","Yes","Migrant",1,0,0
+"657","(35,55]","Male","Other","100-300","NA","NA","Contact",1,0,1
+"658","(35,55]","Male","Other","100-300","NA","Yes","Contact",1,0,0
+"659","(35,55]","Male","Other","41-100","(0,5]","NA","Migrant",1,0,0
+"660","(35,55]","Male","Other","41-100","(0,5]","No","Contact",1,0,1
+"661","(35,55]","Male","Other","41-100","(0,5]","No","Migrant",1,0,0
+"662","(35,55]","Male","Other","41-100","(0,5]","Yes","Contact",2,0,1
+"663","(35,55]","Male","Other","41-100","(0,5]","Yes","Migrant",12,0,3
+"664","(35,55]","Male","Other","41-100","(10,100]","NA","Contact",3,0,2
+"665","(35,55]","Male","Other","41-100","(10,100]","NA","Migrant",1,0,0
+"666","(35,55]","Male","Other","41-100","(10,100]","Yes","Contact",14,1,6
+"667","(35,55]","Male","Other","41-100","(10,100]","Yes","Migrant",2,0,0
+"668","(35,55]","Male","Other","41-100","(5,10]","NA","Contact",1,0,0
+"669","(35,55]","Male","Other","41-100","(5,10]","No","Contact",1,0,0
+"670","(35,55]","Male","Other","41-100","(5,10]","Yes","Contact",4,0,1
+"671","(35,55]","Male","Other","41-100","(5,10]","Yes","Migrant",3,0,1
+"672","(35,55]","Male","Other","41-100","NA","No","Migrant",1,0,0
+"673","(35,55]","Male","Other","NA","NA","No","Migrant",1,0,0
+"674","(35,55]","Male","Other","NA","NA","Yes","Contact",12,0,2
+"675","(35,55]","Male","Other","NA","NA","Yes","Migrant",2,0,0
+"676","(35,55]","Male","South Asian","<40","(10,100]","NA","Contact",1,0,0
+"677","(35,55]","Male","South Asian","<40","(10,100]","Yes","Migrant",1,0,0
+"678","(35,55]","Male","South Asian",">300","(0,5]","NA","Migrant",1,0,0
+"679","(35,55]","Male","South Asian",">300","(10,100]","NA","Migrant",3,0,1
+"680","(35,55]","Male","South Asian",">300","(10,100]","Yes","Contact",5,0,1
+"681","(35,55]","Male","South Asian",">300","(10,100]","Yes","Migrant",2,0,0
+"682","(35,55]","Male","South Asian",">300","(5,10]","No","Migrant",2,0,0
+"683","(35,55]","Male","South Asian",">300","NA","Yes","Contact",1,0,0
+"684","(35,55]","Male","South Asian","100-300","(0,5]","NA","Contact",3,0,0
+"685","(35,55]","Male","South Asian","100-300","(0,5]","NA","Migrant",25,0,9
+"686","(35,55]","Male","South Asian","100-300","(0,5]","No","Contact",5,0,4
+"687","(35,55]","Male","South Asian","100-300","(0,5]","No","Migrant",30,1,15
+"688","(35,55]","Male","South Asian","100-300","(0,5]","Yes","Contact",28,1,16
+"689","(35,55]","Male","South Asian","100-300","(0,5]","Yes","Migrant",143,1,57
+"690","(35,55]","Male","South Asian","100-300","(10,100]","NA","Contact",19,1,9
+"691","(35,55]","Male","South Asian","100-300","(10,100]","NA","Migrant",35,0,9
+"692","(35,55]","Male","South Asian","100-300","(10,100]","No","Contact",6,0,2
+"693","(35,55]","Male","South Asian","100-300","(10,100]","No","Migrant",19,0,5
+"694","(35,55]","Male","South Asian","100-300","(10,100]","Yes","Contact",105,1,37
+"695","(35,55]","Male","South Asian","100-300","(10,100]","Yes","Migrant",75,0,21
+"696","(35,55]","Male","South Asian","100-300","(5,10]","NA","Contact",4,0,0
+"697","(35,55]","Male","South Asian","100-300","(5,10]","NA","Migrant",4,0,2
+"698","(35,55]","Male","South Asian","100-300","(5,10]","No","Contact",5,0,2
+"699","(35,55]","Male","South Asian","100-300","(5,10]","No","Migrant",4,0,2
+"700","(35,55]","Male","South Asian","100-300","(5,10]","Yes","Contact",43,2,23
+"701","(35,55]","Male","South Asian","100-300","(5,10]","Yes","Migrant",27,1,8
+"702","(35,55]","Male","South Asian","100-300","NA","NA","Migrant",2,0,1
+"703","(35,55]","Male","South Asian","100-300","NA","Yes","Contact",2,0,2
+"704","(35,55]","Male","South Asian","100-300","NA","Yes","Migrant",4,0,0
+"705","(35,55]","Male","South Asian","41-100","(0,5]","No","Migrant",1,0,0
+"706","(35,55]","Male","South Asian","41-100","(0,5]","Yes","Migrant",1,0,1
+"707","(35,55]","Male","South Asian","41-100","(10,100]","NA","Contact",1,0,0
+"708","(35,55]","Male","South Asian","41-100","(10,100]","Yes","Migrant",3,0,1
+"709","(35,55]","Male","South Asian","NA","(10,100]","NA","Migrant",1,0,0
+"710","(35,55]","Male","South Asian","NA","NA","NA","Contact",1,0,1
+"711","(35,55]","Male","South Asian","NA","NA","NA","Migrant",2,0,0
+"712","(35,55]","Male","South Asian","NA","NA","No","Migrant",2,0,0
+"713","(35,55]","Male","South Asian","NA","NA","Yes","Contact",24,0,4
+"714","(35,55]","Male","South Asian","NA","NA","Yes","Migrant",13,0,2
+"715","(35,55]","Male","White","<40","(0,5]","No","Contact",3,0,1
+"716","(35,55]","Male","White","<40","(0,5]","Yes","Contact",2,0,2
+"717","(35,55]","Male","White","<40","(10,100]","No","Contact",3,0,0
+"718","(35,55]","Male","White","<40","(10,100]","Yes","Contact",20,0,5
+"719","(35,55]","Male","White","<40","(10,100]","Yes","Migrant",2,0,0
+"720","(35,55]","Male","White","<40","(5,10]","NA","Contact",1,0,0
+"721","(35,55]","Male","White","<40","(5,10]","No","Migrant",1,0,0
+"722","(35,55]","Male","White","<40","(5,10]","Yes","Contact",3,1,1
+"723","(35,55]","Male","White","<40","(5,10]","Yes","Migrant",2,0,0
+"724","(35,55]","Male","White","<40","NA","NA","Contact",1,0,0
+"725","(35,55]","Male","White","<40","NA","Yes","Contact",1,0,0
+"726","(35,55]","Male","White",">300","(0,5]","No","Migrant",1,0,0
+"727","(35,55]","Male","White",">300","(0,5]","Yes","Migrant",1,0,0
+"728","(35,55]","Male","White",">300","(10,100]","No","Contact",1,0,0
+"729","(35,55]","Male","White",">300","(10,100]","Yes","Contact",1,0,1
+"730","(35,55]","Male","White",">300","(5,10]","Yes","Contact",1,0,0
+"731","(35,55]","Male","White","100-300","(10,100]","Yes","Contact",2,0,0
+"732","(35,55]","Male","White","100-300","(5,10]","Yes","Contact",2,0,0
+"733","(35,55]","Male","White","41-100","(0,5]","NA","Migrant",1,0,0
+"734","(35,55]","Male","White","41-100","(0,5]","No","Migrant",3,0,2
+"735","(35,55]","Male","White","41-100","(0,5]","Yes","Contact",4,0,0
+"736","(35,55]","Male","White","41-100","(0,5]","Yes","Migrant",6,0,3
+"737","(35,55]","Male","White","41-100","(10,100]","NA","Contact",1,0,0
+"738","(35,55]","Male","White","41-100","(10,100]","Yes","Contact",5,0,3
+"739","(35,55]","Male","White","41-100","(10,100]","Yes","Migrant",1,0,1
+"740","(35,55]","Male","White","41-100","(5,10]","Yes","Contact",2,0,1
+"741","(35,55]","Male","White","41-100","(5,10]","Yes","Migrant",4,0,3
+"742","(35,55]","Male","White","NA","(10,100]","NA","Contact",1,0,0
+"743","(35,55]","Male","White","NA","(10,100]","Yes","Contact",1,0,0
+"744","(35,55]","Male","White","NA","NA","NA","Contact",8,0,2
+"745","(35,55]","Male","White","NA","NA","No","Contact",14,1,5
+"746","(35,55]","Male","White","NA","NA","Yes","Contact",61,1,11
+"747","(35,55]","Male","White","NA","NA","Yes","Migrant",2,0,0
+"748","(55,100]","Female","Black African or Caribbean","<40","(10,100]","NA","Contact",3,0,0
+"749","(55,100]","Female","Black African or Caribbean","<40","(10,100]","No","Contact",2,0,0
+"750","(55,100]","Female","Black African or Caribbean","<40","(10,100]","Yes","Contact",16,0,4
+"751","(55,100]","Female","Black African or Caribbean",">300","(0,5]","Yes","Contact",1,0,0
+"752","(55,100]","Female","Black African or Caribbean",">300","(0,5]","Yes","Migrant",1,0,0
+"753","(55,100]","Female","Black African or Caribbean",">300","(10,100]","NA","Contact",1,0,0
+"754","(55,100]","Female","Black African or Caribbean",">300","(10,100]","Yes","Contact",7,0,5
+"755","(55,100]","Female","Black African or Caribbean",">300","(5,10]","Yes","Contact",2,0,2
+"756","(55,100]","Female","Black African or Caribbean","100-300","(0,5]","No","Migrant",2,0,0
+"757","(55,100]","Female","Black African or Caribbean","100-300","(0,5]","Yes","Contact",1,0,0
+"758","(55,100]","Female","Black African or Caribbean","100-300","(0,5]","Yes","Migrant",5,0,2
+"759","(55,100]","Female","Black African or Caribbean","100-300","(10,100]","NA","Contact",1,0,0
+"760","(55,100]","Female","Black African or Caribbean","100-300","(10,100]","NA","Migrant",1,0,1
+"761","(55,100]","Female","Black African or Caribbean","100-300","(10,100]","Yes","Contact",7,0,3
+"762","(55,100]","Female","Black African or Caribbean","100-300","(10,100]","Yes","Migrant",3,0,2
+"763","(55,100]","Female","Black African or Caribbean","100-300","(5,10]","Yes","Contact",3,0,2
+"764","(55,100]","Female","Black African or Caribbean","100-300","(5,10]","Yes","Migrant",1,0,0
+"765","(55,100]","Female","Black African or Caribbean","41-100","(10,100]","No","Contact",1,0,0
+"766","(55,100]","Female","Black African or Caribbean","41-100","(10,100]","Yes","Contact",2,0,1
+"767","(55,100]","Female","Black African or Caribbean","NA","(10,100]","Yes","Contact",1,0,0
+"768","(55,100]","Female","Black African or Caribbean","NA","NA","Yes","Contact",2,0,1
+"769","(55,100]","Female","Other","<40","(10,100]","NA","Contact",1,0,0
+"770","(55,100]","Female","Other","<40","(10,100]","Yes","Contact",2,1,0
+"771","(55,100]","Female","Other",">300","(0,5]","NA","Contact",1,0,0
+"772","(55,100]","Female","Other",">300","(0,5]","NA","Migrant",1,0,1
+"773","(55,100]","Female","Other",">300","(0,5]","Yes","Migrant",1,0,0
+"774","(55,100]","Female","Other",">300","(10,100]","NA","Contact",1,0,0
+"775","(55,100]","Female","Other",">300","(10,100]","Yes","Contact",4,0,2
+"776","(55,100]","Female","Other","100-300","(0,5]","NA","Contact",1,0,0
+"777","(55,100]","Female","Other","100-300","(0,5]","NA","Migrant",1,0,1
+"778","(55,100]","Female","Other","100-300","(0,5]","No","Migrant",3,0,1
+"779","(55,100]","Female","Other","100-300","(0,5]","Yes","Contact",1,0,1
+"780","(55,100]","Female","Other","100-300","(0,5]","Yes","Migrant",1,0,0
+"781","(55,100]","Female","Other","100-300","(10,100]","NA","Contact",4,0,2
+"782","(55,100]","Female","Other","100-300","(10,100]","NA","Migrant",2,0,0
+"783","(55,100]","Female","Other","100-300","(10,100]","No","Contact",1,0,0
+"784","(55,100]","Female","Other","100-300","(10,100]","Yes","Contact",8,0,5
+"785","(55,100]","Female","Other","100-300","(5,10]","NA","Migrant",1,0,0
+"786","(55,100]","Female","Other","100-300","(5,10]","No","Contact",1,0,0
+"787","(55,100]","Female","Other","100-300","(5,10]","Yes","Migrant",2,0,1
+"788","(55,100]","Female","Other","100-300","NA","Yes","Contact",1,0,0
+"789","(55,100]","Female","Other","41-100","(0,5]","Yes","Migrant",4,0,1
+"790","(55,100]","Female","Other","41-100","(10,100]","NA","Migrant",1,0,0
+"791","(55,100]","Female","Other","41-100","(10,100]","Yes","Contact",5,0,3
+"792","(55,100]","Female","Other","41-100","(10,100]","Yes","Migrant",1,0,1
+"793","(55,100]","Female","Other","41-100","(5,10]","Yes","Contact",3,0,2
+"794","(55,100]","Female","Other","NA","(10,100]","NA","Contact",1,0,0
+"795","(55,100]","Female","Other","NA","NA","Yes","Contact",1,0,0
+"796","(55,100]","Female","South Asian","<40","(10,100]","NA","Contact",2,0,1
+"797","(55,100]","Female","South Asian","<40","NA","Yes","Migrant",1,0,0
+"798","(55,100]","Female","South Asian",">300","(10,100]","NA","Contact",1,0,1
+"799","(55,100]","Female","South Asian",">300","(10,100]","NA","Migrant",2,0,0
+"800","(55,100]","Female","South Asian",">300","(10,100]","Yes","Contact",2,0,1
+"801","(55,100]","Female","South Asian",">300","(10,100]","Yes","Migrant",13,0,2
+"802","(55,100]","Female","South Asian","100-300","(0,5]","NA","Migrant",4,0,0
+"803","(55,100]","Female","South Asian","100-300","(0,5]","No","Contact",1,0,0
+"804","(55,100]","Female","South Asian","100-300","(0,5]","No","Migrant",6,0,4
+"805","(55,100]","Female","South Asian","100-300","(0,5]","Yes","Contact",1,0,0
+"806","(55,100]","Female","South Asian","100-300","(0,5]","Yes","Migrant",19,0,10
+"807","(55,100]","Female","South Asian","100-300","(10,100]","NA","Contact",14,0,4
+"808","(55,100]","Female","South Asian","100-300","(10,100]","NA","Migrant",82,0,18
+"809","(55,100]","Female","South Asian","100-300","(10,100]","No","Contact",4,0,1
+"810","(55,100]","Female","South Asian","100-300","(10,100]","No","Migrant",67,0,11
+"811","(55,100]","Female","South Asian","100-300","(10,100]","Yes","Contact",51,0,12
+"812","(55,100]","Female","South Asian","100-300","(10,100]","Yes","Migrant",244,1,39
+"813","(55,100]","Female","South Asian","100-300","(5,10]","No","Migrant",1,0,0
+"814","(55,100]","Female","South Asian","100-300","(5,10]","Yes","Contact",3,0,2
+"815","(55,100]","Female","South Asian","100-300","(5,10]","Yes","Migrant",3,0,0
+"816","(55,100]","Female","South Asian","100-300","NA","NA","Contact",1,0,1
+"817","(55,100]","Female","South Asian","100-300","NA","NA","Migrant",2,0,0
+"818","(55,100]","Female","South Asian","100-300","NA","Yes","Contact",2,0,0
+"819","(55,100]","Female","South Asian","100-300","NA","Yes","Migrant",7,0,1
+"820","(55,100]","Female","South Asian","41-100","(10,100]","NA","Migrant",1,0,0
+"821","(55,100]","Female","South Asian","41-100","(10,100]","No","Migrant",1,0,0
+"822","(55,100]","Female","South Asian","41-100","(10,100]","Yes","Contact",4,0,1
+"823","(55,100]","Female","South Asian","41-100","(10,100]","Yes","Migrant",2,0,0
+"824","(55,100]","Female","South Asian","NA","(10,100]","Yes","Migrant",2,0,1
+"825","(55,100]","Female","South Asian","NA","NA","NA","Contact",1,0,1
+"826","(55,100]","Female","South Asian","NA","NA","NA","Migrant",1,0,1
+"827","(55,100]","Female","South Asian","NA","NA","No","Migrant",1,0,0
+"828","(55,100]","Female","South Asian","NA","NA","Yes","Migrant",5,0,1
+"829","(55,100]","Female","White","<40","(0,5]","Yes","Contact",1,0,0
+"830","(55,100]","Female","White","<40","(0,5]","Yes","Migrant",1,0,1
+"831","(55,100]","Female","White","<40","(10,100]","NA","Contact",3,0,0
+"832","(55,100]","Female","White","<40","(10,100]","Yes","Contact",8,0,2
+"833","(55,100]","Female","White","<40","(5,10]","NA","Contact",1,0,0
+"834","(55,100]","Female","White","41-100","(5,10]","Yes","Migrant",1,0,0
+"835","(55,100]","Female","White","NA","NA","NA","Contact",4,0,3
+"836","(55,100]","Female","White","NA","NA","No","Contact",4,0,1
+"837","(55,100]","Female","White","NA","NA","Yes","Contact",19,0,2
+"838","(55,100]","Female","White","NA","NA","Yes","Migrant",3,0,0
+"839","(55,100]","Male","Black African or Caribbean","<40","(10,100]","NA","Contact",3,0,0
+"840","(55,100]","Male","Black African or Caribbean","<40","(10,100]","No","Contact",2,0,0
+"841","(55,100]","Male","Black African or Caribbean","<40","(10,100]","Yes","Contact",10,0,2
+"842","(55,100]","Male","Black African or Caribbean",">300","(10,100]","Yes","Contact",4,0,1
+"843","(55,100]","Male","Black African or Caribbean",">300","(5,10]","No","Contact",1,0,0
+"844","(55,100]","Male","Black African or Caribbean","100-300","(0,5]","Yes","Migrant",3,0,1
+"845","(55,100]","Male","Black African or Caribbean","100-300","(10,100]","NA","Contact",1,0,0
+"846","(55,100]","Male","Black African or Caribbean","100-300","(10,100]","No","Contact",2,0,2
+"847","(55,100]","Male","Black African or Caribbean","100-300","(10,100]","Yes","Contact",4,0,2
+"848","(55,100]","Male","Black African or Caribbean","100-300","(5,10]","NA","Contact",1,0,1
+"849","(55,100]","Male","Black African or Caribbean","100-300","(5,10]","Yes","Contact",3,0,2
+"850","(55,100]","Male","Black African or Caribbean","100-300","(5,10]","Yes","Migrant",1,0,0
+"851","(55,100]","Male","Black African or Caribbean","100-300","NA","NA","Migrant",1,0,1
+"852","(55,100]","Male","Black African or Caribbean","41-100","(10,100]","Yes","Migrant",1,0,1
+"853","(55,100]","Male","Black African or Caribbean","41-100","(5,10]","NA","Migrant",1,0,0
+"854","(55,100]","Male","Black African or Caribbean","41-100","(5,10]","Yes","Contact",1,0,1
+"855","(55,100]","Male","Black African or Caribbean","NA","(10,100]","NA","Contact",2,0,1
+"856","(55,100]","Male","Black African or Caribbean","NA","(10,100]","Yes","Contact",1,0,0
+"857","(55,100]","Male","Other","<40","(0,5]","No","Contact",1,0,1
+"858","(55,100]","Male","Other","<40","(10,100]","NA","Contact",1,0,0
+"859","(55,100]","Male","Other","<40","(10,100]","No","Contact",1,0,0
+"860","(55,100]","Male","Other","<40","(10,100]","Yes","Contact",3,0,0
+"861","(55,100]","Male","Other",">300","(10,100]","Yes","Contact",2,1,2
+"862","(55,100]","Male","Other",">300","(5,10]","No","Contact",1,0,1
+"863","(55,100]","Male","Other","100-300","(0,5]","NA","Migrant",1,0,1
+"864","(55,100]","Male","Other","100-300","(0,5]","No","Migrant",2,0,1
+"865","(55,100]","Male","Other","100-300","(0,5]","Yes","Contact",3,0,3
+"866","(55,100]","Male","Other","100-300","(0,5]","Yes","Migrant",1,0,1
+"867","(55,100]","Male","Other","100-300","(10,100]","NA","Contact",1,0,1
+"868","(55,100]","Male","Other","100-300","(10,100]","NA","Migrant",1,0,1
+"869","(55,100]","Male","Other","100-300","(10,100]","No","Contact",1,0,1
+"870","(55,100]","Male","Other","100-300","(10,100]","No","Migrant",2,0,2
+"871","(55,100]","Male","Other","100-300","(10,100]","Yes","Contact",3,0,1
+"872","(55,100]","Male","Other","100-300","(10,100]","Yes","Migrant",1,0,0
+"873","(55,100]","Male","Other","100-300","(5,10]","No","Contact",1,0,0
+"874","(55,100]","Male","Other","100-300","(5,10]","Yes","Migrant",1,0,0
+"875","(55,100]","Male","Other","41-100","(0,5]","NA","Migrant",1,0,0
+"876","(55,100]","Male","Other","41-100","(0,5]","No","Contact",1,0,0
+"877","(55,100]","Male","Other","41-100","(10,100]","NA","Contact",1,0,0
+"878","(55,100]","Male","Other","41-100","(10,100]","NA","Migrant",3,0,0
+"879","(55,100]","Male","Other","41-100","(10,100]","Yes","Contact",2,0,0
+"880","(55,100]","Male","Other","41-100","(10,100]","Yes","Migrant",3,0,1
+"881","(55,100]","Male","Other","41-100","(5,10]","NA","Migrant",2,0,0
+"882","(55,100]","Male","Other","NA","NA","NA","Contact",1,0,0
+"883","(55,100]","Male","Other","NA","NA","Yes","Contact",1,0,1
+"884","(55,100]","Male","South Asian","<40","(10,100]","No","Contact",1,0,1
+"885","(55,100]","Male","South Asian",">300","(10,100]","NA","Contact",3,0,1
+"886","(55,100]","Male","South Asian",">300","(10,100]","Yes","Contact",2,0,0
+"887","(55,100]","Male","South Asian",">300","(10,100]","Yes","Migrant",11,0,1
+"888","(55,100]","Male","South Asian","100-300","(0,5]","NA","Contact",1,0,1
+"889","(55,100]","Male","South Asian","100-300","(0,5]","NA","Migrant",5,0,0
+"890","(55,100]","Male","South Asian","100-300","(0,5]","No","Migrant",8,0,4
+"891","(55,100]","Male","South Asian","100-300","(0,5]","Yes","Contact",4,0,2
+"892","(55,100]","Male","South Asian","100-300","(0,5]","Yes","Migrant",12,0,5
+"893","(55,100]","Male","South Asian","100-300","(10,100]","NA","Contact",18,0,10
+"894","(55,100]","Male","South Asian","100-300","(10,100]","NA","Migrant",61,0,22
+"895","(55,100]","Male","South Asian","100-300","(10,100]","No","Contact",2,0,2
+"896","(55,100]","Male","South Asian","100-300","(10,100]","No","Migrant",47,0,9
+"897","(55,100]","Male","South Asian","100-300","(10,100]","Yes","Contact",57,1,21
+"898","(55,100]","Male","South Asian","100-300","(10,100]","Yes","Migrant",122,0,40
+"899","(55,100]","Male","South Asian","100-300","(5,10]","NA","Migrant",1,0,0
+"900","(55,100]","Male","South Asian","100-300","(5,10]","No","Migrant",2,0,1
+"901","(55,100]","Male","South Asian","100-300","(5,10]","Yes","Contact",5,0,3
+"902","(55,100]","Male","South Asian","100-300","(5,10]","Yes","Migrant",3,0,2
+"903","(55,100]","Male","South Asian","100-300","NA","NA","Migrant",3,0,0
+"904","(55,100]","Male","South Asian","100-300","NA","Yes","Contact",1,0,0
+"905","(55,100]","Male","South Asian","100-300","NA","Yes","Migrant",2,0,0
+"906","(55,100]","Male","South Asian","41-100","(10,100]","NA","Migrant",2,0,0
+"907","(55,100]","Male","South Asian","41-100","(10,100]","No","Migrant",2,0,0
+"908","(55,100]","Male","South Asian","41-100","(10,100]","Yes","Contact",1,0,1
+"909","(55,100]","Male","South Asian","41-100","(10,100]","Yes","Migrant",3,0,1
+"910","(55,100]","Male","South Asian","NA","(10,100]","NA","Migrant",1,0,0
+"911","(55,100]","Male","South Asian","NA","(10,100]","Yes","Migrant",2,0,1
+"912","(55,100]","Male","South Asian","NA","NA","NA","Migrant",2,0,1
+"913","(55,100]","Male","South Asian","NA","NA","No","Migrant",1,0,0
+"914","(55,100]","Male","South Asian","NA","NA","Yes","Contact",3,0,1
+"915","(55,100]","Male","South Asian","NA","NA","Yes","Migrant",4,0,1
+"916","(55,100]","Male","White","<40","(0,5]","NA","Migrant",1,0,0
+"917","(55,100]","Male","White","<40","(10,100]","NA","Contact",3,0,1
+"918","(55,100]","Male","White","<40","(10,100]","No","Contact",2,0,0
+"919","(55,100]","Male","White","<40","(10,100]","Yes","Contact",8,0,3
+"920","(55,100]","Male","White","100-300","(0,5]","Yes","Migrant",1,0,1
+"921","(55,100]","Male","White","41-100","(0,5]","No","Migrant",1,0,0
+"922","(55,100]","Male","White","41-100","(10,100]","Yes","Contact",2,0,0
+"923","(55,100]","Male","White","NA","NA","NA","Contact",4,0,2
+"924","(55,100]","Male","White","NA","NA","No","Contact",8,0,3
+"925","(55,100]","Male","White","NA","NA","Yes","Contact",37,1,9
+"926","(55,100]","Male","White","NA","NA","Yes","Migrant",1,0,0
