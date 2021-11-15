@@ -1,20 +1,19 @@
 
-#' ---
-#' title: "Evidence synthesis LTBI screening: jags"
-#'
-#' author: "N Green"
-#' date: "`r format(Sys.Date())`"
-#' output:
-#'   html_document:
-#'     keep_md: TRUE
-#' ---
+# Evidence synthesis LTBI screening: jags
+# with real data
 
 
 library(R2jags)
 library(R2WinBUGS)
 library(purrr)
+library(readr)
 
-dat <- read.csv(here::here("data input", "PREDICT_dummy.csv"), header = TRUE)
+
+edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
+predicttb <-
+  read.csv("E:/DIDE-PC_2019/NIHR_HTA_LTBI_project/data/UK-PREDICT-TB/041120-Rishi/PREDICT_data_for_NG.csv")
+
+
 
 jags_dat_input <-
   list(
@@ -24,14 +23,6 @@ jags_dat_input <-
     # Xn  = dat$n_migrant - dat$n_pos,      # number of negative test results
     Xtb = dat$n_tb                        # number of observed active tb cases
   )
-
-
-# # tests
-# #~100% ltbi prevalence
-# jags_dat_input$Xp <- c(1000, 500)
-# #~100% active tb
-# jags_dat_input$Xtb <- c(1000, 500)
-
 
 params <-
   c("sens", "spec",
@@ -69,10 +60,8 @@ n_thin <- 1e2 #floor((n_iter - n_burnin)/500)
 ##############
 
 out <- jags(jags_dat_input,
-            # inits = list(inits(), inits()),
             parameters.to.save = params,
             model.file = here::here("scripts", "BUGS_code.txt"),
-            # model.file = here::here("scripts", "BUGS_code_Xlatent_functional.txt"),
             n.chains = 2,
             n.iter = n_iter,
             n.burnin = n_burnin,

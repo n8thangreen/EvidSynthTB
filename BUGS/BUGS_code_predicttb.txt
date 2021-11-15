@@ -1,0 +1,31 @@
+# predict-tb data
+
+model {
+
+  # likelihood
+
+  for (i in 1:N) {
+    # time to active tb for ltbi pos
+    # gompertz
+    time[i] ~ exp(-scale/shape * (exp(shape * t) - 1)) * (scale*exp(shape*t))^d[i];
+
+    # prob ltbi
+    logit(pos[i]) = b_age*age[i] + b_eth*ethnicity[i]
+  }
+
+  # sensitivity / specificity of ltbi test?
+  # ltbi = pos*sens + (N - pos)*(1 - spec)
+
+  # priors
+
+  alpha ~
+  beta ~
+  b_age ~ norm()
+  b_eth ~ norm()
+
+  # posterior predictions
+
+
+}
+
+
