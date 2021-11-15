@@ -53,29 +53,38 @@ data {
   int<lower=0> N;
   vector[N] t;
   vector[N] d;
+
+  //hyper parameters
+  real mu_lambda;
+  real sigma_lambda;
+  real mu_gamma;
+  real sigma_gamma;
 }
 
 parameters {
-  real mu;
+  real gamma;
   real<lower=0> lambda;
 }
 
 model {
-  lambda ~ normal();
-  mu ~ normal();
+  // priors
+  lambda ~ normal(mu_lambda, sigma_lambda);
+  gamma ~ normal(mu_gamma, sigma_gamma);
 
   // likelihood
   for (i in 1:N) {
-    target += surv_gompertz_lpdf(t[i] | d[i], lambda[i], mu[i]);
+    target += surv_gompertz_lpdf(t[i] | d[i], lambda, gamma);
   }
 }
 
-generated_quantities {
+generated quantities {
 
-  vector[] pppred;
+  vector[10] ppred;
+// what is j is not time
+/// need t_pred[j]
 
   for (j in 1:10) {
-    ppred = surv_gompertz(t, lambda, mu);
+    ppred[j] = gompertz_Surv(j, lambda, gamma);
   }
 
 }
