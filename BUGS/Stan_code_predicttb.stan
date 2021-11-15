@@ -49,30 +49,33 @@ real surv_gompertz_lpdf (real t, real d, real shape, real scale) {
 
 }
 
-// The input data is a vector 'y' of length 'N'.
 data {
   int<lower=0> N;
-  vector[N] y;
+  vector[N] t;
+  vector[N] d;
 }
 
-// The parameters accepted by the model. Our model
-// accepts two parameters 'mu' and 'sigma'.
 parameters {
   real mu;
-  real<lower=0> sigma;
+  real<lower=0> lambda;
 }
 
-// The model to be estimated. We model the output
-// 'y' to be normally distributed with mean 'mu'
-// and standard deviation 'sigma'.
 model {
-  y ~ normal(mu, sigma);
-  
-    // likelihood
-  for (i in 1:n_os) {
-    target += log_sum_exp(
-                log(cf_os) +
-                surv_exp_lpdf(t_os[i] | d_os[i], lambda_os_bg[i]),
+  lambda ~ normal();
+  mu ~ normal();
+
+  // likelihood
+  for (i in 1:N) {
+    target += surv_gompertz_lpdf(t[i] | d[i], lambda[i], mu[i]);
   }
 }
 
+generated_quantities {
+
+  vector[] pppred;
+
+  for (j in 1:10) {
+    ppred = surv_gompertz(t, lambda, mu);
+  }
+
+}
