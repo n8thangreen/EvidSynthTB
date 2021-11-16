@@ -59,6 +59,13 @@ data {
   real sigma_lambda;
   real mu_gamma;
   real sigma_gamma;
+
+//TODO: alternative
+  // int<lower=1> N_uncensored;
+  // int<lower=1> N_censored;
+  // int<lower=0> NC;
+  // vector<lower=0>[N_censored] times_censored;
+  // vector<lower=0>[N_uncensored] times_uncensored;
 }
 
 parameters {
@@ -82,8 +89,12 @@ model {
 
   // likelihood
   for (i in 1:N) {
-    target += surv_gompertz_lpdf(t[i] | d[i], lambda, gamma);
+    target += surv_gompertz_lpdf(t[i] | d[i], gamma, lambda);
   }
+
+//TODO: alternative formulation
+    // target += gompertz_lpdf(times_uncensored | gamma, lambda);
+    // target += gompertz_lccdf(times_censored | gamma, lambda);
 }
 
 generated quantities {
@@ -92,7 +103,7 @@ generated quantities {
 /// need t_pred[j]
 
   for (j in 1:t_lim) {
-    ppred[j] = gompertz_Surv(j, lambda, gamma);
+    ppred[j] = gompertz_Surv(j, gamma, lambda);
   }
 
 }
