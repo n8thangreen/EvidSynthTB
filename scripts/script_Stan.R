@@ -16,13 +16,20 @@ options(mc.cores = parallel::detectCores())
 edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
 load("data input/cleaned_migrant_predict_data.RData")
 
-predicttb <- filter(dat_m, pos == TRUE)
+predicttb <-
+  filter(dat_m, pos == TRUE) %>%
+  mutate(time = as.numeric(time))
 
 dat_input <-
   list(
     N = nrow(predicttb),
-    t = as.numeric(predicttb$time),
-    d = as.numeric(predicttb$status),
+    N_cens = sum(!predicttb$status),
+    N_uncens = sum(predicttb$status),
+    t_cens = predicttb$time[predicttb$status == 0],
+    t_uncens = predicttb$time[predicttb$status == 1],
+    ## alternative formulation
+    # t = as.numeric(predicttb$time),
+    # d = as.numeric(predicttb$status),
     mu_lambda = -4,
     sigma_lambda = 1,
     mu_gamma = -1,
