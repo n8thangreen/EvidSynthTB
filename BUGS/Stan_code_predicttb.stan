@@ -2,6 +2,7 @@
 // estimate tb progression
 // from ltbi positive cases
 
+//TODO: how to vectorise likelihood functions?
 
 functions {
 /**
@@ -12,47 +13,35 @@ functions {
 * @return A real
 */
 
-// log hazard
-  real gompertz_log_h (vector t, real shape, real scale) {
-    vector[num_elements(t)] log_h;
-    log_h = log(scale) + (shape * t);
-    return log_h;
-  }
-
-  // hazard
-  real gompertz_haz (real t, real shape, real scale) {
-    real h;
-    h = scale*exp(shape*t);
-    return h;
-  }
-
-  // gompertz log survival
-  real gompertz_lccdf (vector t, real shape, real scale) {
-    vector[num_elements(t)] log_S;
-    log_S = -scale/shape * (exp(shape * t) - 1);
-    return log_S;
-  }
-
-  // gompertz log density
-  real gompertz_lpdf (vector t, real shape, real scale) {
-    vector[num_elements(t)] log_pdf;
-    log_pdf = gompertz_log_h(t, shape, scale) + gompertz_lccdf(t | shape, scale);
-    return log_pdf;
-  }
-
-  // gompertz survival
-  real gompertz_ccdf (real t, real shape, real scale) {
-    real S;
-    S = exp(-scale/shape * (exp(shape * t) - 1));
-    return S;
-  }
-
-  // gompertz log survival distribution
-  real surv_gompertz_lpdf (real t, real d, real shape, real scale) {
-    real log_lik;
-    log_lik = d * gompertz_log_h(t, shape, scale) + gompertz_lccdf(t | shape, scale);
-    return log_lik;
-  }
+  // // log hazard
+  // real gompertz_log_h (real t, real shape, real scale) {
+  //   return(log(scale) + (shape * t));
+  // }
+  //
+  // // hazard
+  // real gompertz_haz (real t, real shape, real scale) {
+  //   return(scale*exp(shape*t));
+  // }
+  //
+  // // gompertz log survival
+  // real gompertz_lccdf (real t, real shape, real scale) {
+  //   return(-scale/shape * (exp(shape * t) - 1));
+  // }
+  //
+  // // gompertz log density
+  // real gompertz_lpdf (real t, real shape, real scale) {
+  //   return(gompertz_log_h(t, shape, scale) + gompertz_lccdf(t | shape, scale));
+  // }
+  //
+  // // gompertz survival
+  // real gompertz_ccdf (real t, real shape, real scale) {
+  //   return(exp(-scale/shape * (exp(shape * t) - 1)));
+  // }
+  //
+  // // gompertz log survival distribution
+  // real surv_gompertz_lpdf (real t, real d, real shape, real scale) {
+  //   return(d * gompertz_log_h(t, shape, scale) + gompertz_lccdf(t | shape, scale));
+  // }
 }
 
 data {
@@ -68,7 +57,7 @@ data {
   real mu_gamma;
   real sigma_gamma;
 
-//TODO: alternative
+  // alternative
   int<lower=1> N_uncens;
   int<lower=1> N_cens;
   vector<lower=0>[N_cens] t_cens;
@@ -81,38 +70,42 @@ parameters {
 }
 
 transformed parameters {
-  real<lower=0> lambda;
-  real<lower=0> gamma;
-
-  lambda = exp(loglambda);
-  gamma = exp(loggamma);
+  // real<lower=0> lambda;
+  // real<lower=0> gamma;
+  //
+  // lambda = exp(loglambda);
+  // gamma = exp(loggamma);
 }
 
 model {
-
-  // priors
-  loglambda ~ normal(mu_lambda, sigma_lambda);
-  loggamma ~ normal(mu_gamma, sigma_gamma);
-
-  // likelihood
-
-  // for (i in 1:N) {
-  //   target += surv_gompertz_lpdf(t[i] | d[i], gamma, lambda);
+  // // priors
+  // loglambda ~ normal(mu_lambda, sigma_lambda);
+  // loggamma ~ normal(mu_gamma, sigma_gamma);
+  //
+  // // likelihood
+  //
+  // // for (i in 1:N) {
+  // //   target += surv_gompertz_lpdf(t[i] | d[i], gamma, lambda);
+  // // }
+  //
+  // // alternative formulation
+  // for (i in 1:N_uncens) {
+  //   target += gompertz_lpdf(t_uncens[i] | gamma, lambda);
   // }
-
-  // alternative formulation
-  target += gompertz_lpdf(t_uncens | gamma, lambda);
-  target += gompertz_lccdf(t_cens | gamma, lambda);
+  //
+  // for (j in 1:N_cens) {
+  //   target += gompertz_lccdf(t_cens[j] | gamma, lambda);
+  // }
 }
 
 generated quantities {
-  vector[t_lim] ppred;
-// what is j is not time
-/// need t_pred[j]
-
-  for (j in 1:t_lim) {
-    ppred[j] = gompertz_ccdf(j, gamma, lambda);
-  }
+  // vector[t_lim] ppred;
+  // // what is j is not time
+  // // need t_pred[j]
+  //
+  // for (j in 1:t_lim) {
+  //   ppred[j] = gompertz_ccdf(j, gamma, lambda);
+  // }
 
 }
 
