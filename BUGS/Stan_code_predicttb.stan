@@ -13,8 +13,8 @@ functions {
 */
 
 // log hazard
-  real gompertz_log_h (real t, real shape, real scale) {
-    real log_h;
+  real gompertz_log_h (vector t, real shape, real scale) {
+    vector[num_elements(t)] log_h;
     log_h = log(scale) + (shape * t);
     return log_h;
   }
@@ -27,32 +27,40 @@ functions {
   }
 
   // gompertz log survival
-  real gompertz_log_S (real t, real shape, real scale) {
-    real log_S;
+  real gompertz_lccdf (vector t, real shape, real scale) {
+    vector[num_elements(t)] log_S;
     log_S = -scale/shape * (exp(shape * t) - 1);
     return log_S;
   }
 
+  // gompertz log density
+  real gompertz_lpdf (vector t, real shape, real scale) {
+    vector[num_elements(t)] log_pdf;
+    log_pdf = gompertz_log_h(t, shape, scale) + gompertz_lccdf(t | shape, scale);
+    return log_pdf;
+  }
+
   // gompertz survival
-  real gompertz_Surv (real t, real shape, real scale) {
+  real gompertz_ccdf (real t, real shape, real scale) {
     real S;
     S = exp(-scale/shape * (exp(shape * t) - 1));
     return S;
   }
 
-  // gompertz sampling distribution
+  // gompertz log survival distribution
   real surv_gompertz_lpdf (real t, real d, real shape, real scale) {
     real log_lik;
-    log_lik = d * gompertz_log_h(t, shape, scale) + gompertz_log_S(t, shape, scale);
+    log_lik = d * gompertz_log_h(t, shape, scale) + gompertz_lccdf(t | shape, scale);
     return log_lik;
   }
 }
 
 data {
   int<lower=0> N;
-  vector[N] t;
-  vector[N] d;
   int<lower=0> t_lim;
+
+  // vector[N] t;
+  // vector[N] d;
 
   // hyper parameters
   real mu_lambda;
@@ -61,11 +69,10 @@ data {
   real sigma_gamma;
 
 //TODO: alternative
-  // int<lower=1> N_uncensored;
-  // int<lower=1> N_censored;
-  // int<lower=0> NC;
-  // vector<lower=0>[N_censored] times_censored;
-  // vector<lower=0>[N_uncensored] times_uncensored;
+  int<lower=1> N_uncens;
+  int<lower=1> N_cens;
+  vector<lower=0>[N_cens] t_cens;
+  vector<lower=0>[N_uncens] t_uncens;
 }
 
 parameters {
@@ -88,13 +95,14 @@ model {
   loggamma ~ normal(mu_gamma, sigma_gamma);
 
   // likelihood
-  for (i in 1:N) {
-    target += surv_gompertz_lpdf(t[i] | d[i], gamma, lambda);
-  }
 
-//TODO: alternative formulation
-    // target += gompertz_lpdf(times_uncensored | gamma, lambda);
-    // target += gompertz_lccdf(times_censored | gamma, lambda);
+  // for (i in 1:N) {
+  //   target += surv_gompertz_lpdf(t[i] | d[i], gamma, lambda);
+  // }
+
+  // alternative formulation
+  target += gompertz_lpdf(t_uncens | gamma, lambda);
+  target += gompertz_lccdf(t_cens | gamma, lambda);
 }
 
 generated quantities {
@@ -103,7 +111,7 @@ generated quantities {
 /// need t_pred[j]
 
   for (j in 1:t_lim) {
-    ppred[j] = gompertz_Surv(j, gamma, lambda);
+    ppred[j] = gompertz_ccdf(j, gamma, lambda);
   }
 
 }
