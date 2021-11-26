@@ -61,11 +61,10 @@ data {
   real sigma_gamma;
 
 //TODO: alternative
-  // int<lower=1> N_uncensored;
-  // int<lower=1> N_censored;
-  // int<lower=0> NC;
-  // vector<lower=0>[N_censored] times_censored;
-  // vector<lower=0>[N_uncensored] times_uncensored;
+  // int<lower=1> N_uncens;
+  // int<lower=1> N_cens;
+  // vector<lower=0>[N_cens] times_cens;
+  // vector<lower=0>[N_uncens] times_uncens;
 }
 
 parameters {
@@ -93,8 +92,8 @@ model {
   }
 
 //TODO: alternative formulation
-    // target += gompertz_lpdf(times_uncensored | gamma, lambda);
-    // target += gompertz_lccdf(times_censored | gamma, lambda);
+    // target += gompertz_lpdf(times_uncens | gamma, lambda);
+    // target += gompertz_lccdf(times_cens | gamma, lambda);
 }
 
 generated quantities {
