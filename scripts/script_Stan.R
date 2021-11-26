@@ -30,19 +30,22 @@ dat_input <-
     ## alternative formulation
     # t = as.numeric(predicttb$time),
     # d = as.numeric(predicttb$status),
-    mu_lambda = -4,
-    sigma_lambda = 1,
-    mu_gamma = -1,
-    sigma_gamma = 1,
+    ## normal priors
+    mu_gamma = -0.8481,  # shape
+    sigma_gamma = 0.1,
+    ## gamma priors
+    a_lambda = 0.1, # rate
+    b_lambda = 1,
     t_lim = 20)
 
-params <- c("ppred",
-            "lambda",
-            "gamma")
+params <- c(
+  "ppred",
+  "lambda",
+  "gamma")
 
-n_iter <- 2e3
-n_burnin <- 1e1
-n_thin <- 1e1 #floor((n_iter - n_burnin)/500)
+n_iter <- 10e3
+n_burnin <- 3e1
+n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
 
 
 ##############
@@ -52,11 +55,11 @@ n_thin <- 1e1 #floor((n_iter - n_burnin)/500)
 out <- stan(data = dat_input,
             pars = params,
             file = here::here("BUGS", "Stan_code_predicttb.stan"),
-            chains = 2,
+            chains = 1,
             iter = n_iter,
             warmup = n_burnin,
             thin = n_thin,
-            control = list(adapt_delta = 0.9,
+            control = list(adapt_delta = 0.99,
                            max_treedepth = 20))
 
 stan_output <- extract(out)
