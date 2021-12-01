@@ -16,6 +16,8 @@ options(mc.cores = parallel::detectCores())
 edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
 load("data input/cleaned_migrant_predict_data.RData")
 
+pos_dat <- select(dat_m, pos, age, ethnicity)
+
 predicttb <-
   filter(dat_m, pos == TRUE) %>%
   mutate(time = as.numeric(time))
@@ -27,6 +29,9 @@ dat_input <-
     N_uncens = sum(predicttb$status),
     t_cens = predicttb$time[predicttb$status == 0],
     t_uncens = predicttb$time[predicttb$status == 1],
+    eth = as.numeric(as.factor(pos_dat$ethnicity)),
+    age = pos_dat$age,
+    pos = as.numeric(pos_dat$pos),
     ## alternative formulation
     # t = as.numeric(predicttb$time),
     # d = as.numeric(predicttb$status),
