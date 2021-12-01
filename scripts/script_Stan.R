@@ -18,6 +18,8 @@ load("data input/cleaned_migrant_predict_data.RData")
 
 pos_dat <- select(dat_m, pos, age, ethnicity)
 
+dummy_eth <- model.matrix(~ ethnicity, data = pos_dat)
+
 predicttb <-
   filter(dat_m, pos == TRUE) %>%
   mutate(time = as.numeric(time))
@@ -25,11 +27,13 @@ predicttb <-
 dat_input <-
   list(
     N = nrow(predicttb),
+    M = nrow(pos_dat),
     N_cens = sum(!predicttb$status),
     N_uncens = sum(predicttb$status),
     t_cens = predicttb$time[predicttb$status == 0],
     t_uncens = predicttb$time[predicttb$status == 1],
-    eth = as.numeric(as.factor(pos_dat$ethnicity)),
+    k = ncol(dummy_eth),  # include intercept
+    eth = dummy_eth,
     age = pos_dat$age,
     pos = as.numeric(pos_dat$pos),
     ## alternative formulation
@@ -45,6 +49,7 @@ dat_input <-
 
 params <- c(
   "ppred",
+  "y_tilde",
   "lambda",
   "gamma")
 
@@ -112,4 +117,13 @@ ggplot(plot_dat, aes(time, mean)) +
               linetype = 0,
               alpha = 0.2) +
   ylim(0, 1)
+
+
+# probability ltbi
+
+melt(stan_output$y_tilde) %>%
+ggplot(xx, aes(x = value)) +
+  geom_histogram() +
+  facet_wrap(~Var2)
+
 

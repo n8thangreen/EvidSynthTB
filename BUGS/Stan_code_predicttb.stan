@@ -45,8 +45,10 @@ functions {
 }
 
 data {
-  int<lower=0> N;
+  int<lower=0> N;      // ltbi positive
+  int<lower=0> M;      // complete sample
   int<lower=0> t_lim;
+  int<lower=1> k;
 
   // hyper parameters
   // real mu_lambda;
@@ -56,22 +58,15 @@ data {
   real a_lambda;
   real b_lambda;
 
-  real mu0;
-  real sigma0;
-  real mu_eth;
-  real sigma_eth;
-  real mu_age;
-  real sigma_age;
-
   // alternative
   int<lower=1> N_uncens;
   int<lower=1> N_cens;
   vector<lower=0>[N_cens] t_cens;
   vector<lower=0>[N_uncens] t_uncens;
 
-  vector[N] eth;
-  vector[N] age;
-  int<lower=0,upper=1> pos[N];
+  matrix[M, k] eth;
+  // vector[N] age;
+  int<lower=0,upper=1> pos[M];
 }
 
 parameters {
@@ -80,9 +75,8 @@ parameters {
   real<lower=0> lambda;  // rate
   real gamma;   // shape
 
-  real beta0;
-  real beta_age;
-  real beta_eth;
+  vector[k] beta;
+  // real beta_age;
 }
 
 transformed parameters {
@@ -98,9 +92,8 @@ model {
   lambda ~ gamma(a_lambda, b_lambda);
   gamma ~ normal(mu_gamma, sigma_gamma);
 
-  beta0 ~ normal(mu0, sigma0);
-  beta_eth ~ normal(mu_eth, sigma_eth);
-  beta_age ~ normal(mu_age, sigma_age);
+  beta ~ normal(0, 1);
+  // beta_age ~ normal(0, 1);
 
   // likelihood
 
@@ -112,27 +105,29 @@ model {
     target += gompertz_lccdf(t_cens[j] | gamma, lambda);
   }
 
-  pos ~ bernoulli_logit(beta0 + beta_eth * eth + beta_age * age);
+  pos ~ bernoulli_logit(eth * beta);  //+ beta_age * age);
 }
 
 generated quantities {
   vector[t_lim] ppred;
-  // what is j is not time
-  // need t_pred[j]
+  //TODO: what is j is not time
+  //      need t_pred[j]
 
-  vector[89] age_tilde = 1:89;
-  vector[6] eth_tilde = 1:6;
-  matrix[89, 6]<lower=0,upper=1> y_tilde;
+  // vector[89] age_tilde = 1:89;
+  vector[k - 1] y_tilde;
+  vector[k - 1] ones_vector = rep_vector(1, k - 1);
+
+  // complete design matrix
+  matrix[k - 1, k] X = append_col(ones_vector, diag_matrix(ones_vector));
 
   for (j in 1:t_lim) {
     ppred[j] = gompertz_ccdf(j, gamma, lambda);
   }
 
-  for (n in 1:89)
-    for (m in 1:6)
-      y_tilde[n, m] ~ bernoulli_logit_rng(beta0 + beta_eth * eth_tilde[m] + beta_age * age_tilde[n]);
-    }
-  }
+  // for (n in 1:89)
 
+    y_tilde = inv_logit(X * beta);   //+ beta_age * age_tilde[n]);
+
+  // }
 }
 
