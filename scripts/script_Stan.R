@@ -16,9 +16,13 @@ options(mc.cores = parallel::detectCores())
 edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
 load("data input/cleaned_migrant_predict_data.RData")
 
-pos_dat <- select(dat_m, pos, age, ethnicity)
+pos_dat <-
+  select(dat_m, pos, age, ethnicity) %>%
+  mutate(age = as.numeric(age)) %>%
+  na.omit()
 
-dummy_eth <- model.matrix(~ ethnicity, data = pos_dat)
+dummy_dat <- model.matrix(~ age, data = pos_dat)
+# dummy_eth <- model.matrix(~ ethnicity, data = pos_dat)
 
 predicttb <-
   filter(dat_m, pos == TRUE) %>%
@@ -27,18 +31,14 @@ predicttb <-
 dat_input <-
   list(
     N = nrow(predicttb),
-    M = nrow(pos_dat),
+    M = nrow(dummy_dat),
     N_cens = sum(!predicttb$status),
     N_uncens = sum(predicttb$status),
     t_cens = predicttb$time[predicttb$status == 0],
     t_uncens = predicttb$time[predicttb$status == 1],
-    k = ncol(dummy_eth),  # include intercept
-    eth = dummy_eth,
-    age = pos_dat$age,
+    k = ncol(dummy_dat),        # include intercept
+    X = dummy_dat,
     pos = as.numeric(pos_dat$pos),
-    ## alternative formulation
-    # t = as.numeric(predicttb$time),
-    # d = as.numeric(predicttb$status),
     ## normal priors
     mu_gamma = -0.8481,  # shape
     sigma_gamma = 0.1,
@@ -49,7 +49,8 @@ dat_input <-
 
 params <- c(
   "ppred",
-  "y_tilde",
+  "beta",
+  # "y_tilde",
   "lambda",
   "gamma")
 
@@ -68,6 +69,7 @@ out <- stan(data = dat_input,
             chains = 1,
             iter = n_iter,
             warmup = n_burnin,
+            init = list(list(`beta[10]` = 0.1)),
             thin = n_thin,
             control = list(adapt_delta = 0.99,
                            max_treedepth = 20))
@@ -121,9 +123,14 @@ ggplot(plot_dat, aes(time, mean)) +
 
 # probability ltbi
 
+eth_names <- colnames(dummy_eth)[-1]  # remove intercept
+n_eth <- length(eth_names)
+
 melt(stan_output$y_tilde) %>%
-ggplot(xx, aes(x = value)) +
+  mutate(Var2 = eth_names[match(Var2, 1:n_eth)]) %>%
+  ggplot(aes(x = value)) +
   geom_histogram() +
   facet_wrap(~Var2)
+
 
 

@@ -48,11 +48,9 @@ data {
   int<lower=0> N;      // ltbi positive
   int<lower=0> M;      // complete sample
   int<lower=0> t_lim;
-  int<lower=1> k;
+  int<lower=1> k;      // including intercept
 
   // hyper parameters
-  // real mu_lambda;
-  // real sigma_lambda;
   real mu_gamma;
   real sigma_gamma;
   real a_lambda;
@@ -64,37 +62,31 @@ data {
   vector<lower=0>[N_cens] t_cens;
   vector<lower=0>[N_uncens] t_uncens;
 
-  matrix[M, k] eth;
-  // vector[N] age;
+  matrix[M, k] X;
   int<lower=0,upper=1> pos[M];
 }
 
 parameters {
-  // real loglambda;
-  // real loggamma;
   real<lower=0> lambda;  // rate
   real gamma;   // shape
-
   vector[k] beta;
-  // real beta_age;
 }
 
 transformed parameters {
-  // real<lower=0> lambda;
-  //
-  // lambda = exp(loglambda);
 }
 
 model {
   // priors
-  // loglambda ~ normal(mu_lambda, sigma_lambda);
 
   lambda ~ gamma(a_lambda, b_lambda);
   gamma ~ normal(mu_gamma, sigma_gamma);
 
-  beta ~ normal(0, 1);
-  // beta_age ~ normal(0, 1);
+  for (i in 1:(k - 1)) {
+    beta[i] ~ normal(0, 1);
+  }
+  beta[k] ~ normal(0.2, 0.1);
 
+//print...
   // likelihood
 
   for (i in 1:N_uncens) {
@@ -105,7 +97,7 @@ model {
     target += gompertz_lccdf(t_cens[j] | gamma, lambda);
   }
 
-  pos ~ bernoulli_logit(eth * beta);  //+ beta_age * age);
+  pos ~ bernoulli_logit(X * beta);
 }
 
 generated quantities {
@@ -114,11 +106,11 @@ generated quantities {
   //      need t_pred[j]
 
   // vector[89] age_tilde = 1:89;
-  vector[k - 1] y_tilde;
-  vector[k - 1] ones_vector = rep_vector(1, k - 1);
+  // vector[k - 1] y_tilde;
+  // vector[k - 1] ones_vector = rep_vector(1, k - 1);
 
   // complete design matrix
-  matrix[k - 1, k] X = append_col(ones_vector, diag_matrix(ones_vector));
+  // matrix[k - 1, k] X = append_col(ones_vector, diag_matrix(ones_vector));
 
   for (j in 1:t_lim) {
     ppred[j] = gompertz_ccdf(j, gamma, lambda);
@@ -126,7 +118,7 @@ generated quantities {
 
   // for (n in 1:89)
 
-    y_tilde = inv_logit(X * beta);   //+ beta_age * age_tilde[n]);
+    // y_tilde = inv_logit(X * beta);   //+ beta_age * age_tilde[n]);
 
   // }
 }
