@@ -1,31 +1,54 @@
 
 library(brms)
+library(ggplot2)
 
-fit_brms <- brm(formula = pos ~ age*ethnicity,  
-                data = pos_dat, 
+load("data input/cleaned_migrant_predict_data.RData")
+
+pos_dat <-
+  select(dat_m, pos, age, ethnicity) %>%
+  mutate(age = as.numeric(age)) %>%
+  na.omit()
+
+fit_brms <- brm(formula = pos ~ age*ethnicity,
+                data = pos_dat,
                 family = bernoulli(link = "logit"),
-                warmup = 500, 
-                iter = 2000, 
-                chains = 2, 
-                inits = "0", 
-                cores = 2,
+                warmup = 500,
+                iter = 2000,
+                thin = 10,
+                chains = 2,
+                inits = "0",
+                cores = 3,
                 seed = 123)
 
-save(fit_brms, file = "data output/rbms.RData")
+save(fit_brms, file = "data output/brms_pltbi.RData")
 
-stan_output <- brms::as_draws_df(fit_brms)
+Xnew <-
+  expand.grid(age = 1:89,
+              ethnicity = levels(pos_dat$ethnicity))
 
-summary(fit_brms)
+pred_brms <-
+  fitted(fit_brms, newdata = Xnew)
 
-stanplot(fit_brms,
-         type = "areas",
-         prob = 0.95) +
-  xlim(-1, 1)
+p_ltbi_brms <- cbind(Xnew, prob_ltbi = pred_brms)
 
+ggplot(p_ltbi_brms, aes(x = age, y = prob_ltbi.Estimate, group = ethnicity, col = ethnicity)) +
+  geom_line()
 
-# frequentist
+save(p_ltbi_brms, file = "data output/p_ltbi_brms.RData")
+
+## frequentist
+
 fit <-
   dat_m %>%
   glm(pos ~ age*ethnicity,
       data = .,
       family = "binomial")
+
+pred <-
+  predict(fit, newdata = Xnew, type = "response")
+
+prob_ltbi <- cbind(Xnew, prob_ltbi = pred)
+
+ggplot(prob_ltbi, aes(x = age, y = prob_ltbi, group = ethnicity, col = ethnicity)) +
+  geom_line()
+
