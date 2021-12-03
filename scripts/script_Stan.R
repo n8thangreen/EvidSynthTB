@@ -16,6 +16,13 @@ options(mc.cores = parallel::detectCores())
 edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
 load("data input/cleaned_migrant_predict_data.RData")
 
+pos_dat <-
+  select(dat_m, pos, age, ethnicity) %>%
+  mutate(age = as.numeric(age)) %>%
+  na.omit()
+
+dummy_dat <- model.matrix(~ age + ethnicity, data = pos_dat)
+
 predicttb <-
   filter(dat_m, pos == TRUE) %>%
   mutate(time = as.numeric(time))
@@ -27,9 +34,6 @@ dat_input <-
     N_uncens = sum(predicttb$status),
     t_cens = predicttb$time[predicttb$status == 0],
     t_uncens = predicttb$time[predicttb$status == 1],
-    ## alternative formulation
-    # t = as.numeric(predicttb$time),
-    # d = as.numeric(predicttb$status),
     ## normal priors
     mu_gamma = -0.8481,  # shape
     sigma_gamma = 0.1,
@@ -107,4 +111,5 @@ ggplot(plot_dat, aes(time, mean)) +
               linetype = 0,
               alpha = 0.2) +
   ylim(0, 1)
+
 

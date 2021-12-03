@@ -45,12 +45,11 @@ functions {
 }
 
 data {
-  int<lower=0> N;
+  int<lower=0> N;      // ltbi positive
+  int<lower=0> M;      // complete sample
   int<lower=0> t_lim;
 
   // hyper parameters
-  // real mu_lambda;
-  // real sigma_lambda;
   real mu_gamma;
   real sigma_gamma;
   real a_lambda;
@@ -64,21 +63,15 @@ data {
 }
 
 parameters {
-  // real loglambda;
-  // real loggamma;
   real<lower=0> lambda;  // rate
   real gamma;   // shape
 }
 
 transformed parameters {
-  // real<lower=0> lambda;
-  //
-  // lambda = exp(loglambda);
 }
 
 model {
   // priors
-  // loglambda ~ normal(mu_lambda, sigma_lambda);
 
   lambda ~ gamma(a_lambda, b_lambda);
   gamma ~ normal(mu_gamma, sigma_gamma);
@@ -96,8 +89,8 @@ model {
 
 generated quantities {
   vector[t_lim] ppred;
-  // what is j is not time
-  // need t_pred[j]
+  //TODO: what is j is not time
+  //      need t_pred[j]
 
   for (j in 1:t_lim) {
     ppred[j] = gompertz_ccdf(j, gamma, lambda);
