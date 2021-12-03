@@ -46,7 +46,6 @@ functions {
 
 data {
   int<lower=0> N;      // ltbi positive
-  int<lower=0> M;      // complete sample
   int<lower=0> t_lim;
 
   // hyper parameters
