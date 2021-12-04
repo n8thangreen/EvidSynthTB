@@ -34,6 +34,8 @@ edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
 # predict-tb model fit stats
 load("~/R/EvidSynthTB/data output/brms_pltbi.RData")
 load("~/R/EvidSynthTB/data output/p_ltbi_brms.RData")
+# active tb survival
+load("~/R/EvidSynthTB/data output/stan_output.RData")
 
 # aggregate into 5 yr age groups
 pltbi_agegrp <-
@@ -78,25 +80,28 @@ edetecttb_a <-
 ppred <- stan_output$ppred
 
 S_m <-
-  summary(fs_m, t = 0:20) %>%
+  data.frame(time = 0:ncol(ppred),
+             est = c(1, colMeans(ppred))) %>%
   ##TODO: is this the right stat to use?
   mutate(diff = lag(est) - est)
 
 edetecttb_with_est <-
   full_join(edetecttb_a, S_m, by = "time") %>%
-  mutate(n_tb = round(n_ltbi*diff, 2))
+  mutate(n_tb = round(n_ltbi*diff, 2),
+         n_tb_low = round(n_ltbi_low*diff, 2),
+         n_tb_upp = round(n_ltbi_upp*diff, 2))
 
 save(edetecttb_with_est, file = "edetecttb_with_estimates.RData")
 write.csv(edetecttb_with_est, file = "edetecttb_with_estimates.csv")
 
 
-###################
+######################
 # compare with ETS
 
 library(readr)
 library(reshape2)
 
-ETS <- read_csv("../data/ETS_for_PREDICT_comparison_new.csv")
+ETS <- read_csv("../../data/ETS_for_PREDICT_comparison_new.csv")
 
 ETSm <-
   melt(ETS,
@@ -141,7 +146,30 @@ ggdat <-
 ggplot(ggdat, aes(time, value, col = variable, linetype = ethnicity)) +
   geom_line() +
   theme_bw() +
-  # facet_grid(age_grp ~ year, scales = "free_y")
+  geom_ribbon(data = combined_dat, aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity), inherit.aes = FALSE,
+              linetype = 0,
+              alpha = 0.1) +
   facet_wrap(vars(age_grp), scales = "free_y")
 
+
+## aggregate all ages
+combined_agg <-
+  combined_dat %>%
+  group_by(ethnicity) %>%
+  summarise(n_tb_ETS = sum(n_tb_ETS),
+            n_tb_low = sum(n_tb_low),
+            n_tb_upp = sum(n_tb_upp),
+            n_tb = sum(n_tb))
+ggdat <-
+  melt(combined_agg, measure.vars = c("n_tb", "n_tb_ETS")) %>%
+  mutate(value = ifelse(is.na(value), 0, value)) #%>%
+## single age easier to read
+# filter(age_grp == "[40,45)")
+
+ggplot(ggdat, aes(time, value, col = variable, linetype = ethnicity)) +
+  geom_line() +
+  theme_bw() +
+  geom_ribbon(data = combined_agg, aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity), inherit.aes = FALSE,
+              linetype = 0,
+              alpha = 0.1)
 
