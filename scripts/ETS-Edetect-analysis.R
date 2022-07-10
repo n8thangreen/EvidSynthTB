@@ -32,12 +32,12 @@ ETS <- read_csv("../../data/ETS_for_PREDICT_comparison_new.csv")
 edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
 
 # predict-tb model fit stats
-load("~/R/EvidSynthTB/data output/brms_pltbi.RData")
+load("~/R/EvidSynthTB/data output/brms_pltbi.RData")   # Stan output
 load("~/R/EvidSynthTB/data output/p_ltbi_brms.RData")
 # active tb survival
-load("~/R/EvidSynthTB/data output/stan_output.RData")
+load("~/R/EvidSynthTB/data output/stan_output.RData")  # gompertz
 
-# aggregate into 5 yr age groups
+# aggregate ethnicity into 5 yr age groups
 pltbi_agegrp <-
   p_ltbi_brms %>%
   mutate(age_grp = cut(age, breaks = seq(0, 95, 5), right = FALSE)) %>%
@@ -103,6 +103,7 @@ library(reshape2)
 
 ETS <- read_csv("../../data/ETS_for_PREDICT_comparison_new.csv")
 
+# clean ETS data
 ETSm <-
   melt(ETS,
        id.vars = c("age_grp_at_entry", "ethgrp", "entry_year"),
@@ -153,9 +154,10 @@ ggplot(ggdat, aes(time, value, col = variable, linetype = ethnicity)) +
 
 
 ## aggregate all ages
+
 combined_agg <-
   combined_dat %>%
-  group_by(ethnicity) %>%
+  group_by(ethnicity, time) %>%
   summarise(n_tb_ETS = sum(n_tb_ETS),
             n_tb_low = sum(n_tb_low),
             n_tb_upp = sum(n_tb_upp),
@@ -171,5 +173,5 @@ ggplot(ggdat, aes(time, value, col = variable, linetype = ethnicity)) +
   theme_bw() +
   geom_ribbon(data = combined_agg, aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity), inherit.aes = FALSE,
               linetype = 0,
-              alpha = 0.1)
-
+              alpha = 0.1) +
+facet_wrap(vars(ethnicity), scales = "free_y")
