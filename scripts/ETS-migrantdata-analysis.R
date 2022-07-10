@@ -51,12 +51,13 @@ pltbi_agegrp <-
             low_pltbi = mean(prob_ltbi.Q2.5),
             upp_pltbi = mean(prob_ltbi.Q97.5))  ##TODO: how to best aggregate this statistic?
 
+# combined ages
 pltbi_ethgrp <-
   p_ltbi_brms %>%
   group_by(ethnicity) %>%
   summarise(mean_pltbi = mean(prob_ltbi.Estimate),
             low_pltbi = mean(prob_ltbi.Q2.5),
-            upp_pltbi = mean(prob_ltbi.Q97.5))  ##TODO: how to best aggregate this statistic?
+            upp_pltbi = mean(prob_ltbi.Q97.5))
 
 ## clean migrant journey data
 
@@ -73,34 +74,27 @@ entry_pop <-
   group_by(year_issue, ethnicity) |>
   summarise(pop = sum(pop))
 
-#
-migrant_a <-
+# combine migrant counts and S probabilities
+# combine estimate number ltbi
+dat <-
   migrant_S %>%
   mutate(nat = as.character(nat)) |>
   mutate(nat = replace(nat, nat == "Sub_Saharan_Africa", "Black African"),
          nat = replace(nat, nat == "Bangladesh", "Bangladeshi"),
          nat = replace(nat, nat == "India", "Indian"),
-         nat = replace(nat, nat == "Pakistan", "Pakistani")) %>%
+         nat = replace(nat, nat == "Pakistan", "Pakistani")) |>
   rename(ethnicity = nat,
          S_expire = value) |>
-  as_tibble()
-
-# combine migrant counts and S probabilities
-migrant_dat <-
-  inner_join(migrant_a, entry_pop) |>
-  mutate(year_pop = S_expire*pop)
-
-# combine data and estimate number ltbi
-dat <-
-  migrant_dat %>%
-  left_join(pltbi_ethgrp, by = c("ethnicity")) %>%
-  # left_join(pltbi_agegrp, by = c("age_grp", "ethnicity")) %>%
+  inner_join(entry_pop) |>
+  mutate(year_pop = S_expire*pop) |>
+  left_join(pltbi_ethgrp, by = c("ethnicity")) |>
+  # left_join(pltbi_agegrp, by = c("age_grp", "ethnicity")) |>
   mutate(n_ltbi = year_pop*mean_pltbi,
          n_ltbi_low = year_pop*low_pltbi,
          n_ltbi_upp = year_pop*upp_pltbi) |>
   filter(year_issue <= year_expire) |>
   mutate(time = year_expire - year_issue + 1)
-  # full_join(data.frame(time = 1:10), by = character()) %>%
+  # full_join(data.frame(time = 1:10), by = character()) |>
   # na.omit()
 
 ##TODO: how to do this for posterior samples?
@@ -135,6 +129,7 @@ library(reshape2)
 ETS <- read_csv("../../data/ETS_for_PREDICT_comparison_new.csv")
 
 # clean ETS data
+# to long format
 ETSm <-
   melt(ETS,
        id.vars = c("age_grp_at_entry", "ethgrp", "entry_year"),
@@ -173,8 +168,6 @@ combined_a <-
             n_tb_ETS = sum(n_tb_ETS, na.rm = TRUE))
 
 
-
-
 ########
 # plots
 ########
@@ -186,19 +179,21 @@ ggplot(combined_dat, aes(time, n_tb, col = year_issue)) +
   xlim(0,8) +
   theme_bw() +
   facet_wrap(vars(ethnicity), scales = "free_y")
-  geom_ribbon(aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity), inherit.aes = FALSE,
+  geom_ribbon(aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity),
+              inherit.aes = FALSE,
               linetype = 0,
               alpha = 0.1) +
 
 
 ggdat <-
   melt(combined_agg, measure.vars = c("n_tb", "n_tb_ETS")) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) #%>%
+  mutate(value = ifelse(is.na(value), 0, value))
 
 ggplot(ggdat, aes(time, value, col = variable, linetype = ethnicity)) +
   geom_line() +
   theme_bw() +
-  geom_ribbon(data = combined_agg, aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity), inherit.aes = FALSE,
+  geom_ribbon(data = combined_agg, aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity),
+              inherit.aes = FALSE,
               linetype = 0,
               alpha = 0.1) +
 facet_wrap(vars(ethnicity), scales = "free_y")
