@@ -57,29 +57,19 @@ real inv_cdf_gompertz (real p, real shape, real scale) {
 
 data {
   int<lower=1> N;          // total sample size
-  int<lower=0> N_pos;      // ltbi positive
   int<lower=0> t_lim;
 
   // hyper parameters
-  real mu_gamma;
-  real sigma_gamma;
+  real mu_shape;
+  real sigma_shape;
   real a_lambda;
   real b_lambda;
 
-  // alternative
-  int<lower=0> N_tb;
-  int<lower=1> N_uncens;
-  int<lower=1> N_cens;
-
   vector<lower=0>[N] t;
-  vector<lower=0>[N_cens] t_cens;
-  vector<lower=0>[N_uncens] t_uncens;
+  vector<lower=0>[N] d;
 
   // number of columns in the design matrix X
   int K;
-  // design matrix X
-  // should not include an intercept
-  // matrix [N, K] X;
 
   vector[N] age;
   vector[N] ethnicity;
@@ -91,7 +81,7 @@ data {
 
 parameters {
   real<lower=0> lambda;  // rate
-  real gamma;            // shape
+  real shape;
 
   // regression coefficient vector
   real alpha;
@@ -100,53 +90,35 @@ parameters {
 
 transformed parameters {
   vector[N] eta;
-  real N_pos_hat;
-  vector[N] p_pos;
+  vector[N] cf;
 
-  // eta = alpha + X * beta;
   eta = alpha + beta[1]*age + beta[2]*ethnicity;
-
-  N_pos_hat = inv_logit(alpha)*N;
-  p_pos = inv_logit(eta);
+  cf = inv_logit(eta);
 }
 
 model {
   // priors
   lambda ~ normal(a_lambda, b_lambda);
-
-  alpha ~ normal(0, scale_alpha);
+  shape ~ normal(mu_shape, sigma_shape);
   beta ~ normal(0, scale_beta);
+  alpha ~ normal(0, scale_alpha);
 
   // likelihood
-
-  // target = binomial_logit_lpmf(N_pos | N, eta);
-  // for (k in 1:N) {
-  //   // N_pos ~ bernoulli_logit(eta);
-  //   target += bernoulli_logit_lpmf(pos[k] | eta[k]);
-  // }
-
-
-  // for (i in 1:N) {
-  //   target += poisson_lpmf(N_tb | trisk*lambda);
-  // }
-
-  //// cure fraction model
-  ///TODO: see bstanmcm code...
-
+  // cure fraction model
   for (i in 1:N) {
     target += log_sum_exp(
-                log(cf[i]), log1m(cf[i]) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda[i]));
+                log(cf[i]), log1m(cf[i]) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
   }
 
 }
 
 generated quantities {
-  vector[t_lim] ppred;
-  //TODO: what is j is not time
-  //      need t_pred[j]
-
-  for (j in 1:t_lim) {
-    ppred[j] = gompertz_ccdf(j, gamma, lambda);
-  }
+  // vector[t_lim] ppred;
+  // //TODO: what is j is not time
+  // //      need t_pred[j]
+  //
+  // for (j in 1:t_lim) {
+  //   ppred[j] = gompertz_ccdf(j, gamma, lambda);
+  // }
 }
 
