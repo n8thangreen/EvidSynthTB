@@ -58,25 +58,27 @@ real inv_cdf_gompertz (real p, real shape, real scale) {
 data {
   int<lower=1> N;          // total sample size
   int<lower=0> t_lim;
+  int<lower=0> n_eth;
 
   // hyper parameters
   real mu_shape;
   real sigma_shape;
   real a_lambda;
   real b_lambda;
+  real a_eth;
+  real b_eth;
 
   vector<lower=0>[N] t;
   vector<lower=0>[N] d;
 
-  // number of columns in the design matrix X
-  int K;
+  vector[N] pos;
 
   vector[N] age;
-  vector[N] ethnicity;
+  int ethnicity[N];
 
   // priors on regression coefficients
   real scale_alpha;
-  vector[K] scale_beta;
+  real scale_beta;
 }
 
 parameters {
@@ -85,14 +87,17 @@ parameters {
 
   // regression coefficient vector
   real alpha;
-  vector[K] beta;
+  real beta_age;
+
+  vector[n_eth] beta_eth;
+  real sd_eth;
 }
 
 transformed parameters {
   vector[N] eta;
   vector[N] cf;
 
-  eta = alpha + beta[1]*age + beta[2]*ethnicity;
+  eta = alpha + beta_age*age + beta_eth[ethnicity];
   cf = inv_logit(eta);
 }
 
@@ -100,8 +105,17 @@ model {
   // priors
   lambda ~ normal(a_lambda, b_lambda);
   shape ~ normal(mu_shape, sigma_shape);
-  beta ~ normal(0, scale_beta);
+  beta_age ~ normal(0, scale_beta);
   alpha ~ normal(0, scale_alpha);
+  sd_eth ~ gamma(a_eth, b_eth);
+
+  for (j in 1:n_eth) {
+    beta_eth[j] ~ normal(0, sd_eth);
+  }
+
+  for (i in 1:N) {
+    pos[i] ~ bernoulli(cf[i])
+  }
 
   // likelihood
   // cure fraction model
@@ -113,12 +127,12 @@ model {
 }
 
 generated quantities {
-  // vector[t_lim] ppred;
-  // //TODO: what is j is not time
-  // //      need t_pred[j]
-  //
-  // for (j in 1:t_lim) {
-  //   ppred[j] = gompertz_ccdf(j, gamma, lambda);
-  // }
+  vector[t_lim] S_pred;
+  //TODO: what is j is not time
+  //      need t_pred[j]
+
+  for (j in 1:t_lim) {
+    S_pred[j] = gompertz_Surv(j, shape, lambda);
+  }
 }
 
