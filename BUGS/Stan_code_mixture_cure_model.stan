@@ -62,23 +62,23 @@ data {
 
   // hyper parameters
   real mu_shape;
-  real sigma_shape;
+  real<lower=0> sigma_shape;
   real a_lambda;
   real b_lambda;
   real a_eth;
   real b_eth;
 
   vector<lower=0>[N] t;
-  vector<lower=0>[N] d;
+  vector<lower=0, upper=1>[N] d;
 
-  vector[N] pos;
+  int pos[N];
 
   vector[N] age;
   int ethnicity[N];
 
   // priors on regression coefficients
-  real scale_alpha;
-  real scale_beta;
+  real<lower=0> scale_alpha;
+  real<lower=0> scale_beta;
 }
 
 parameters {
@@ -90,12 +90,12 @@ parameters {
   real beta_age;
 
   vector[n_eth] beta_eth;
-  real sd_eth;
+  real<lower=0> sd_eth;
 }
 
 transformed parameters {
   vector[N] eta;
-  vector[N] cf;
+  vector<lower=0, upper=1>[N] cf;
 
   eta = alpha + beta_age*age + beta_eth[ethnicity];
   cf = inv_logit(eta);
@@ -103,7 +103,7 @@ transformed parameters {
 
 model {
   // priors
-  lambda ~ normal(a_lambda, b_lambda);
+  lambda ~ gamma(a_lambda, b_lambda);
   shape ~ normal(mu_shape, sigma_shape);
   beta_age ~ normal(0, scale_beta);
   alpha ~ normal(0, scale_alpha);
@@ -113,22 +113,25 @@ model {
     beta_eth[j] ~ normal(0, sd_eth);
   }
 
-  for (i in 1:N) {
-    pos[i] ~ bernoulli(cf[i])
-  }
-
   // likelihood
-  // cure fraction model
+  // mixture cure model
   for (i in 1:N) {
-    target += log_sum_exp(
-                log(cf[i]), log1m(cf[i]) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
+    // pos[i] ~ bernoulli_logit(eta[i])
+
+    target += bernoulli_logit_lupmf(pos[i] | eta[i]) +
+              log_sum_exp(
+                log1m(cf[i]), log(cf[i]) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
+
+    // target += log_sum_exp(
+    //             log((cf[i]/(1-cf[i]))^pos[i]),
+    //             log(cf[i]^(pos[i]+1) / (1 - cf)^(pos[i]-1)) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
   }
 
 }
 
 generated quantities {
   vector[t_lim] S_pred;
-  //TODO: what is j is not time
+  //TODO: what if j is not time
   //      need t_pred[j]
 
   for (j in 1:t_lim) {

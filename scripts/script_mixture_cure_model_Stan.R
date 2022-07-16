@@ -28,16 +28,16 @@ dat_input <-
     ethnicity =  as.numeric(droplevels(dat_m$ethnicity)),
     n_eth = length(unique(dat_m$ethnicity)),
     t_lim = 20,
-    scale_alpha = 1,
-    scale_beta = 1,
+    scale_alpha = 10,
+    scale_beta = 10,
     a_eth = 0.01,
     b_eth = 0.01,
     ## normal priors
     mu_shape = -0.8481,
-    sigma_shape = 0.1,
+    sigma_shape = 1,
     ## gamma priors
-    a_lambda = 0.1, # rate
-    b_lambda = 1)
+    a_lambda = 0.01, # rate
+    b_lambda = 0.01)
 
 params <- c(
   "S_pred",
@@ -83,8 +83,8 @@ library(ggplot2)
 # base R
 stan_output$S_pred %>%
   as.data.frame %>%
-  # summarise(across(.fns = ~ mean(.x, na.rm = TRUE ))) %>%
-  summarise(across(.fns = ~ median(.x, na.rm = TRUE ))) %>%
+  summarise(across(.fns = ~ mean(.x, na.rm = TRUE ))) %>%
+  # summarise(across(.fns = ~ median(.x, na.rm = TRUE ))) %>%
   unlist() %>%
   plot(ylim = c(0.5, 1), type = "l")
 
@@ -123,7 +123,7 @@ for (i in 1:ncol(stan_output$beta_eth)) {
 
   lrg <- stan_output$alpha + stan_output$beta_eth[, i]
   print(summary(1/(1 + exp(-lrg))))
+  hist(1/(1 + exp(-lrg)), breaks = 40)
 }
 
-hist(1/(1 + exp(-lrg)), breaks = 40)
 
