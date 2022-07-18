@@ -76,16 +76,13 @@ parameters {
   real shape;
   real<lower=0, upper=1> sens;
   real<lower=0, upper=1> spec;
-  real<lower=0, upper=1> prev;
-  // real<lower=0, upper=1> prob_pos;
+  real<lower=0, upper=1> prev_cf;
+  real<lower=0, upper=1> prev_diag;
 }
 
 transformed parameters {
-  // real<lower=0, upper=1> prev;
-  // prev = (prob_pos + spec - 1)/(sens + spec - 1);
-
   real<lower=0, upper=1> prob_pos;
-  prob_pos = prev*sens + (1-prev)*(1-spec);
+  prob_pos = prev_diag*sens + (1-prev_diag)*(1-spec);
 }
 
 model {
@@ -94,20 +91,22 @@ model {
   shape ~ normal(mu_shape, sigma_shape);
   sens ~ beta(100, 20);
   spec ~ beta(100, 20);
-  // prob_pos ~ beta(30, 30);
-  prev ~ beta(30, 60);
+  prev_mean ~ normal(-1, 1);
+  prev_sd ~ gamma(0.1, 0.1);
+
+  # random effect
+  logit(prev_diag) ~ normal(prev_mean, prev_sd);
+  logit(prev_cf) ~ normal(prev_mean, prev_sd);
 
   // likelihood
   // mixture cure model
   for (i in 1:N) {
     pos[i] ~ bernoulli(prob_pos);
-    // log(prob_pos^pos[i] * (1 - prob_pos)^(1 - pos[i])) +
 
     target += log_sum_exp(
-                log1m(prev),
-                log(prev) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
+                log1m(prev_cf),
+                log(prev_cf) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
   }
-
 }
 
 generated quantities {
