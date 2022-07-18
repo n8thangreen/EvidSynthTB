@@ -113,18 +113,20 @@ model {
     beta_eth[j] ~ normal(0, sd_eth);
   }
 
+////TODO: at diagnosis model?
+
   // likelihood
   // mixture cure model
   for (i in 1:N) {
     // pos[i] ~ bernoulli_logit(eta[i])
 
-    target += bernoulli_logit_lupmf(pos[i] | eta[i]) +
-              log_sum_exp(
-                log1m(cf[i]), log(cf[i]) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
+    // target += bernoulli_logit_lupmf(pos[i] | eta[i]) +
+    //           log_sum_exp(
+    //             log1m(cf[i]), log(cf[i]) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
 
-    // target += log_sum_exp(
-    //             log((cf[i]/(1-cf[i]))^pos[i]),
-    //             log(cf[i]^(pos[i]+1) / (1 - cf)^(pos[i]-1)) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
+    target += log_sum_exp(
+                log((cf[i]/(1-cf[i]))^pos[i]),
+                log(cf[i]^(pos[i]+1) / (1 - cf[i])^(pos[i]-1)) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
   }
 
 }
@@ -135,6 +137,7 @@ generated quantities {
   //      need t_pred[j]
 
   for (j in 1:t_lim) {
+    // S_pred[j] =(1 - inv_logit(alpha)) + inv_logit(alpha)*gompertz_Surv(j, shape, lambda);
     S_pred[j] = gompertz_Surv(j, shape, lambda);
   }
 }

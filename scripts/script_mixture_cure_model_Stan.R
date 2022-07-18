@@ -45,9 +45,11 @@ params <- c(
   "beta_age", "beta_eth",
   "lambda", "shape")
 
-n_iter <- 10e2
+n_iter <- 10e3
 n_burnin <- 3e1
-n_thin <- 1e1 #floor((n_iter - n_burnin)/500)
+n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
+
+##TODO: try with artificial clean data?
 
 
 ###########
