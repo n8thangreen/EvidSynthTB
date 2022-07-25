@@ -1,7 +1,7 @@
 // using predict-tb data
 // estimate tb progression
 // from ltbi positive cases
-
+// hierarchical model on prevalence
 
 functions {
 /**
@@ -57,7 +57,12 @@ real inv_cdf_gompertz (real p, real shape, real scale) {
 
 data {
   int<lower=1> N;          // total sample size
+  int<lower=1> N_obs;
+  int<lower=1> N_cens;
   int<lower=0> t_lim;
+
+  int obs_idx[N_obs];
+  int cens_idx[N_cens];
 
   // hyper parameters
   real mu_shape;
@@ -68,20 +73,28 @@ data {
   vector<lower=0>[N] t;
   vector<lower=0, upper=1>[N] d;
 
-  int pos[N];
+  int x[N];  // positive test results
 }
 
 parameters {
-  real<lower=0> lambda;  // rate
-  real shape;
   real<lower=0, upper=1> sens;
   real<lower=0, upper=1> spec;
-  real<lower=0, upper=1> prev_cf;
-  real<lower=0, upper=1> prev_diag;
+  real lin_diag;
+  real lin_cf;
+  real<lower=0> lambda;  // rate
+  real shape;
+  real prev_mean;
+  real<lower=0> prev_sd;
 }
 
 transformed parameters {
   real<lower=0, upper=1> prob_pos;
+  real<lower=0, upper=1> prev_diag;
+  real<lower=0, upper=1> prev_cf;
+
+  prev_diag = inv_logit(lin_diag);
+  prev_cf = inv_logit(lin_cf);
+
   prob_pos = prev_diag*sens + (1-prev_diag)*(1-spec);
 }
 
@@ -91,21 +104,32 @@ model {
   shape ~ normal(mu_shape, sigma_shape);
   sens ~ beta(100, 20);
   spec ~ beta(100, 20);
-  prev_mean ~ normal(-1, 1);
-  prev_sd ~ gamma(0.1, 0.1);
+  prev_mean ~ normal(-1, 0.5);
+  prev_sd ~ gamma(1, 2);
 
-  # random effect
-  logit(prev_diag) ~ normal(prev_mean, prev_sd);
-  logit(prev_cf) ~ normal(prev_mean, prev_sd);
+  // random effect
+  lin_diag ~ normal(prev_mean, prev_sd);
+  lin_cf ~ normal(prev_mean, prev_sd);
+
+  //// prevalence/cure fraction as individual level random effect?
+  // for (i in 1:N){
+  //   prev[i] ~ normal(prev_mean, prev_sd);
+  // }
 
   // likelihood
   // mixture cure model
   for (i in 1:N) {
-    pos[i] ~ bernoulli(prob_pos);
-
     target += log_sum_exp(
                 log1m(prev_cf),
                 log(prev_cf) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
+  }
+
+  for (i in 1:N_cens) {
+    x[cens_idx[i]] ~ bernoulli(prob_pos);
+  }
+
+  for (i in 1:N_obs) {
+    x[obs_idx[i]] ~ bernoulli(sens);
   }
 }
 

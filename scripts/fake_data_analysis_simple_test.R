@@ -9,6 +9,8 @@ library(purrr)
 library(readr)
 library(dplyr)
 
+# rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
 
 N <- 1000
 
@@ -17,45 +19,43 @@ rdat <-
     t = round(flexsurv::rgompertz(N, shape = 0.5, rate = 0.1), 3)) |>
     mutate(x = rbinom(n = N, size = 1, prob = 0.3),
            ## observe all progression times
+           ## no false negatives
            d = ifelse(x == 1, 1, 0),
            # d = sample(c(0,1), size = N, replace = TRUE),
            # d = ifelse(x == 0, 0, d),
+           ## censored times after event times
            t = ifelse(x == 0, t + 5, t)) |>
   as_tibble()
 
 rdat
 
-# for (i in prob) {
-#   x[i] <- purrr::rbernoulli(1, p = i)
-# }
-
-# rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
-
 
 dat_input <-
   list(
     N = nrow(rdat),
-    t = as.numeric(rdat$t),
-    d = as.numeric(rdat$d),
-    pos = rdat$x,
+    N_obs = sum(rdat$d),
+    N_cens = sum(1 - rdat$d),
     t_lim = 20,
-    ## normal priors
     mu_shape = 0.5,
     sigma_shape = 1,
-    ## gamma priors on rate
     a_lambda = 3,
-    b_lambda = 30)
+    b_lambda = 30,
+    obs_idx = which(rdat$d == 1),
+    cens_idx = which(rdat$d == 0),
+    t = as.numeric(rdat$t),
+    d = as.numeric(rdat$d),
+    x = rdat$x)
 
 params <- c(
   "S_pred",
   "sens", "spec",
-  "prev",
+  "prev_cf", "prev_diag", "prev_mean",
   "lambda", "shape")
 
 n_iter <- 10e3
 n_burnin <- 3e1
 n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
+
 
 ###########
 # run MCMC
@@ -123,10 +123,13 @@ ggplot(plot_dat, aes(time, median)) +
 
 # LTBI prevalence
 
-hist(stan_output$prev, breaks = 40)
+hist(stan_output$prev_cf, breaks = 40)
+hist(stan_output$prev_diag, breaks = 40)
+hist(stan_output$prev_mean, breaks = 40)
+hist(1/(1 + exp(-stan_output$prev_mean)), breaks = 40)
 hist(stan_output$sens, breaks = 40)
 hist(stan_output$spec, breaks = 40)
 
-plot(flexsurv::pgompertz(q = 0:20, shape = 0.1, rate = 0.1, lower.tail = FALSE),
+plot(flexsurv::pgompertz(q = 0:20, shape = 0.5, rate = 0.1, lower.tail = FALSE),
       type = "l")
 
