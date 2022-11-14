@@ -1,0 +1,14 @@
+## LTBI screening split model
+
+model {
+
+  for (j in 1:len_gp) {
+
+  ##TODO:...
+
+  }
+
+  ## prior distributions
+
+}
+
