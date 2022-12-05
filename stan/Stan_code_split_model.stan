@@ -1,59 +1,58 @@
-// using predict-tb data
 // estimate tb progression
-// from ltbi positive cases
-// hierarchical model on prevalence
+// using kernel estimate posterior of latent prevalence
+
+// see:
+// Goudie RJB, Presanis AM, Lunn D, De Angelis D, Wernisch L.
+// Joining and splitting models with Markov melding. Bayesian Anal. 2019;14(1)
+// p.95
+
 
 functions {
 #include /include/distributions.stan
 }
 
 data {
-  int<lower=1> N;          // total sample size
-  int<lower=1> N_obs;
-  int<lower=1> N_cens;
+  int<lower=1> N;          // event sample size
   int<lower=0> t_lim;
-
-  int obs_idx[N_obs];
-  int cens_idx[N_cens];
-
-  // hyper parameters
-  real mu_shape;
-  real<lower=0> sigma_shape;
-  real a_lambda;
-  real b_lambda;
-
   vector<lower=0>[N] t;
   vector<lower=0, upper=1>[N] d;
 
-  int x[N];  // positive test results
+  // hyper parameters
+  // gompertz
+  real mu_shape;
+  real<lower=0> sigma_shape;
+
+  real a_lambda;  // rate
+  real b_lambda;
+
+  // cure fraction
+  real mu_cf;
+  real<lower=0> mu_sigma;
+
+  // plug-in cure fraction data
+  int<lower=1> M;          // sample size
+  real[M] mu_hat;
+  real<lower=0>[M] sigma_hat;
 }
 
 parameters {
-  real<lower=0, upper=1> sens;
-  real<lower=0, upper=1> spec;
-  real lin_diag;
   real lin_cf;
   real<lower=0> lambda;  // rate
   real shape;
-  real prev_mean;
-  real<lower=0> prev_sd;
 }
 
 transformed parameters {
-  real<lower=0, upper=1> prob_pos;
-  real<lower=0, upper=1> prev_diag;
   real<lower=0, upper=1> prev_cf;
 
-  prev_diag = inv_logit(lin_diag);
   prev_cf = inv_logit(lin_cf);
-
-  prob_pos = prev_diag*sens + (1-prev_diag)*(1-spec);
 }
 
 model {
   // priors
   lambda ~ gamma(a_lambda, b_lambda);
   shape ~ normal(mu_shape, sigma_shape);
+
+  lin_cf ~ normal(mu_cf, sigma_cf);
 
   // likelihood
   // mixture cure model
@@ -63,22 +62,18 @@ model {
                 log(prev_cf) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
   }
 
-  for (i in 1:N_cens) {
-    x[cens_idx[i]] ~ bernoulli(prob_pos);
-  }
-
-  for (i in 1:N_obs) {
-    x[obs_idx[i]] ~ bernoulli(sens);
+  // incidence model
+  for (i in 1:M) {
+    target += normal_lpdf(mu_hat[i] | lin_cf, sigma_hat[i]);
   }
 }
 
 generated quantities {
-  vector[t_lim] S_pred;
-  //TODO: what if j is not time
-  //      need t_pred[j]
-
-  for (j in 1:t_lim) {
-    S_pred[j] = gompertz_Surv(j, shape, lambda);
-  }
+  //TODO:
+  // vector[t_lim] S_pred;
+  //
+  // for (j in 1:t_lim) {
+  //   S_pred[j] = gompertz_Surv(j, shape, lambda);
+  // }
 }
 
