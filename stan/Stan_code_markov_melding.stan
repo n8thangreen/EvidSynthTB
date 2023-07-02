@@ -1,4 +1,4 @@
-// estimate tb progression
+// estimate tb progression distribution
 // using kernel estimate posterior of latent prevalence
 // modular models with feedback
 // assume a perfect diagnostic test
@@ -29,12 +29,12 @@ data {
 
   // cure fraction
   real mu_cf;
-  real<lower=0> mu_sigma;
+  real<lower=0> sigma_cf;
 
-  // plug-in cure fraction data
-  int<lower=1> M;          // diagnostic sample size
-  real[M] mu_hat;
-  real<lower=0>[M] sigma_hat;
+  // plug-in cure fraction (posterior) data
+  int<lower=1> M;          // sample size
+  vector[M] mu_hat;
+  vector<lower=0>[M] sigma_hat;
 }
 
 parameters {

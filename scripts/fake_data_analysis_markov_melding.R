@@ -11,7 +11,7 @@ library(dplyr)
 
 
 # sample size
-N <- 1000
+N <- 500
 
 # disease-free censoring additional time
 t_offset <- 5
@@ -32,12 +32,11 @@ progression_dat <-
   as_tibble()
 
 prevalence_dat <-
-  data.frame(mu_hat = boot::logit(0.3),
+  data.frame(mu_hat = boot::logit(rnorm(n = 10, mean = 0.3, sd = 0.05)),
              sigma_hat = 0.01)
 
 # rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
-
 
 dat_input <-
   list(
@@ -47,8 +46,6 @@ dat_input <-
     d = as.numeric(progression_dat$d),
     pos = progression_dat$x,
     t_lim = 20,        # maximum time
-    mu_alpha = -0.8,
-    scale_alpha = 0.5,
     ## normal priors on shape
     mu_shape = 0.1,
     sigma_shape = 0.5,
@@ -57,17 +54,19 @@ dat_input <-
     b_lambda = 0.01,
     mu_hat = prevalence_dat$mu_hat,
     sigma_hat = prevalence_dat$sigma_hat,
+    # mu_hat = array(prevalence_dat$mu_hat, 1),
+    # sigma_hat = array(prevalence_dat$sigma_hat, 1),
     mu_cf = boot::logit(0.3),
     sigma_cf = 0.1)
 
 params <- c(
-  # "S_pred",          # generated sample
+  # "S_pred",          # generated values
   "prev_cf",          # ltbi prevalence
   "lambda", "shape")
 
-n_iter <- 10e3
-n_burnin <- 3e1
-n_thin <- 2e1  #floor((n_iter - n_burnin)/500)
+n_iter <- 1e3
+n_burnin <- 100
+n_thin <- 10  #floor((n_iter - n_burnin)/500)
 
 ###########
 # run MCMC
@@ -75,6 +74,8 @@ n_thin <- 2e1  #floor((n_iter - n_burnin)/500)
 
 out <- stan(data = dat_input,
             pars = params,
+            model_name = "stan_output_fake_markov_melding",
+            # init = ,
             file = here::here("stan", "Stan_code_markov_melding.stan"),
             chains = 1,
             iter = n_iter,
@@ -84,6 +85,8 @@ out <- stan(data = dat_input,
                            max_treedepth = 20))
 
 stan_output <- extract(out)
+
+save(stan_output, file = here::here("data output", "stan_output_fake_markov_melding.RData"))
 
 mean(stan_output$lambda)
 mean(stan_output$shape)
@@ -103,7 +106,6 @@ stan_output$S_pred %>%
   # summarise(across(.fns = ~ median(.x, na.rm = TRUE ))) %>%
   unlist() %>%
   plot(type = "l")
-
 
 plot_dat <-
   stan_output$S_pred %>%
@@ -132,10 +134,8 @@ ggplot(plot_dat, aes(time, median)) +
               alpha = 0.2) +
   ylim(0, 1)
 
-
 # LTBI prevalence
-
-hist(stan_output$cf, breaks = 40)
+hist(stan_output$prev_cf, breaks = 40)
 
 plot(flexsurv::pgompertz(q = 0:20, shape = 0.5, rate = 0.01, lower.tail = FALSE),
       type = "l", col = "red")
