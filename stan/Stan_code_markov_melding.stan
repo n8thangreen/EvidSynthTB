@@ -1,6 +1,7 @@
 // estimate tb progression
 // using kernel estimate posterior of latent prevalence
-// modular models with no feedback
+// modular models with feedback
+// assume a perfect diagnostic test
 
 // see:
 // Goudie RJB, Presanis AM, Lunn D, De Angelis D, Wernisch L.

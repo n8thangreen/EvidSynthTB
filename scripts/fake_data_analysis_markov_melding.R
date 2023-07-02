@@ -1,7 +1,7 @@
 
-# Fit simple mixture cure model
-# with simulates artificial ltbi and tb data
-# without covariate age or ethnicity
+# Fit markov melding model using Stan
+# with simulated artificial ltbi and tb progression data
+# without covariate (age or ethnicity)
 
 library(rstan)
 library(shinystan)
@@ -20,7 +20,7 @@ t_offset <- 5
 p_ltbi <- 0.3
 
 # progression from ltbi to active tb times
-rdat <-
+progression_dat <-
   data.frame(
     t = round(flexsurv::rgompertz(N, shape = 0.1, rate = 0.1), 3)) |>
     mutate(x = rbinom(n = N, size = 1, prob = p_ltbi),   # ltbi status
@@ -31,11 +31,9 @@ rdat <-
            t = ifelse(x == 0, t + t_offset, t)) |>       # time
   as_tibble()
 
-rdat
-
-# for (i in prob) {
-#   x[i] <- purrr::rbernoulli(1, p = i)
-# }
+prevalence_dat <-
+  data.frame(mu_hat = boot::logit(0.3),
+             sigma_hat = 0.01)
 
 # rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
@@ -43,10 +41,11 @@ options(mc.cores = parallel::detectCores())
 
 dat_input <-
   list(
-    N = nrow(rdat),
-    t = as.numeric(rdat$t),
-    d = as.numeric(rdat$d),
-    pos = rdat$x,
+    N = nrow(progression_dat),
+    M = nrow(prevalence_dat),
+    t = as.numeric(progression_dat$t),
+    d = as.numeric(progression_dat$d),
+    pos = progression_dat$x,
     t_lim = 20,        # maximum time
     mu_alpha = -0.8,
     scale_alpha = 0.5,
@@ -55,12 +54,15 @@ dat_input <-
     sigma_shape = 0.5,
     ## gamma priors on rate
     a_lambda = 0.1,
-    b_lambda = 0.01)
+    b_lambda = 0.01,
+    mu_hat = prevalence_dat$mu_hat,
+    sigma_hat = prevalence_dat$sigma_hat,
+    mu_cf = boot::logit(0.3),
+    sigma_cf = 0.1)
 
 params <- c(
-  "S_pred",
-  "cf",      # ltbi prevalence
-  "alpha",
+  # "S_pred",          # generated sample
+  "prev_cf",          # ltbi prevalence
   "lambda", "shape")
 
 n_iter <- 10e3
