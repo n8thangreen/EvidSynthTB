@@ -62,11 +62,6 @@ model {
                 log1m(prev_cf),
                 log(prev_cf) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
   }
-
-  // incidence model (ltbi prevalence)
-  for (i in 1:M) {
-    target += normal_lpdf(mu_hat[i] | lin_cf, sigma_hat[i]);
-  }
 }
 
 generated quantities {

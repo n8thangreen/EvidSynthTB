@@ -1,6 +1,6 @@
 
-# Evidence synthesis LTBI screening: Stan
-# with real data
+# Evidence synthesis LTBI screening using Stan
+# markov melding model with real data
 
 
 library(rstan)
@@ -49,16 +49,13 @@ n_iter <- 10e3
 n_burnin <- 3e1
 n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
 
-##TODO: try with artificial clean data?
-
-
 ###########
 # run MCMC
 ###########
 
 out <- stan(data = dat_input,
             pars = params,
-            file = here::here("BUGS", "Stan_code_mixture_cure_model.stan"),
+            file = here::here("BUGS", "Stan_code_markov_melding.stan"),
             chains = 1,
             iter = n_iter,
             warmup = n_burnin,
@@ -68,7 +65,7 @@ out <- stan(data = dat_input,
 
 stan_output <- extract(out)
 
-save(stan_output, file = here::here("data output", "stan_output_mcm.RData"))
+save(stan_output, file = here::here("data output", "stan_output_markov_melding.RData"))
 
 mean(stan_output$lambda)
 mean(stan_output$shape)

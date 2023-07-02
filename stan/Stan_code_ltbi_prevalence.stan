@@ -1,6 +1,4 @@
-// estimate tb progression
-// using kernel estimate posterior of latent prevalence
-// modular models with no feedback
+// estimate lbi prevalence
 
 // see:
 // Goudie RJB, Presanis AM, Lunn D, De Angelis D, Wernisch L.
@@ -14,17 +12,6 @@ functions {
 
 data {
   int<lower=1> N;          // survival data sample size
-  int<lower=0> t_lim;      // maximum time
-  vector<lower=0>[N] t;
-  vector<lower=0, upper=1>[N] d;  // censoring status
-
-  // hyper parameters
-  // gompertz
-  real mu_shape;
-  real<lower=0> sigma_shape;
-
-  real a_lambda;  // rate
-  real b_lambda;
 
   // cure fraction
   real mu_cf;
@@ -54,14 +41,6 @@ model {
   shape ~ normal(mu_shape, sigma_shape);
 
   lin_cf ~ normal(mu_cf, sigma_cf);
-
-  // likelihood
-  // mixture cure model (tb progression)
-  for (i in 1:N) {
-    target += log_sum_exp(
-                log1m(prev_cf),
-                log(prev_cf) + surv_gompertz_lpdf(t[i] | d[i], shape, lambda));
-  }
 
   // incidence model (ltbi prevalence)
   for (i in 1:M) {
