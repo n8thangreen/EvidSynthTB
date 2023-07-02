@@ -63,7 +63,7 @@ n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
 
 out <- stan(data = dat_input,
             pars = params,
-            file = here::here("BUGS", "Stan_code_mixture_cure_model_simple_test.stan"),
+            file = here::here("BUGS", "Stan_code_mixture_cure_model_imperfect_test.stan"),
             chains = 1,
             iter = n_iter,
             warmup = n_burnin,

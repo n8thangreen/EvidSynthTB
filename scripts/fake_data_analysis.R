@@ -1,4 +1,5 @@
 
+# Fit mixture cure model
 # simulates artificial ltbi and tb data
 
 library(rstan)
@@ -7,7 +8,7 @@ library(purrr)
 library(readr)
 library(dplyr)
 
-
+# sample size
 N <- 100
 
 # covariates

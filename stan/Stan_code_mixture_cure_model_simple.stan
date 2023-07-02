@@ -1,6 +1,6 @@
-// using predict-tb data
-// estimate tb progression
-// from ltbi positive cases
+// using predict-tb data or fake data
+// estimated using tb progression times
+// and ltbi positive cases
 
 
 functions {
@@ -57,18 +57,18 @@ real inv_cdf_gompertz (real p, real shape, real scale) {
 
 data {
   int<lower=1> N;          // total sample size
-  int<lower=0> t_lim;
+  int<lower=0> t_lim;      // maximum time
 
   // hyper parameters
   real mu_shape;
   real<lower=0> sigma_shape;
-  real a_lambda;
+  real a_lambda;              // rate
   real b_lambda;
-  real mu_alpha;
+  real mu_alpha;              // regression coefficients
   real scale_alpha;
 
-  vector<lower=0>[N] t;
-  vector<lower=0, upper=1>[N] d;
+  vector<lower=0>[N] t;           // times
+  vector<lower=0, upper=1>[N] d;  // censoring status
 
   int pos[N];
 }
@@ -82,7 +82,7 @@ parameters {
 }
 
 transformed parameters {
-  real<lower=0, upper=1> cf;
+  real<lower=0, upper=1> cf;  // cure fraction; prevalence of ltbi
 
   cf = inv_logit(alpha);
 }

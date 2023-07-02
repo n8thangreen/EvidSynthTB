@@ -1,6 +1,5 @@
-// using predict-tb data
-// estimate tb progression
-// from ltbi positive cases
+// using predict-tb data or fake data
+// tb progression times and ltbi positive cases
 // hierarchical model on prevalence
 
 functions {

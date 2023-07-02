@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# EvidSynthTB
+# EvidSynthTB: Evidence synthesis of TB data
 
 <!-- badges: start -->
 

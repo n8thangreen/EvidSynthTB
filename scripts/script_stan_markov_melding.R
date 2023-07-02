@@ -1,7 +1,7 @@
 
-# Fit simple mixture cure model
-# with simulates artificial ltbi and tb data
-# without covariate age or ethnicity
+# Evidence synthesis LTBI screening: Stan
+# with real data
+
 
 library(rstan)
 library(shinystan)
@@ -9,63 +9,48 @@ library(purrr)
 library(readr)
 library(dplyr)
 
-
-# sample size
-N <- 1000
-
-# disease-free censoring additional time
-t_offset <- 5
-
-# prevalence of ltbi
-p_ltbi <- 0.3
-
-# progression from ltbi to active tb times
-rdat <-
-  data.frame(
-    t = round(flexsurv::rgompertz(N, shape = 0.1, rate = 0.1), 3)) |>
-    mutate(x = rbinom(n = N, size = 1, prob = p_ltbi),   # ltbi status
-           ## observe all progression times
-           d = ifelse(x == 1, 1, 0),                     # censoring status
-           # d = sample(c(0,1), size = N, replace = TRUE),
-           # d = ifelse(x == 0, 0, d),
-           t = ifelse(x == 0, t + t_offset, t)) |>       # time
-  as_tibble()
-
-rdat
-
-# for (i in prob) {
-#   x[i] <- purrr::rbernoulli(1, p = i)
-# }
-
 # rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
 
+load("data input/cleaned_migrant_predict_data.RData")
+
+dat_m <- dat_m[!is.na(dat_m$age), ]
+dat_m <- dat_m[dat_m$ethnicity != "", ]
+
 dat_input <-
   list(
-    N = nrow(rdat),
-    t = as.numeric(rdat$t),
-    d = as.numeric(rdat$d),
-    pos = rdat$x,
-    t_lim = 20,        # maximum time
-    mu_alpha = -0.8,
-    scale_alpha = 0.5,
-    ## normal priors on shape
-    mu_shape = 0.1,
-    sigma_shape = 0.5,
-    ## gamma priors on rate
-    a_lambda = 0.1,
+    N = nrow(dat_m),
+    t = as.numeric(dat_m$time),
+    d = as.numeric(dat_m$status),
+    pos = dat_m$pos,
+    age = as.numeric(dat_m$age) - mean(dat_m$age, na.rm = TRUE),
+    ethnicity =  as.numeric(droplevels(dat_m$ethnicity)),
+    n_eth = length(unique(dat_m$ethnicity)),
+    t_lim = 20,
+    scale_alpha = 10,
+    scale_beta = 10,
+    a_eth = 0.01,
+    b_eth = 0.01,
+    ## normal priors
+    mu_shape = -0.8481,
+    sigma_shape = 1,
+    ## gamma priors
+    a_lambda = 0.01, # rate
     b_lambda = 0.01)
 
 params <- c(
   "S_pred",
-  "cf",      # ltbi prevalence
-  "alpha",
+  "cf", "alpha",
+  "beta_age", "beta_eth",
   "lambda", "shape")
 
 n_iter <- 10e3
 n_burnin <- 3e1
-n_thin <- 2e1  #floor((n_iter - n_burnin)/500)
+n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
+
+##TODO: try with artificial clean data?
+
 
 ###########
 # run MCMC
@@ -73,7 +58,7 @@ n_thin <- 2e1  #floor((n_iter - n_burnin)/500)
 
 out <- stan(data = dat_input,
             pars = params,
-            file = here::here("stan", "Stan_code_mixture_cure_model_simple.stan"),
+            file = here::here("BUGS", "Stan_code_mixture_cure_model.stan"),
             chains = 1,
             iter = n_iter,
             warmup = n_burnin,
@@ -83,8 +68,11 @@ out <- stan(data = dat_input,
 
 stan_output <- extract(out)
 
+save(stan_output, file = here::here("data output", "stan_output_mcm.RData"))
+
 mean(stan_output$lambda)
 mean(stan_output$shape)
+mean(stan_output$cf)
 
 
 #######
@@ -100,7 +88,7 @@ stan_output$S_pred %>%
   summarise(across(.fns = ~ mean(.x, na.rm = TRUE ))) %>%
   # summarise(across(.fns = ~ median(.x, na.rm = TRUE ))) %>%
   unlist() %>%
-  plot(type = "l")
+  plot(ylim = c(0.5, 1), type = "l")
 
 
 plot_dat <-
@@ -133,8 +121,11 @@ ggplot(plot_dat, aes(time, median)) +
 
 # LTBI prevalence
 
-hist(stan_output$cf, breaks = 40)
+for (i in 1:ncol(stan_output$beta_eth)) {
 
-plot(flexsurv::pgompertz(q = 0:20, shape = 0.5, rate = 0.01, lower.tail = FALSE),
-      type = "l", col = "red")
+  lrg <- stan_output$alpha + stan_output$beta_eth[, i]
+  print(summary(1/(1 + exp(-lrg))))
+  hist(1/(1 + exp(-lrg)), breaks = 40)
+}
+
 
