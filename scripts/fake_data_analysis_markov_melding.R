@@ -3,6 +3,8 @@
 # with simulated artificial ltbi and tb progression data
 # without covariate (age or ethnicity)
 
+##TODO: why is flexsurv (shape, rate) the other way around to wikipedia?
+
 library(rstan)
 library(shinystan)
 library(purrr)
@@ -14,15 +16,18 @@ library(dplyr)
 N <- 500
 
 # disease-free censoring additional time
-t_offset <- 5
+t_offset <- 10
 
 # prevalence of ltbi
 p_ltbi <- 0.3
 
+shape0 <- 0.1
+rate0 <- 0.1
+
 # progression from ltbi to active tb times
 progression_dat <-
   data.frame(
-    t = round(flexsurv::rgompertz(N, shape = 0.1, rate = 0.1), 3)) |>
+    t = round(flexsurv::rgompertz(N, shape0 = 0.1, rate0 = 0.1), 3)) |>
     mutate(x = rbinom(n = N, size = 1, prob = p_ltbi),   # ltbi status
            ## observe all progression times
            d = ifelse(x == 1, 1, 0),                     # censoring status
@@ -45,26 +50,27 @@ dat_input <-
     t = as.numeric(progression_dat$t),
     d = as.numeric(progression_dat$d),
     pos = progression_dat$x,
-    t_lim = 20,        # maximum time
-    ## normal priors on shape
+    t_lim = 20,              # maximum time
+    ## normal prior on shape
     mu_shape = 0.1,
-    sigma_shape = 0.5,
-    ## gamma priors on rate
-    a_lambda = 0.1,
-    b_lambda = 0.01,
+    sigma_shape = 0.05,
+    ## gamma prior on rate
+    a_lambda = 0.2,
+    b_lambda = 0.2,
     mu_hat = prevalence_dat$mu_hat,
     sigma_hat = prevalence_dat$sigma_hat,
-    # mu_hat = array(prevalence_dat$mu_hat, 1),
+    # mu_hat = array(prevalence_dat$mu_hat, 1),      # for single data point
     # sigma_hat = array(prevalence_dat$sigma_hat, 1),
+    ## normal prior on linear transformed cure fraction
     mu_cf = boot::logit(0.3),
-    sigma_cf = 0.1)
+    sigma_cf = 0.2)
 
 params <- c(
-  # "S_pred",          # generated values
+  "S_pred",          # generated values
   "prev_cf",          # ltbi prevalence
   "lambda", "shape")
 
-n_iter <- 1e3
+n_iter <- 2e3
 n_burnin <- 100
 n_thin <- 10  #floor((n_iter - n_burnin)/500)
 
@@ -137,6 +143,6 @@ ggplot(plot_dat, aes(time, median)) +
 # LTBI prevalence
 hist(stan_output$prev_cf, breaks = 40)
 
-plot(flexsurv::pgompertz(q = 0:20, shape = 0.5, rate = 0.01, lower.tail = FALSE),
-      type = "l", col = "red")
+plot(flexsurv::pgompertz(q = 0:20, shape = shape0, rate = rate0, lower.tail = FALSE),
+      type = "l", col = "red", ylab = "S")
 
