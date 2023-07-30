@@ -53,7 +53,7 @@ We want to obtain posterior distributions for LTBI prevalence, `pl`, and active 
 
 A Directed Acyclic Graph of the model is given below.
 
-![](docs/evid-synthesis-method/DAG-full_model.PNG)
+![](man/figures/DAG-full_model.PNG)
 
 
 ## Example

@@ -60,13 +60,9 @@ model {
   // mixture cure model (tb progression)
   for (i in 1:N) {
     // event
-    // if (d[i] == 1)
-    // (prev_cf*gompertz_pdf(t[i] | shape, lambda))^d[i]
     target += d[i] * (log(prev_cf) + gompertz_lpdf(t[i] | shape, lambda));
 
     // censored
-    // if (d[i] == 0)
-    // * ((1-prev_cf) + prev_cf * surv_gompertz(t[i] | shape, lambda))^(1 - d[i])
     target += (1 - d[i]) * log_sum_exp(log1m(prev_cf), log(prev_cf) + gompertz_log_S(t[i], shape, lambda));
   }
 
