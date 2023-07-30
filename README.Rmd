@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # EvidSynthTB: Evidence synthesis of TB data
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The goal of EvidSynthTB is to use Bayesian Multi-Parameter Evidence Synthesis (MPES) to estimate TB epidemiological parameters LTBI prevalence and active TB progression rate.
@@ -37,7 +38,7 @@ Input data sets used in this analysis are:
 - PREDICT-TB
 
 
-## Model
+## General model
 
 We want to obtain posterior distributions for LTBI prevalence, `pl`, and active TB activation rate, `lambda`. The other model parameters are:
 
@@ -58,10 +59,67 @@ A Directed Acyclic Graph of the model is given below.
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to solve a common problem.
+Fit markov melding model using Stan with simulated artificial LTBI and TB progression data without covariate (age or ethnicity).
 
-```{r example}
+```{r load-packages, warning=FALSE, message=FALSE}
+library(rstan)
+library(shinystan)
+library(purrr)
+library(readr)
+library(dplyr)
 library(EvidSynthTB)
-## basic example code
 ```
 
+We generate some fake data.
+
+```{r fake-data}
+# sample size
+N <- 500
+
+# disease-free censoring additional time
+t_offset <- 10
+
+# prevalence of ltbi
+p_ltbi <- 0.3
+
+shape0 <- 0.1
+rate0 <- 0.1
+
+# progression from LTBI to active tb times
+progression_dat <-
+  data.frame(
+    t = round(flexsurv::rgompertz(N, shape = shape0, rate = rate0), 3)) |>
+    mutate(x = rbinom(n = N, size = 1, prob = p_ltbi),   # ltbi status
+           ## observe all progression times
+           d = ifelse(x == 1, 1, 0),                     # censoring status
+           # d = sample(c(0,1), size = N, replace = TRUE),
+           # d = ifelse(x == 0, 0, d),
+           t = ifelse(x == 0, t + t_offset, t)) |>       # time
+  as_tibble()
+
+# prevalence of LTBI
+prevalence_dat <-
+  data.frame(mu_hat = boot::logit(rnorm(n = 10, mean = 0.3, sd = 0.05)),
+             sigma_hat = 0.01)
+```
+
+We can now use the prevalence data and progression data to obtain posterior distributions.
+
+```{r model-fit}
+out <- evidsynth_fit(prevalence_dat, progression_dat)
+```
+
+We can view the output.
+
+```{r plots}
+library(reshape2)
+library(ggplot2)
+
+plot_progression(out)
+
+# LTBI prevalence
+stan_output <- extract(out$fit)
+
+hist(stan_output$prev_cf, breaks = 40)
+```

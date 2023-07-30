@@ -27,7 +27,7 @@ rate0 <- 0.1
 # progression from ltbi to active tb times
 progression_dat <-
   data.frame(
-    t = round(flexsurv::rgompertz(N, shape0 = 0.1, rate0 = 0.1), 3)) |>
+    t = round(flexsurv::rgompertz(N, shape = shape0, rate = rate0), 3)) |>
     mutate(x = rbinom(n = N, size = 1, prob = p_ltbi),   # ltbi status
            ## observe all progression times
            d = ifelse(x == 1, 1, 0),                     # censoring status
@@ -97,6 +97,7 @@ save(stan_output, file = here::here("data output", "stan_output_fake_markov_meld
 mean(stan_output$lambda)
 mean(stan_output$shape)
 
+# out2 <- evidsynth_fit(prevalence_dat, progression_dat)
 
 #######
 # plot
@@ -140,9 +141,15 @@ ggplot(plot_dat, aes(time, median)) +
               alpha = 0.2) +
   ylim(0, 1)
 
+# plot_progression(out2)
+
 # LTBI prevalence
 hist(stan_output$prev_cf, breaks = 40)
 
+# plot_prevalence()
+
+
+## check
 plot(flexsurv::pgompertz(q = 0:20, shape = shape0, rate = rate0, lower.tail = FALSE),
       type = "l", col = "red", ylab = "S")
 
