@@ -112,7 +112,7 @@ out <- evidsynth_fit(prevalence_dat, progression_dat)
 
 We can view the output.
 
-```{r plots}
+```{r plots, warning=FALSE, message=FALSE}
 library(reshape2)
 library(ggplot2)
 

@@ -1,5 +1,5 @@
 
-#' evidsynth_fit
+#' Evidence synthesis model fit
 #'
 #' @param prevalence_data
 #' @param progression_data
@@ -8,7 +8,7 @@
 #' @param n_burnin Number of iterations in burn-in
 #' @param n_thin Number of iterations to thin
 #'
-#' @return
+#' @return List
 #' @export
 #'
 evidsynth_fit <- function(prevalence_data,
@@ -52,11 +52,13 @@ evidsynth_fit <- function(prevalence_data,
   # run MCMC
   ###########
 
+  if (cut) model_nm <- "Stan_code_markov_melding.stan"
+
   out <- stan(data = dat_input,
               pars = params,
-              model_name = "stan_output_fake_markov_melding",
+              model_name = model_nm,
               # init = ,
-              file = here::here("stan", "Stan_code_markov_melding.stan"),
+              file = here::here("stan", model_nm),
               chains = 1,
               iter = n_iter,
               warmup = n_burnin,
