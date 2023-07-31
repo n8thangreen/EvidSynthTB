@@ -23,14 +23,82 @@ You can install the development version from
 devtools::install_github("n8thangreen/EvidSynthTB")
 ```
 
-## Data
+## General model structure
+
+The framework provided by this package is more general that just applied
+to TB and can be generally thought of as consisting of two key
+components. The first is the uncertain starting state occupancy
+distribution. We assume that we do not directly observed the proportion
+of individuals in each state at time 0. The second is the uncertain
+probability of transition from the latent infection state to the active
+disease state. This is unknown because of the starting state
+distribution and other survival analysis uncertainty including right
+censored times.,
+
+The diagram below depicts this model structure.
+
+![](man/figures/flowdiagram.png)
+
+## Mathematical formalisation
+
+More formally, the two components can be thought of as two parts of a
+likelihood.
+
+- A mixture cure model
+- The starting state occupancy is represented by a binomial cure
+  fraction model
+
+## Joint, independent and cut models
+
+- Joint model
+
+Free flow between components
+
+$$
+L_0 = \left[ (1 - \pi) f_u(t_i) \right]^{d_i} \left[ \pi + (1 - \pi) S_u(t_i) \right]^{1-d_i}
+$$
+
+where $\pi$ is the cure fraction, $d_i$ are the censoring identifiers,
+$S_u$ is the uncured survival function, $f_u$ is the uncured density
+function, and $t_i$ is the event time of either progression or end of
+follow up.
+
+$$
+L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+$$
+
+- Independent model
+
+Disjoint models fit separately so that two probability of latent
+infection probabilities are inferred $\pi$ and $\pi_0$.
+
+$$
+L_0 = \left[ (1 - \pi_0) f_u(t_i) \right]^{d_i} \left[ \pi_0 + (1 - \pi_0) S_u(t_i) \right]^{1-d_i}
+$$
+
+$$
+L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+$$
+
+- Cut-point model
+
+\[ref\]
+
+The idea is to cut feedback from the active disease progression
+component to the latent infection/state occupancy component.
+
+$$
+L_{\pi} = \phi(\hat{\mu} \mid \mbox{logit}(\pi), \hat{\sigma}^2)
+$$
+
+## TB data
 
 Input data sets used in this analysis are:
 
 - Enhanced TB Surveillance (ETS)
 - PREDICT-TB
 
-## General model
+## General TB model
 
 We want to obtain posterior distributions for LTBI prevalence, `pl`, and
 active TB activation rate, `lambda`. The other model parameters are:
@@ -105,8 +173,8 @@ out <- evidsynth_fit(prevalence_dat, progression_dat)
 #> 
 #> SAMPLING FOR MODEL 'stan_output_fake_markov_melding' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000482 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.82 seconds.
+#> Chain 1: Gradient evaluation took 0.000409 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.09 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -131,10 +199,13 @@ out <- evidsynth_fit(prevalence_dat, progression_dat)
 #> Chain 1: Iteration: 1900 / 2000 [ 95%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.794 seconds (Warm-up)
-#> Chain 1:                34.728 seconds (Sampling)
-#> Chain 1:                35.522 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.315 seconds (Warm-up)
+#> Chain 1:                40.803 seconds (Sampling)
+#> Chain 1:                41.118 seconds (Total)
 #> Chain 1:
+#> Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#> https://mc-stan.org/misc/warnings.html#bfmi-low
+#> Warning: Examine the pairs() plot to diagnose sampling problems
 ```
 
 We can view the output.
@@ -142,7 +213,6 @@ We can view the output.
 ``` r
 library(reshape2)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.2.3
 
 plot_progression(out)
 ```

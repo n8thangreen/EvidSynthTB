@@ -71,7 +71,46 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"n8thangreen/EvidSynthTB"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+<h2 id="general-model-structure">General model structure<a class="anchor" aria-label="anchor" href="#general-model-structure"></a>
+</h2>
+<p>The framework provided by this package is more general that just applied to TB and can be generally thought of as consisting of two key components. The first is the uncertain starting state occupancy distribution. We assume that we do not directly observed the proportion of individuals in each state at time 0. The second is the uncertain probability of transition from the latent infection state to the active disease state. This is unknown because of the starting state distribution and other survival analysis uncertainty including right censored times.,</p>
+<p>The diagram below depicts this model structure.</p>
+<p><img src="reference/figures/flowdiagram.png"></p>
+</div>
+<div class="section level2">
+<h2 id="mathematical-formalisation">Mathematical formalisation<a class="anchor" aria-label="anchor" href="#mathematical-formalisation"></a>
+</h2>
+<p>More formally, the two components can be thought of as two parts of a likelihood.</p>
+<ul>
+<li>A mixture cure model</li>
+<li>The starting state occupancy is represented by a binomial cure fraction model</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="joint-independent-and-cut-models">Joint, independent and cut models<a class="anchor" aria-label="anchor" href="#joint-independent-and-cut-models"></a>
+</h2>
+<ul>
+<li>Joint model</li>
+</ul>
+<p>Free flow between components</p>
+<p><span class="math display"><em>L</em><sub>0</sub> = [(1−<em>π</em>)<em>f</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup><em>d</em><sub><em>i</em></sub></sup>[<em>π</em>+(1−<em>π</em>)<em>S</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup>1 − <em>d</em><sub><em>i</em></sub></sup></span></p>
+<p>where <span class="math inline"><em>π</em></span> is the cure fraction, <span class="math inline"><em>d</em><sub><em>i</em></sub></span> are the censoring identifiers, <span class="math inline"><em>S</em><sub><em>u</em></sub></span> is the uncured survival function, <span class="math inline"><em>f</em><sub><em>u</em></sub></span> is the uncured density function, and <span class="math inline"><em>t</em><sub><em>i</em></sub></span> is the event time of either progression or end of follow up.</p>
+<p><span class="math display"><em>L</em><sub><em>π</em></sub> = Bin(<em>x</em>∣<em>μ</em>,<em>σ</em><sup>2</sup>)</span></p>
+<ul>
+<li>Independent model</li>
+</ul>
+<p>Disjoint models fit separately so that two probability of latent infection probabilities are inferred <span class="math inline"><em>π</em></span> and <span class="math inline"><em>π</em><sub>0</sub></span>.</p>
+<p><span class="math display"><em>L</em><sub>0</sub> = [(1−<em>π</em><sub>0</sub>)<em>f</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup><em>d</em><sub><em>i</em></sub></sup>[<em>π</em><sub>0</sub>+(1−<em>π</em><sub>0</sub>)<em>S</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup>1 − <em>d</em><sub><em>i</em></sub></sup></span></p>
+<p><span class="math display"><em>L</em><sub><em>π</em></sub> = Bin(<em>x</em>∣<em>μ</em>,<em>σ</em><sup>2</sup>)</span></p>
+<ul>
+<li>Cut-point model</li>
+</ul>
+<p>[ref]</p>
+<p>The idea is to cut feedback from the active disease progression component to the latent infection/state occupancy component.</p>
+<p><span class="math display"><em>L</em><sub><em>π</em></sub> = <em>ϕ</em>(<em>μ̂</em>∣logit(<em>π</em>),<em>σ̂</em><sup>2</sup>)</span></p>
+</div>
+<div class="section level2">
+<h2 id="tb-data">TB data<a class="anchor" aria-label="anchor" href="#tb-data"></a>
 </h2>
 <p>Input data sets used in this analysis are:</p>
 <ul>
@@ -80,7 +119,7 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="general-model">General model<a class="anchor" aria-label="anchor" href="#general-model"></a>
+<h2 id="general-tb-model">General TB model<a class="anchor" aria-label="anchor" href="#general-tb-model"></a>
 </h2>
 <p>We want to obtain posterior distributions for LTBI prevalence, <code>pl</code>, and active TB activation rate, <code>lambda</code>. The other model parameters are:</p>
 <ul>
@@ -153,8 +192,8 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'stan_output_fake_markov_melding' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000482 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.82 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000409 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.09 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -179,15 +218,17 @@
 <span><span class="co">#&gt; Chain 1: Iteration: 1900 / 2000 [ 95%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.794 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                34.728 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                35.522 seconds (Total)</span></span>
-<span><span class="co">#&gt; Chain 1:</span></span></code></pre></div>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.315 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                40.803 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                41.118 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:</span></span>
+<span><span class="co">#&gt; Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low</span></span>
+<span><span class="co">#&gt; Warning: Examine the pairs() plot to diagnose sampling problems</span></span></code></pre></div>
 <p>We can view the output.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hadley/reshape" class="external-link">reshape2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.2.3</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/plot_progression.html">plot_progression</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plots-1.png" width="100%"></p>

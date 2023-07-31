@@ -30,7 +30,63 @@ You can install the development version from [GitHub](https://github.com/) with:
 devtools::install_github("n8thangreen/EvidSynthTB")
 ```
 
-## Data
+## General model structure
+
+The framework provided by this package is more general that just applied to TB and can be generally thought of as consisting of two key components. The first is the uncertain starting state occupancy distribution. We assume that we do not directly observed the proportion of individuals in each state at time 0.
+The second is the uncertain probability of transition from the latent infection state to the active disease state. This is unknown because of the starting state distribution and other survival analysis uncertainty including right censored times.,
+
+The diagram below depicts this model structure.
+
+![](man/figures/flowdiagram.png)
+
+## Mathematical formalisation
+
+More formally, the two components can be thought of as two parts of a likelihood.
+
+* A mixture cure model 
+* The starting state occupancy is represented by a binomial cure fraction model
+
+
+## Joint, independent and cut models
+
+* Joint model
+
+Free flow between components
+
+$$
+L_0 = \left[ (1 - \pi) f_u(t_i) \right]^{d_i} \left[ \pi + (1 - \pi) S_u(t_i) \right]^{1-d_i}
+$$
+
+where $\pi$ is the cure fraction, $d_i$ are the censoring identifiers, $S_u$ is the uncured survival function, $f_u$ is the uncured density function, and $t_i$ is the event time of either progression or end of follow up.
+
+$$
+L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+$$
+
+* Independent model
+
+Disjoint models fit separately so that two probability of latent infection probabilities are inferred $\pi$ and $\pi_0$.
+
+$$
+L_0 = \left[ (1 - \pi_0) f_u(t_i) \right]^{d_i} \left[ \pi_0 + (1 - \pi_0) S_u(t_i) \right]^{1-d_i}
+$$
+
+$$
+L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+$$
+
+* Cut-point model
+
+[ref]
+
+The idea is to cut feedback from the active disease progression component to the latent infection/state occupancy component.
+
+$$
+L_{\pi} = \phi(\hat{\mu} \mid \mbox{logit}(\pi), \hat{\sigma}^2)
+$$
+
+
+## TB data
 
 Input data sets used in this analysis are:
 
@@ -38,7 +94,7 @@ Input data sets used in this analysis are:
 - PREDICT-TB
 
 
-## General model
+## General TB model
 
 We want to obtain posterior distributions for LTBI prevalence, `pl`, and active TB activation rate, `lambda`. The other model parameters are:
 
