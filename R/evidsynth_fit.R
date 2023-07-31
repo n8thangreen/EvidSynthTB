@@ -14,6 +14,7 @@
 evidsynth_fit <- function(prevalence_data,
                           progression_data,
                           cut = TRUE,
+                          # model = c("cut", "independent", "joint"),
                           n_iter = 2e3,
                           n_burnin = 100,
                           n_thin = 10) {
