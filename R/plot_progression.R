@@ -3,7 +3,7 @@
 #'
 #' @param evidsynth_obj Output of model fit
 #'
-#' @return
+#' @return ggplot2 object
 #' @export
 #'
 plot_progression <- function(evidsynth_obj) {

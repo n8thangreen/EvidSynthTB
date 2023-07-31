@@ -2,19 +2,23 @@
 % Please edit documentation in R/evidsynth_fit.R
 \name{evidsynth_fit}
 \alias{evidsynth_fit}
-\title{evidsynth_fit}
+\title{Evidence synthesis model fit}
 \usage{
 evidsynth_fit(
   prevalence_data,
   progression_data,
-  cut = TRUE,
+  model = "cut",
   n_iter = 2000,
   n_burnin = 100,
   n_thin = 10
 )
 }
 \arguments{
-\item{cut}{Cut-point model to stop feedback; logical}
+\item{prevalence_data}{Latent infection prevalence data}
+
+\item{progression_data}{Disease progression data}
+
+\item{model}{Which model to use, from "cut", "independent", or "joint"}
 
 \item{n_iter}{Number of iterations}
 
@@ -22,6 +26,9 @@ evidsynth_fit(
 
 \item{n_thin}{Number of iterations to thin}
 }
+\value{
+List
+}
 \description{
-evidsynth_fit
+Evidence synthesis model fit
 }

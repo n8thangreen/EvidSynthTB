@@ -9,6 +9,9 @@ plot_progression(evidsynth_obj)
 \arguments{
 \item{evidsynth_obj}{Output of model fit}
 }
+\value{
+ggplot2 object
+}
 \description{
 Plot progression survival curve
 }

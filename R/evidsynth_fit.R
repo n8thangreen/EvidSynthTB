@@ -1,9 +1,9 @@
 
 #' Evidence synthesis model fit
 #'
-#' @param prevalence_data
-#' @param progression_data
-#' @param cut Cut-point model to stop feedback; logical
+#' @param prevalence_data Latent infection prevalence data
+#' @param progression_data Disease progression data
+#' @param model Which model to use, from "cut", "independent", or "joint"
 #' @param n_iter Number of iterations
 #' @param n_burnin Number of iterations in burn-in
 #' @param n_thin Number of iterations to thin
@@ -13,8 +13,7 @@
 #'
 evidsynth_fit <- function(prevalence_data,
                           progression_data,
-                          cut = TRUE,
-                          # model = c("cut", "independent", "joint"),
+                          model = "cut",
                           n_iter = 2e3,
                           n_burnin = 100,
                           n_thin = 10) {
@@ -53,7 +52,9 @@ evidsynth_fit <- function(prevalence_data,
   # run MCMC
   ###########
 
-  if (cut) model_nm <- "Stan_code_markov_melding.stan"
+  if (model == "cut") model_nm <- "Stan_code_markov_melding.stan"
+  if (model == "joint") model_nm <- "Stan_code_joint.stan"
+  if (model == "independent") model_nm <- "Stan_code_independent.stan"
 
   out <- stan(data = dat_input,
               pars = params,
