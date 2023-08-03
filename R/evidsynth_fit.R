@@ -13,10 +13,11 @@
 #'
 evidsynth_fit <- function(prevalence_data,
                           progression_data,
-                          model = "cut",
+                          model = c("cut", "independent", "joint"),
                           n_iter = 2e3,
                           n_burnin = 100,
                           n_thin = 10) {
+  model <- match.arg(model)
 
   # rstan_options(auto_write = TRUE)
   options(mc.cores = parallel::detectCores())
