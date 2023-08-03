@@ -43,15 +43,16 @@ The diagram below depicts this model structure.
 
 More formally, the two components can be thought of as two parts of a likelihood.
 
-* A mixture cure model 
-* The starting state occupancy is represented by a binomial cure fraction model
+1. A mixture cure model 
+2. The starting state occupancy is represented by a binomial cure fraction model
 
+We provide 3 ways of specifying the model within this general structure. They differ by how the information from one componenet is shared or influences the other.
 
 ## Joint, independent and cut models
 
 * Joint model
 
-Free flow between components
+In this model there is free flow of information between components. That is both models are fit simultaneously and all of the data are used for both. 
 
 $$
 L_0 = \left[ (1 - \pi) f_u(t_i) \right]^{d_i} \left[ \pi + (1 - \pi) S_u(t_i) \right]^{1-d_i}
@@ -65,7 +66,8 @@ $$
 
 * Independent model
 
-Disjoint models fit separately so that two probability of latent infection probabilities are inferred $\pi$ and $\pi_0$.
+This assumes disjoint models which are fit separately so that two probability of latent infection probabilities are inferred $\pi$ and $\pi_0$.
+There is no connection between modules and so no flow of information.
 
 $$
 L_0 = \left[ (1 - \pi_0) f_u(t_i) \right]^{d_i} \left[ \pi_0 + (1 - \pi_0) S_u(t_i) \right]^{1-d_i}
@@ -79,7 +81,11 @@ $$
 
 [ref]
 
-The idea is to cut feedback from the active disease progression component to the latent infection/state occupancy component.
+The model allow the information contained in the data to only flow in one direction.
+This allows for 'stronger' data to influence other modules but for 'weaker' or corrupted or noisy data to be restricted in terms of its influence.
+This may be appropriate for the TB model because the Latent TB data may be more reliable, coming from studies, and the population level progression data may be less reliable because of the case mix, missing data etc.
+
+Thus, the basic idea is to cut feedback from the active disease progression component to the latent infection/state occupancy component.
 
 $$
 L_{\pi} = \phi(\hat{\mu} \mid \mbox{logit}(\pi), \hat{\sigma}^2)
@@ -88,10 +94,13 @@ $$
 
 ## TB data
 
-Input data sets used in this analysis are:
+The input data sets used in this analysis can come from several different sources. For development and testing we generated fake data with the same characteristics of the real world data.
+Secondly, we can obtain data from published literature. The LTBI data are given in tables and the time to event data can be estimated by digitising published survival curves [Abubaker].
+Finally, when available the individual level data can be used directly from the original sources. In the UK context, this includes:
 
-- Enhanced TB Surveillance (ETS)
-- PREDICT-TB
+1. PREDICT-TB
+2. [https://www.gov.uk/government/statistics/reports-of-cases-of-tb-to-uk-enhanced-tuberculosis-surveillance-systems](Enhanced TB Surveillance (ETS))
+
 
 
 ## General TB model
