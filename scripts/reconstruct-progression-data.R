@@ -48,7 +48,6 @@ surv_inp <- data.frame(ID = 1:nrow(digdata),
                        survival = round(digdata$Dataset.y, 3))
 
 # ensure monotonic
-# just drop rows
 surv_inp$diff <- c(TRUE, diff(surv_inp$survival)<=0)
 
 surv_inp <- surv_inp |>
