@@ -105,6 +105,7 @@ Finally, when available the individual level data can be used directly from the 
 
 ## General TB model
 
+We now describe a full statistical model which incorporates the different components already introduced.
 We want to obtain posterior distributions for LTBI prevalence, `pl`, and active TB activation rate, `lambda`. The other model parameters are:
 
 - `Xm1`: Cohort size (observed)
@@ -118,6 +119,7 @@ We want to obtain posterior distributions for LTBI prevalence, `pl`, and active 
 - `sens`, `spec`: Test sensitivity and specificity (prior)
 
 A Directed Acyclic Graph of the model is given below.
+Simpler model can be derived from this more general model, for instance by assuming that the diagnostic test perform perfectly and so have fixed, known sensitivity and specificity.
 
 ![](man/figures/DAG-full_model.PNG)
 

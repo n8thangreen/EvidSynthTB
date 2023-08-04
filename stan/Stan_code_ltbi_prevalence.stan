@@ -1,59 +1,39 @@
-// estimate lbi prevalence
-
-// see:
-// Goudie RJB, Presanis AM, Lunn D, De Angelis D, Wernisch L.
-// Joining and splitting models with Markov melding. Bayesian Anal. 2019;14(1)
-// p.95
-
+// estimate ltbi prevalence
 
 functions {
 #include /include/distributions.stan
 }
 
 data {
-  int<lower=1> N;          // survival data sample size
-
-  // cure fraction
-  real mu_cf;
-  real<lower=0> mu_sigma;
-
-  // plug-in cure fraction data
-  int<lower=1> M;          // diagnostic sample size
-  real[M] mu_hat;
-  real<lower=0>[M] sigma_hat;
+  int<lower=0> ltbi;        // counts positive
+  int<lower=1> n_ethn;      // number of ethnic groups
+  int<lower=1> N[n_ethn];   // subsample sizes
 }
 
 parameters {
-  real lin_cf;           // cure fraction linear equation
-  real<lower=0> lambda;  // rate
-  real shape;
+  real alpha;
+  real[n_ethn] b_ethn;
 }
 
 transformed parameters {
-  real<lower=0, upper=1> prev_cf;  // ltbi prevalance
-
-  prev_cf = inv_logit(lin_cf);
+  real mu;
 }
 
 model {
   // priors
-  lambda ~ gamma(a_lambda, b_lambda);
-  shape ~ normal(mu_shape, sigma_shape);
+  alpha ~ normal(0, 10);
 
-  lin_cf ~ normal(mu_cf, sigma_cf);
+  // fixed effect
+  for (i in 1:n_ethn) {
+    b_ethn[i] ~ normal(0, 10);
+  }
 
   // incidence model (ltbi prevalence)
-  for (i in 1:M) {
-    target += normal_lpdf(mu_hat[i] | lin_cf, sigma_hat[i]);
+  for (i in 1:n_ethn) {
+    y[i] ~ binomial(mu[i], N[i]);
+    logit(mu[i]) = alpha + b_ethn[i]
   }
 }
 
 generated quantities {
-  //TODO:
-  // vector[t_lim] S_pred;
-  //
-  // for (j in 1:t_lim) {
-  //   S_pred[j] = gompertz_Surv(j, shape, lambda);
-  // }
 }
-
