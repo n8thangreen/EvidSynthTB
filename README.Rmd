@@ -124,7 +124,9 @@ Simpler model can be derived from this more general model, for instance by assum
 ![](man/figures/DAG-full_model.PNG)
 
 
-## Example
+## Examples
+
+### Fake data
 
 This is a basic example which shows you how to solve a common problem.
 Fit markov melding model using Stan with simulated artificial LTBI and TB progression data without covariate (age or ethnicity).
@@ -189,4 +191,30 @@ plot_progression(out)
 stan_output <- extract(out$fit)
 
 hist(stan_output$prev_cf, breaks = 40)
+```
+
+### Real data
+
+From Abubakar (2018)
+
+```{r}
+library(rstanarm)
+
+dat <- data.frame(y = 1444, n = 1444+4936)
+
+# expected value
+dat$y/dat$n
+
+fit <- stan_glm(formula = formula("cbind(y, n - y) ~ 1"),
+                data = dat,
+                family = binomial(link = "logit"))
+stan.mu <- posterior_epred(fit)
+
+hist(stan.mu, breaks = 40)
+```
+
+The posterior distribution for LTBI prevalence is then plugged-in to the `evidsynth_fit()` as before.
+
+```{r}
+progression_dat <- read.table("raw-data/IPDdata.txt")
 ```
