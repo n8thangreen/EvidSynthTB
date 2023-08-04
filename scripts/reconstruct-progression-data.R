@@ -86,7 +86,7 @@ write.table(atrisk, file = "raw-data/nrisk_inp.txt", row.names = FALSE)
 survHE::digitise(surv_inp = "raw-data/surv_inp.txt",
                  nrisk_inp = "raw-data/nrisk_inp.txt",
                  km_output = "raw-data/KMdata.txt",
-                 ipd_output = "raw-data/KMdata.txt")
+                 ipd_output = "raw-data/IPDdata.txt")
 
 IPDdata <- read.table("raw-data/IPDdata.txt", header = TRUE)
 KMdata <- read.table("raw-data/KMdata.txt", header = TRUE)
