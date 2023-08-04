@@ -37,15 +37,28 @@ library(survHE)
 digdata <- read.csv("raw-data/abubaker-2018_curve Dataset.csv")
 
 # survival data
-digdata$Dataset.y <- 100 - digdata$Dataset.y
-plot(digdata, ylim = c(95,100), type = "l")
+digdata$Dataset.y <- (100 - digdata$Dataset.y)/100
+plot(digdata, ylim = c(0.95, 1), type = "l")
+
+# sort in ascending time
+digdata <- digdata[order(digdata$Dataset.x), ]
 
 surv_inp <- data.frame(ID = 1:nrow(digdata),
                        time = digdata$Dataset.x,
-                       survival = digdata$Dataset.y)
+                       survival = round(digdata$Dataset.y, 3))
 
-## is this needed? why??
-surv_inp <- cbind("k" = rownames(surv_inp), surv_inp)
+# ensure monotonic
+# just drop rows
+surv_inp$diff <- c(TRUE, diff(surv_inp$survival)<=0)
+
+surv_inp <- surv_inp |>
+  mutate(survival = ifelse(!diff, lag(survival), survival)) |>
+  select(-diff)
+
+# # check
+# surv_inp$diff_mono <- c(TRUE, diff(surv_inp$mono)<=0)
+
+surv_inp$time[1] <- 0
 
 write.table(surv_inp, file = "raw-data/surv_inp.txt", row.names = FALSE)
 
@@ -71,10 +84,15 @@ write.table(atrisk, file = "raw-data/nrisk_inp.txt", row.names = FALSE)
 # digitize data
 
 survHE::digitise(surv_inp = "raw-data/surv_inp.txt",
-                 nrisk_inp = "raw-data/nrisk_inp.txt")
+                 nrisk_inp = "raw-data/nrisk_inp.txt",
+                 km_output = "raw-data/KMdata.txt",
+                 ipd_output = "raw-data/KMdata.txt")
 
-IPDdata <- read.table("IPDdata.txt", header = TRUE)
-KMdata <- read.table("KMdata.txt", header = TRUE)
-head(IPDdata)
+IPDdata <- read.table("raw-data/IPDdata.txt", header = TRUE)
+KMdata <- read.table("raw-data/KMdata.txt", header = TRUE)
 
-
+IPD <- as.data.frame(IPDdata)
+KM.est <- survfit(Surv(time, event) ~ 1, data = IPD)
+                  # type = "kaplan-meier")
+plot(KM.est, ylim = c(0.95, 1))
+lines(digdata, ylim = c(0.95, 1), type = "l", col = "red")
