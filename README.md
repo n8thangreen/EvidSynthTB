@@ -16,7 +16,7 @@ prevalence and active TB progression rate.
 ## Installation
 
 You can install the development version from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/n8thangreen/EvidSynthTB) with:
 
 ``` r
 # install.packages("devtools")
@@ -44,15 +44,21 @@ The diagram below depicts this model structure.
 More formally, the two components can be thought of as two parts of a
 likelihood.
 
-- A mixture cure model
-- The starting state occupancy is represented by a binomial cure
-  fraction model
+1.  A mixture cure model
+2.  The starting state occupancy is represented by a binomial cure
+    fraction model
+
+We provide 3 ways of specifying the model within this general structure.
+They differ by how the information from one componenet is shared or
+influences the other.
 
 ## Joint, independent and cut models
 
-- Joint model
+#### Joint model
 
-Free flow between components
+In this model there is free flow of information between components. That
+is both models are fit simultaneously and all of the data are used for
+both.
 
 $$
 L_0 = \left[ (1 - \pi) f_u(t_i) \right]^{d_i} \left[ \pi + (1 - \pi) S_u(t_i) \right]^{1-d_i}
@@ -67,10 +73,12 @@ $$
 L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
 $$
 
-- Independent model
+#### Independent model
 
-Disjoint models fit separately so that two probability of latent
-infection probabilities are inferred $\pi$ and $\pi_0$.
+This assumes disjoint models which are fit separately so that two
+probability of latent infection probabilities are inferred $\pi$ and
+$\pi_0$. There is no connection between modules and so no flow of
+information.
 
 $$
 L_0 = \left[ (1 - \pi_0) f_u(t_i) \right]^{d_i} \left[ \pi_0 + (1 - \pi_0) S_u(t_i) \right]^{1-d_i}
@@ -80,12 +88,20 @@ $$
 L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
 $$
 
-- Cut-point model
+#### Cut-point model
 
 \[ref\]
 
-The idea is to cut feedback from the active disease progression
-component to the latent infection/state occupancy component.
+The model allow the information contained in the data to only flow in
+one direction. This allows for ‘stronger’ data to influence other
+modules but for ‘weaker’ or corrupted or noisy data to be restricted in
+terms of its influence. This may be appropriate for the TB model because
+the Latent TB data may be more reliable, coming from studies, and the
+population level progression data may be less reliable because of the
+case mix, missing data etc.
+
+Thus, the basic idea is to cut feedback from the active disease
+progression component to the latent infection/state occupancy component.
 
 $$
 L_{\pi} = \phi(\hat{\mu} \mid \mbox{logit}(\pi), \hat{\sigma}^2)
@@ -93,15 +109,24 @@ $$
 
 ## TB data
 
-Input data sets used in this analysis are:
+The input data sets used in this analysis can come from several
+different sources. For development and testing we generated fake data
+with the same characteristics of the real world data. Secondly, we can
+obtain data from published literature. The LTBI data are given in tables
+and the time to event data can be estimated by digitising published
+survival curves \[Abubaker\]. Finally, when available the individual
+level data can be used directly from the original sources. In the UK
+context, this includes:
 
-- Enhanced TB Surveillance (ETS)
-- PREDICT-TB
+1.  PREDICT-TB
+2.  [https://www.gov.uk/government/statistics/reports-of-cases-of-tb-to-uk-enhanced-tuberculosis-surveillance-systems](Enhanced%20TB%20Surveillance%20(ETS))
 
 ## General TB model
 
-We want to obtain posterior distributions for LTBI prevalence, `pl`, and
-active TB activation rate, `lambda`. The other model parameters are:
+We now describe a full statistical model which incorporates the
+different components already introduced. We want to obtain posterior
+distributions for LTBI prevalence, `pl`, and active TB activation rate,
+`lambda`. The other model parameters are:
 
 - `Xm1`: Cohort size (observed)
 - `Xp1`: Number positive test results (observed)
@@ -113,11 +138,16 @@ active TB activation rate, `lambda`. The other model parameters are:
 - `pTB`: Probability active TB (functional)
 - `sens`, `spec`: Test sensitivity and specificity (prior)
 
-A Directed Acyclic Graph of the model is given below.
+A Directed Acyclic Graph of the model is given below. Simpler model can
+be derived from this more general model, for instance by assuming that
+the diagnostic test perform perfectly and so have fixed, known
+sensitivity and specificity.
 
 ![](man/figures/DAG-full_model.PNG)
 
-## Example
+## Examples
+
+### Fake data
 
 This is a basic example which shows you how to solve a common problem.
 Fit markov melding model using Stan with simulated artificial LTBI and
@@ -173,8 +203,8 @@ out <- evidsynth_fit(prevalence_dat, progression_dat)
 #> 
 #> SAMPLING FOR MODEL 'stan_output_fake_markov_melding' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000409 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.09 seconds.
+#> Chain 1: Gradient evaluation took 0.000485 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.85 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -199,13 +229,13 @@ out <- evidsynth_fit(prevalence_dat, progression_dat)
 #> Chain 1: Iteration: 1900 / 2000 [ 95%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.315 seconds (Warm-up)
-#> Chain 1:                40.803 seconds (Sampling)
-#> Chain 1:                41.118 seconds (Total)
+#> Chain 1:  Elapsed Time: 1.223 seconds (Warm-up)
+#> Chain 1:                46.064 seconds (Sampling)
+#> Chain 1:                47.287 seconds (Total)
 #> Chain 1:
-#> Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
-#> https://mc-stan.org/misc/warnings.html#bfmi-low
-#> Warning: Examine the pairs() plot to diagnose sampling problems
+#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#bulk-ess
 ```
 
 We can view the output.
@@ -228,3 +258,44 @@ hist(stan_output$prev_cf, breaks = 40)
 ```
 
 <img src="man/figures/README-plots-2.png" width="100%" />
+
+### Real data
+
+From Abubakar (2018)
+
+``` r
+library(rstanarm)
+#> Loading required package: Rcpp
+#> This is rstanarm version 2.26.1
+#> - See https://mc-stan.org/rstanarm/articles/priors for changes to default priors!
+#> - Default priors may change, so it's safest to specify priors, even if equivalent to the defaults.
+#> - For execution on a local, multicore CPU with excess RAM we recommend calling
+#>   options(mc.cores = parallel::detectCores())
+#> 
+#> Attaching package: 'rstanarm'
+#> The following object is masked from 'package:rstan':
+#> 
+#>     loo
+
+dat <- data.frame(y = 1444, n = 1444+4936)
+
+# expected value
+dat$y/dat$n
+#> [1] 0.2263323
+
+fit <- stan_glm(formula = formula("cbind(y, n - y) ~ 1"),
+                data = dat,
+                family = binomial(link = "logit"))
+stan.mu <- posterior_epred(fit)
+
+hist(stan.mu, breaks = 40)
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+The posterior distribution for LTBI prevalence is then plugged-in to the
+`evidsynth_fit()` as before.
+
+``` r
+progression_dat <- read.table("raw-data/IPDdata.txt")
+```

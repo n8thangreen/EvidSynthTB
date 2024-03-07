@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -23,9 +23,9 @@ The goal of EvidSynthTB is to use Bayesian Multi-Parameter Evidence Synthesis (M
 
 ## Installation
 
-You can install the development version from [GitHub](https://github.com/) with:
+You can install the development version from [GitHub](https://github.com/n8thangreen/EvidSynthTB) with:
 
-``` r
+```r
 # install.packages("devtools")
 devtools::install_github("n8thangreen/EvidSynthTB")
 ```
@@ -50,7 +50,7 @@ We provide 3 ways of specifying the model within this general structure. They di
 
 ## Joint, independent and cut models
 
-* Joint model
+#### Joint model
 
 In this model there is free flow of information between components. That is both models are fit simultaneously and all of the data are used for both. 
 
@@ -64,7 +64,7 @@ $$
 L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
 $$
 
-* Independent model
+#### Independent model
 
 This assumes disjoint models which are fit separately so that two probability of latent infection probabilities are inferred $\pi$ and $\pi_0$.
 There is no connection between modules and so no flow of information.
@@ -77,7 +77,7 @@ $$
 L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
 $$
 
-* Cut-point model
+#### Cut-point model
 
 [ref]
 
@@ -197,7 +197,7 @@ hist(stan_output$prev_cf, breaks = 40)
 
 From Abubakar (2018)
 
-```{r}
+```{r real-data}
 library(rstanarm)
 
 dat <- data.frame(y = 1444, n = 1444+4936)
@@ -215,6 +215,6 @@ hist(stan.mu, breaks = 40)
 
 The posterior distribution for LTBI prevalence is then plugged-in to the `evidsynth_fit()` as before.
 
-```{r}
+```{r real-data-fit}
 progression_dat <- read.table("raw-data/IPDdata.txt")
 ```

@@ -7,7 +7,7 @@
 evidsynth_fit(
   prevalence_data,
   progression_data,
-  model = "cut",
+  model = c("cut", "independent", "joint"),
   n_iter = 2000,
   n_burnin = 100,
   n_thin = 10
