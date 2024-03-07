@@ -72,7 +72,9 @@ $x \sim \mbox{Bin}(\pi, N)$, i.e.
 
 $$
 L_{\pi} = \pi^x (1 - \pi)^{N - x}
-$$ We will work on the logit scale for $\pi$ in terms of $\mu, \epsilon$
+$$
+
+We will work on the logit scale for $\pi$ in terms of $\mu, \epsilon$
 so that
 
 $$
