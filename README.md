@@ -67,10 +67,17 @@ $$
 where $\pi$ is the cure fraction, $d_i$ are the censoring identifiers,
 $S_u$ is the uncured survival function, $f_u$ is the uncured density
 function, and $t_i$ is the event time of either progression or end of
-follow up.
+follow up. Starting state are represented by
+$x \sim \mbox{Bin}(\pi, N)$, i.e.
 
 $$
-L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+L_{\pi} = \pi^x (1 - \pi)^{N - x}
+$$ We will work on the logit scale for $\pi$ in terms of $\mu, \epsilon$
+so that
+
+$$
+\mbox{logit}(\pi) = \mu + \epsilon \\
+\epsilon \sim N(0, \sigma^2)
 $$
 
 #### Independent model
@@ -85,7 +92,7 @@ L_0 = \left[ (1 - \pi_0) f_u(t_i) \right]^{d_i} \left[ \pi_0 + (1 - \pi_0) S_u(t
 $$
 
 $$
-L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+L_{\pi} = \pi^x (1 - \pi)^{N - x}
 $$
 
 #### Cut-point model
@@ -203,8 +210,8 @@ out <- evidsynth_fit(prevalence_dat, progression_dat)
 #> 
 #> SAMPLING FOR MODEL 'stan_output_fake_markov_melding' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000485 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.85 seconds.
+#> Chain 1: Gradient evaluation took 0.000503 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 5.03 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -229,13 +236,10 @@ out <- evidsynth_fit(prevalence_dat, progression_dat)
 #> Chain 1: Iteration: 1900 / 2000 [ 95%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 1.223 seconds (Warm-up)
-#> Chain 1:                46.064 seconds (Sampling)
-#> Chain 1:                47.287 seconds (Total)
+#> Chain 1:  Elapsed Time: 1.455 seconds (Warm-up)
+#> Chain 1:                34.378 seconds (Sampling)
+#> Chain 1:                35.833 seconds (Total)
 #> Chain 1:
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
 ```
 
 We can view the output.
@@ -291,7 +295,7 @@ stan.mu <- posterior_epred(fit)
 hist(stan.mu, breaks = 40)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-real-data-1.png" width="100%" />
 
 The posterior distribution for LTBI prevalence is then plugged-in to the
 `evidsynth_fit()` as before.

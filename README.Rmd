@@ -58,10 +58,16 @@ $$
 L_0 = \left[ (1 - \pi) f_u(t_i) \right]^{d_i} \left[ \pi + (1 - \pi) S_u(t_i) \right]^{1-d_i}
 $$
 
-where $\pi$ is the cure fraction, $d_i$ are the censoring identifiers, $S_u$ is the uncured survival function, $f_u$ is the uncured density function, and $t_i$ is the event time of either progression or end of follow up.
+where $\pi$ is the cure fraction, $d_i$ are the censoring identifiers, $S_u$ is the uncured survival function, $f_u$ is the uncured density function, and $t_i$ is the event time of either progression or end of follow up. Starting state are represented by $x \sim \mbox{Bin}(\pi, N)$, i.e.
 
 $$
-L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+L_{\pi} = \pi^x (1 - \pi)^{N - x}
+$$
+We will work on the logit scale for $\pi$ in terms of $\mu, \epsilon$ so that 
+
+$$
+\mbox{logit}(\pi) = \mu + \epsilon \\
+\epsilon \sim N(0, \sigma^2)
 $$
 
 #### Independent model
@@ -74,7 +80,7 @@ L_0 = \left[ (1 - \pi_0) f_u(t_i) \right]^{d_i} \left[ \pi_0 + (1 - \pi_0) S_u(t
 $$
 
 $$
-L_{\pi} = \mbox{Bin}(x \mid \mu, \sigma^2)
+L_{\pi} = \pi^x (1 - \pi)^{N - x}
 $$
 
 #### Cut-point model
