@@ -76,7 +76,7 @@ $$ We will work on the logit scale for $\pi$ in terms of $\mu, \epsilon$
 so that
 
 $$
-\mbox{logit}(\pi) = \mu + \epsilon \\
+\mbox{logit}(\pi) = \mu + \epsilon, \\
 \epsilon \sim N(0, \sigma^2)
 $$
 
