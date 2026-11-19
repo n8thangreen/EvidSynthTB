@@ -2,3 +2,14 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^LICENSE\.md$
+^data input$
+^data output$
+^raw-data$
+^scripts$
+^plots$
+^docs$
+^BUGS$
+^stan$
+^inst/docs$
+^inst/legacy$
+\.exe$

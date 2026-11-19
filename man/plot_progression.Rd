@@ -2,16 +2,21 @@
 % Please edit documentation in R/plot_progression.R
 \name{plot_progression}
 \alias{plot_progression}
-\title{Plot progression survival curve}
+\title{Plot posterior progression survival curve}
 \usage{
-plot_progression(evidsynth_obj)
+plot_progression(evidsynth_obj, type = c("uncured", "population"))
 }
 \arguments{
-\item{evidsynth_obj}{Output of model fit}
+\item{evidsynth_obj}{Output of [evidsynth_fit()].}
+
+\item{type}{Character. Either `"uncured"` (uncured progression survival
+`S_pred`, conditional on being LTBI positive) or `"population"` (overall
+mixture survival `S_pop_pred`, including the cured fraction `1 - prev_cf`).}
 }
 \value{
-ggplot2 object
+A `ggplot2` object.
 }
 \description{
-Plot progression survival curve
+Plots the posterior median, mean, 50% credible interval, and 95% credible
+interval of the survival curve over time from an `evidsynth_fit` object.
 }

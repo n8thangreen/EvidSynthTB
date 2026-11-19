@@ -1,0 +1,47 @@
+## LTBI screening evidence synthesis model ----
+
+model {
+
+  for (j in 1:len_gp) {
+
+      X_latent[j] <- trunc(p_latent[j] * Xm[j])            # functional relationship
+
+      p_pos[j] <- (p_latent[j]*sens) + (1 - p_latent[j])*(1 - spec)
+
+      Xp[j] ~ dbin(p_pos[j], Xm[j])
+
+      Xtb[j] ~ dbin(lambda, X_latent[j])                   # time independent
+
+      #logit(p_latent[j]) <- alpha + betas[rfs[j]] + beta_inc[inc[j]]
+      logit(p_latent[j]) <- alpha + betas[rfs[j]]
+    }
+
+  ## prior distributions
+
+  alpha ~ dlogis(0, 1)
+
+  betas ~ dt(0, 0.16, 1)    # Cauchy(2.5) (Gelman); for standardised input
+
+  #beta_inc[1] = 0
+  #for (i in 2:len_inc) {
+  #
+  #  beta_inc[i] ~ dnorm(0, 0.001)    # vague
+  #  betas_inc[i] ~ dnorm(0, 0.5)    # non-standardised informative
+  #}
+
+  sens ~ dbeta(100, 5)   # good: mean~=0.9
+  spec ~ dbeta(100, 5)
+  lambda ~ dbeta(5, 100) # mean~= 0.1
+
+  ## posterior predictions
+
+  for (j in 1:len_rfs) {
+    #for (k in 1:len_inc) {
+
+      #logit(ppred[j,k]) <- alpha + betas[rfs[j]] + beta_inc[inc[k]]
+      logit(ppred[j]) <- alpha + betas[rfs[j]]
+    #}
+  }
+
+}
+

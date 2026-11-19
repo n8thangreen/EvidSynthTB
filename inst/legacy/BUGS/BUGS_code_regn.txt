@@ -1,0 +1,117 @@
+## LTBI screening evidence synthesis model ----
+
+model {
+
+  for (j in 1:len_gp) {
+
+      X_latent[j] <- trunc(p_latent[j] * Xm[j])            # functional relationship
+
+      p_pos[j] <- (p_latent[j]*sens) + (1 - p_latent[j])*(1 - spec)
+
+      Xp[j] ~ dbin(p_pos[j], Xm[j])
+
+      Xtb[j] ~ dbin(lambda, X_latent[j])                   # time independent
+
+      logit(p_latent[j]) <- alpha + betas*rfs[j] + beta_inc[inc[j]] + beta_eth[eth[j]] +
+                            beta_age[age[j]] + beta_bcg[bcg[j]] + beta_yse[yse[j]]
+    }
+
+  ## prior distributions for inference
+
+  alpha ~ dnorm(0, 0.368)
+  betas ~ dnorm(0, 0.368)
+
+  #beta_inc[1] = 0           # set as baseline
+  for (i in 1:len_inc) {
+    beta_inc[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_eth) {
+    beta_eth[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_age) {
+    beta_age[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_bcg) {
+    beta_bcg[i] ~ dnorm(0, 0.368)
+  }
+
+  for (i in 1:len_yse) {
+    beta_yse[i] ~ dnorm(0, 0.368)
+  }
+
+  sens ~ dbeta(100, 5)   # good: mean~=0.9
+  spec ~ dbeta(100, 5)
+  lambda ~ dbeta(5, 100) # mean~= 0.1
+
+  ## priors used in prior predictive distn
+
+  prior_alpha ~ dnorm(0, 0.368)
+  prior_s ~ dnorm(0, 0.368)
+  for (i in 1:len_inc) {
+    prior_inc[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_eth) {
+    prior_eth[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_age) {
+    prior_age[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_bcg) {
+    prior_bcg[i] ~ dnorm(0, 0.368)
+  }
+  for (i in 1:len_yse) {
+    prior_yse[i] ~ dnorm(0, 0.368)
+  }
+  prior_lambda ~ dbeta(5, 100)
+
+  ## prior predictive distn
+  ## for sample covariates
+  ##TODO: include positivity, sens, spec
+  for (j in 1:len_gp) {
+    logit(prior_ltbi[j]) <- prior_alpha + prior_s*rfs[j] + prior_inc[inc[j]] + prior_eth[eth[j]] +
+                            prior_age[age[j]] + prior_bcg[bcg[j]] + prior_yse[yse[j]]
+    prior_X_latent[j] <- trunc(prior_ltbi[j] * Xm[j])
+    prior_Xtb[j] ~ dbin(prior_lambda, prior_X_latent[j])
+  }
+
+
+  ## posterior predictions
+
+  ## complete grid of covariate values
+  for (i in 1:len_rfs) {
+    for (k in 1:len_inc) {
+      for (m in 1:len_eth) {
+        for (a in 1:len_age) {
+          for (b in 1:len_bcg) {
+            for (y in 1:len_yse) {
+              logit(ppred[i,k,m,a,b,y]) <- alpha + betas*i + beta_inc[k] + beta_eth[m] +
+                                            beta_age[a] + beta_bcg[b] + beta_yse[y]
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ## for sample covariates
+  for (j in 1:len_gp) {
+    logit(ppred_grp[j]) <- alpha + betas*rfs[j] + beta_inc[inc[j]] + beta_eth[eth[j]] +
+                            beta_age[age[j]] + beta_bcg[bcg[j]] + beta_yse[yse[j]]
+    pred_X_latent[j] <- trunc(ppred_grp[j] * Xm[j])
+    pred_Xtb[j] ~ dbin(lambda, pred_X_latent[j])
+  }
+
+  ## posterior predictive distn
+  #c <- 1   # pick an individual to replicate; ##TODO: loop over whole sample?
+  #pred_X_latent <- trunc(ppred[rfs[c] + 1, inc[c], eth[c], age[c], bcg[c], yse[c]] * Xm[c])
+
+  ## marginalise
+  ##TODO: how to do this?
+  #p_contact <- sum(ppred[1, , , , , ])
+  #p_migrant <- 1 - p_contact
+
+}
+

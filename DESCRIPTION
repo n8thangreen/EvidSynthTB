@@ -1,11 +1,29 @@
 Package: EvidSynthTB
 Type: Package
-Title: Bayesian Multi-Parameter Evidence Synthesis (MPES) to estimate TB epidemiological parameters.
-Version: 0.1.0
-Description: Bayesian Multi-Parameter Evidence Synthesis (MPES) to estimate TB epidemiological parameters.
+Title: Bayesian Multi-Parameter Evidence Synthesis for TB Epidemiology
+Version: 0.2.0
+Authors@R: 
+    person("Nathan", "Green", , "n.green@ucl.ac.uk", role = c("aut", "cre"))
+Description: Bayesian Multi-Parameter Evidence Synthesis (MPES) linking latent
+    tuberculosis infection (LTBI) diagnostic survey data with active TB
+    progression survival data using mixture cure models, imperfect diagnostic
+    test models, and modular/cut inference in Stan.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.3.1
-Authors@R: 
-    person("Nathan", "Green", , "n.green@ucl.ac.uk", role = "ctb")
+Depends:
+    R (>= 4.1.0)
+Imports:
+    cmdstanr,
+    dplyr,
+    flexsurv,
+    ggplot2,
+    posterior,
+    rlang,
+    stats,
+    tibble,
+    tools,
+    utils
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.0
