@@ -1,0 +1,48 @@
+url: https://n8thangreen.github.io/EvidSynthTB/
+template:
+  bootstrap: 5
+  math-rendering: mathjax
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    articles:
+      text: Vignettes
+      menu:
+      - text: "1. Comparing Synthesis Models: Cut, Joint, Melding, Elastic & Tempered"
+        href: articles/model-comparison-simulation.html
+      - text: "2. Imperfect Diagnostic Tests, Latent-Class Coupling & Subgroup Cohorts"
+        href: articles/imperfect-tests-and-coupling.html
+      - text: "3. UK PREDICT-TB Case Studies: Reconstructed Survival & Migrant Cohort"
+        href: articles/predict-tb-case-studies.html
+
+articles:
+- title: Methodology & Case Studies
+  navbar: ~
+  contents:
+  - model-comparison-simulation
+  - imperfect-tests-and-coupling
+  - predict-tb-case-studies
+
+reference:
+- title: Model Fitting & Multi-Model Synthesis
+  desc: Fit and compare Bayesian Multi-Parameter Evidence Synthesis (MPES) models in CmdStan.
+  contents:
+  - evidsynth_fit
+  - compare_evidsynth
+- title: Quantitative Diagnostics & Visualization
+  desc: Evaluate parameter recovery, diagnose inter-module conflict and feedback shift, and plot posterior comparisons.
+  contents:
+  - evaluate_comparison
+  - diagnose_feedback
+  - plot_progression
+  - plot_model_comparison
+  - plot_survival_comparison
+- title: Data Simulation & Real TB Datasets
+  desc: Simulate synthetic LTBI/TB datasets with imperfect tests or conflict, and load UK PREDICT-TB datasets.
+  contents:
+  - create_fake_data
+  - load_abubakar_2018
+  - load_predict_migrant

@@ -32,7 +32,7 @@ The framework links two core epidemiological modules:
    Only truly infected individuals ($Z_i = 1$, uncured fraction $\pi_i$, or positive predictive value $\text{PPV}_i$ in a test-positive follow-up cohort) are at risk of progressing to active TB with uncured survival $S_u(t)$ and density $f_u(t)$ (`"gompertz"`, `"weibull"`, or `"exponential"`):
    $$L_{\text{surv}, i} = \left[ \tilde{\pi}_i f_u(t_i) \right]^{d_i} \left[ (1 - \tilde{\pi}_i) + \tilde{\pi}_i S_u(t_i) \right]^{1 - d_i}$$
 
-![](man/figures/flowdiagram.png)
+![Two-module LTBI and active TB progression model flow diagram](man/figures/flowdiagram.png)
 
 ### Six Synthesis & Modular Feedback Strategies
 

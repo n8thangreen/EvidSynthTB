@@ -1,0 +1,177 @@
+---
+title: "3. UK PREDICT-TB Case Studies: Reconstructed Survival & Linked Migrant Cohort"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{3. UK PREDICT-TB Case Studies: Reconstructed Survival & Linked Migrant Cohort}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Overview
+
+The UK PREDICT-TB study (Abubakar et al., 2018) evaluated latent tuberculosis infection (LTBI) screening and subsequent progression to active TB among recent migrants and TB contacts in the UK. Depending on data access, researchers typically encounter two different data structures from this study:
+
+1. **Case Study A — Published Aggregate Positivity + Reconstructed Kaplan-Meier IPD (`load_abubakar_2018()`):**
+   From the published paper, we observe the aggregate baseline IGRA positivity count ($y = 1444$ positive out of $n = 6380$ participants) together with pseudo-individual survival times $(t_i, d_i)_{i=1}^{6380}$ reconstructed by digitizing the published Kaplan-Meier curve (`scripts/reconstruct-progression-data.R`). Because the digitized survival curve does not link individual test outcomes $x_i$ to individual times $t_i$, this is an **unlinked two-module synthesis** problem.
+2. **Case Study B — Linked Individual-Level Migrant Cohort (`load_predict_migrant()`):**
+   In the individual-level migrant sub-cohort extract (`cleaned_migrant_predict_data.RData`), each participant $i$ has a linked baseline test result $x_i \in \{0, 1\}$, follow-up time $t_i$, active TB progression indicator $d_i \in \{0, 1\}$, and demographic covariates (`age`, `age_z`, `ethnicity`). This enables **individual-level latent-class coupling** and covariate regression.
+
+---
+
+## Mathematical Formulation
+
+### Case Study A: Unlinked Aggregate Survey + Reconstructed Survival Cohort
+
+Let $y = 1444$ and $n = 6380$ denote the aggregate IGRA positivity data in Module 1, and let $(t_i, d_i)_{i=1}^{N_{\text{surv}}}$ denote the digitized progression times in Module 2. With imperfect IGRA sensitivity and specificity ($\text{sens} \sim \text{Beta}(a_{\text{sens}}, b_{\text{sens}})$, $\text{spec} \sim \text{Beta}(a_{\text{spec}}, b_{\text{spec}})$) and a Gompertz uncured progression hazard $h_u(t) = \lambda e^{\gamma t}$:
+
+$$
+\begin{aligned}
+y &\sim \text{Binomial}\!\left(n, \, \pi_{\text{diag}} \, \text{sens} + (1 - \pi_{\text{diag}})(1 - \text{spec})\right), \\[4pt]
+L_2(t_i, d_i \mid \pi_{\text{surv}}, \lambda, \gamma) &=
+\left[ \pi_{\text{surv}} \, \lambda e^{\gamma t_i} \exp\!\left(-\frac{\lambda}{\gamma}(e^{\gamma t_i} - 1)\right) \right]^{d_i}
+\left[ (1 - \pi_{\text{surv}}) + \pi_{\text{surv}} \exp\!\left(-\frac{\lambda}{\gamma}(e^{\gamma t_i} - 1)\right) \right]^{1 - d_i}.
+\end{aligned}
+$$
+
+Because active TB progression events in the full cohort are rare (~1.5% over 5 years) and follow-up is heavily right-censored around 4–5 years, fitting Module 2 alone (`model = "independent"`) cannot separately identify the cure fraction $1 - \pi_{\text{surv}}$ and the Gompertz shape parameter $\gamma < 0$ (which governs how quickly the progression hazard decays over time). Linking Module 1 and Module 2 via `"cut"`, `"joint"`, or `"elastic"` anchors the uncured fraction $\pi$ using the diagnostic test data, allowing the survival curve $S_u(t)$ among LTBI-positive individuals to be identified.
+
+### Case Study B: Linked Individual-Level Migrant Cohort with Covariates
+
+In the linked migrant cohort, each participant $i$ has baseline age $a_i$ (standardized as $\text{age}_{z,i}$), baseline test result $x_i \in \{0, 1\}$, and survival outcome $(t_i, d_i)$. Individual baseline LTBI prevalence is modeled as:
+
+$$
+\text{logit}(\pi_i) = \alpha + \beta_{\text{age}} \, \text{age}_{z,i}.
+$$
+
+Under individual-level latent-class coupling (`coupling = "latent_class"`), each participant's latent infection status $Z_i \sim \text{Bernoulli}(\pi_i)$ jointly governs $x_i$ and $(t_i, d_i)$:
+
+$$
+L_i(x_i, t_i, d_i) =
+\begin{cases}
+\pi_i \, \text{sens}^{x_i} (1 - \text{sens})^{1 - x_i} \, f_u(t_i \mid \lambda, \gamma) & \text{if } d_i = 1, \\[4pt]
+(1 - \pi_i) (1 - \text{spec})^{x_i} \text{spec}^{1 - x_i} + \pi_i \, \text{sens}^{x_i} (1 - \text{sens})^{1 - x_i} \, S_u(t_i \mid \lambda, \gamma) & \text{if } d_i = 0.
+\end{cases}
+$$
+
+---
+
+## Worked Analysis: Case Study A (Reconstructed Abubakar 2018 Data)
+
+```{r setup-pkg}
+library(EvidSynthTB)
+library(dplyr)
+library(ggplot2)
+
+abub <- load_abubakar_2018()
+abub$prevalence_data
+head(abub$progression_data)
+```
+
+For computational speed in this vignette, we take a stratified subsample including all observed active TB events ($d_i = 1$) and a weighted sample of censored observations (in a full analysis, as in `scripts/script_Stan.R`, pass `abub$progression_data` directly):
+
+```{r fit-abubakar}
+set.seed(501)
+events_df <- dplyr::filter(abub$progression_data, d == 1L)
+cens_df <- dplyr::slice_sample(dplyr::filter(abub$progression_data, d == 0L), n = 450)
+prog_sub <- dplyr::bind_rows(events_df, cens_df)
+
+comp_abub <- compare_evidsynth(
+  prevalence_data = abub$prevalence_data,
+  progression_data = prog_sub,
+  models = c("cut", "joint", "independent", "elastic"),
+  imperfect_test = TRUE,
+  surv_dist = "gompertz",
+  t_lim = 10,
+  chains = 1,
+  n_iter = 400,
+  n_burnin = 200,
+  n_cut_subsamples = 8,
+  seed = 501
+)
+
+knitr::kable(comp_abub$summary_table, digits = 3)
+knitr::kable(diagnose_feedback(comp_abub), digits = 3)
+```
+
+```{r plot-abubakar}
+plot_model_comparison(
+  comp_abub,
+  variables = c("prev_diag", "prev_cf", "lambda", "shape")
+)
+plot_survival_comparison(comp_abub, type = "uncured")
+```
+
+Notice that the Gompertz shape parameter $\gamma$ (`shape`) is estimated to be negative, reflecting the biological reality that the hazard of progressing from LTBI to active TB is highest in the first 1–2 years after entry/screening and decays exponentially thereafter.
+
+---
+
+## Worked Analysis: Case Study B (Linked PREDICT-TB Migrant Cohort)
+
+```{r load-migrant}
+migrant <- load_predict_migrant()
+glimpse(migrant$progression_data)
+```
+
+We compare individual-level `"latent_class"` coupling against `"population"` coupling and the two-stage `"cut"` model on a stratified subsample of the linked migrant cohort with standardized age (`age_z`) as a baseline covariate:
+
+```{r fit-migrant}
+set.seed(601)
+mig_events <- dplyr::filter(migrant$progression_data, d == 1L)
+mig_cens <- dplyr::slice_sample(dplyr::filter(migrant$progression_data, d == 0L), n = 400)
+mig_sub <- dplyr::bind_rows(mig_events, mig_cens)
+
+fit_mig_lc <- evidsynth_fit(
+  prevalence_data = migrant$prevalence_data,
+  progression_data = mig_sub,
+  model = "joint",
+  coupling = "latent_class",
+  imperfect_test = TRUE,
+  covariates = "age_z",
+  t_lim = 10,
+  chains = 1,
+  n_iter = 400,
+  n_burnin = 200,
+  seed = 601
+)
+
+fit_mig_cut <- evidsynth_fit(
+  prevalence_data = migrant$prevalence_data,
+  progression_data = mig_sub,
+  model = "cut",
+  coupling = "latent_class",
+  imperfect_test = TRUE,
+  covariates = "age_z",
+  t_lim = 10,
+  chains = 1,
+  n_iter = 400,
+  n_burnin = 200,
+  n_cut_subsamples = 8,
+  seed = 601
+)
+
+comp_migrant <- structure(
+  list(
+    fits = list(joint_latent_class = fit_mig_lc, cut_latent_class = fit_mig_cut),
+    summary_table = bind_rows(
+      mutate(fit_mig_lc$summary, model = "joint_latent_class"),
+      mutate(fit_mig_cut$summary, model = "cut_latent_class")
+    )
+  ),
+  class = "evidsynth_comparison"
+)
+
+knitr::kable(comp_migrant$summary_table, digits = 3)
+knitr::kable(diagnose_feedback(comp_migrant), digits = 3)
+plot_survival_comparison(comp_migrant, type = "uncured")
+```

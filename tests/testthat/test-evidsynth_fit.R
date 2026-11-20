@@ -83,6 +83,25 @@ test_that("evidsynth_fit works across synthesis strategies and blocks feedback i
   expect_s3_class(p1, "ggplot")
   expect_s3_class(p2, "ggplot")
   expect_s3_class(p3, "ggplot")
+
+  # Quantitative comparison metrics & feedback diagnostics
+  eval_metrics <- evaluate_comparison(comp, truth = sim_conflict$truth)
+  expect_named(eval_metrics, c("parameter_metrics", "survival_metrics"))
+  expect_contains(
+    names(eval_metrics$parameter_metrics),
+    c("model", "variable", "truth", "bias", "rmse", "cov_95", "width_95")
+  )
+  expect_contains(
+    names(eval_metrics$survival_metrics),
+    c("model", "iae_surv", "irmse_surv")
+  )
+
+  fb_tbl <- diagnose_feedback(comp)
+  expect_contains(
+    names(fb_tbl),
+    c("model", "feedback_shift", "conflict_diff_median", "conflict_prob_pos", "waic_surv")
+  )
+  expect_all_false(is.na(fb_tbl$waic_surv))
 })
 
 test_that("evidsynth_fit supports linked latent_class coupling with imperfect tests", {

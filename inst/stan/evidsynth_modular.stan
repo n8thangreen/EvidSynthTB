@@ -308,11 +308,46 @@ model {
 generated quantities {
   vector[t_lim] S_pred;                       // Uncured survival S_u(t)
   vector[t_lim] S_pop_pred;                   // Population mixture survival (1 - prev_cf) + prev_cf * S_u(t)
+  vector[N_surv] log_lik_surv;                // Pointwise survival log-likelihood for WAIC/LOO
   real<lower=0, upper=1> ppv_cf;
 
   {
     real p_pos1 = prev_cf * sens[1] + (1.0 - prev_cf) * (1.0 - spec[1]);
     ppv_cf = (prev_cf * sens[1]) / p_pos1;
+
+    vector[N_surv] eta_surv_gq = rep_vector(alpha_surv, N_surv);
+    if (P_cov > 0) {
+      eta_surv_gq += X_surv * beta_cov;
+    }
+    for (i in 1:N_surv) {
+      real pi_surv_i = inv_logit(eta_surv_gq[i]);
+      real log_f = dispatch_lpdf(t[i] | surv_dist, shape, lambda);
+      real log_S = dispatch_log_S(t[i], surv_dist, shape, lambda);
+      real pi_eff;
+
+      if (is_linked == 1 && coupling == 2 && cohort_type == 1) {
+        real lp_x_z1 = 0.0;
+        real lp_x_z0 = 0.0;
+        for (k in 1:K_tests) {
+          lp_x_z1 += bernoulli_lpmf(x_linked[i, k] | sens[k]);
+          lp_x_z0 += bernoulli_lpmf(x_linked[i, k] | 1.0 - spec[k]);
+        }
+        real log_num = log(pi_surv_i) + lp_x_z1;
+        real log_den = log_sum_exp(log1m(pi_surv_i) + lp_x_z0, log_num);
+        pi_eff = exp(log_num - log_den);
+      } else if (cohort_type == 2) {
+        real p_pos_i = pi_surv_i * sens[1] + (1.0 - pi_surv_i) * (1.0 - spec[1]);
+        pi_eff = (pi_surv_i * sens[1]) / p_pos_i;
+      } else {
+        pi_eff = pi_surv_i;
+      }
+
+      if (d[i] == 1) {
+        log_lik_surv[i] = log(pi_eff) + log_f;
+      } else {
+        log_lik_surv[i] = log_sum_exp(log1m(pi_eff), log(pi_eff) + log_S);
+      }
+    }
   }
 
   for (j in 1:t_lim) {

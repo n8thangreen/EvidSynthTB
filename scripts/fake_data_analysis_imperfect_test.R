@@ -1,135 +1,120 @@
+# Imperfect Diagnostic Test & Mixture Cure Model Analysis (Simulated Data)
+# Evaluates:
+#   1. Population-level coupling vs Individual-level latent-class coupling
+#   2. Single imperfect test (K = 1) vs Dual imperfect tests (K = 2, e.g. IGRA + TST)
+#   3. All-comers follow-up (cohort_type = "all") vs Test-positive subgroup
+#      follow-up (cohort_type = "pos_only", where uncured fraction is PPV)
 
-# simulates artificial ltbi and tb data
-# without covariate age or ethnicity
-# and with imperfect diagnostic test
-
-library(rstan)
-library(shinystan)
-library(purrr)
-library(readr)
+library(EvidSynthTB)
 library(dplyr)
-
-# rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
-
-N <- 1000
-
-rdat <-
-  data.frame(
-    t = round(flexsurv::rgompertz(N, shape = 0.5, rate = 0.1), 3)) |>
-    mutate(x = rbinom(n = N, size = 1, prob = 0.3),
-           ## observe all progression times
-           ## no false negatives
-           d = ifelse(x == 1, 1, 0),
-           # d = sample(c(0,1), size = N, replace = TRUE),
-           # d = ifelse(x == 0, 0, d),
-           ## censored times after event times
-           t = ifelse(x == 0, t + 5, t)) |>
-  as_tibble()
-
-rdat
-
-
-dat_input <-
-  list(
-    N = nrow(rdat),
-    N_obs = sum(rdat$d),
-    N_cens = sum(1 - rdat$d),
-    t_lim = 20,
-    mu_shape = 0.5,
-    sigma_shape = 1,
-    a_lambda = 3,
-    b_lambda = 30,
-    obs_idx = which(rdat$d == 1),
-    cens_idx = which(rdat$d == 0),
-    t = as.numeric(rdat$t),
-    d = as.numeric(rdat$d),
-    x = rdat$x)
-
-params <- c(
-  "S_pred",
-  "sens", "spec",
-  "prev_cf", "prev_diag", "prev_mean",
-  "lambda", "shape")
-
-n_iter <- 10e3
-n_burnin <- 3e1
-n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
-
-
-###########
-# run MCMC
-###########
-
-out <- stan(data = dat_input,
-            pars = params,
-            file = here::here("BUGS", "Stan_code_mixture_cure_model_imperfect_test.stan"),
-            chains = 1,
-            iter = n_iter,
-            warmup = n_burnin,
-            thin = n_thin,
-            control = list(adapt_delta = 0.99,
-                           max_treedepth = 20))
-
-stan_output <- extract(out)
-
-mean(stan_output$lambda)
-mean(stan_output$shape)
-
-
-#######
-# plot
-#######
-
-library(reshape2)
 library(ggplot2)
 
-# base R
-stan_output$S_pred %>%
-  as.data.frame %>%
-  summarise(across(.fns = ~ mean(.x, na.rm = TRUE ))) %>%
-  # summarise(across(.fns = ~ median(.x, na.rm = TRUE ))) %>%
-  unlist() %>%
-  plot(type = "l")
+# 1. Simulate linked cohort with K = 2 imperfect diagnostic tests (IGRA + TST)
+sim_k2 <- create_fake_data(
+  N_surv = 600,
+  n_survey = 1200,
+  p_ltbi = 0.30,
+  sens = c(0.85, 0.78),
+  spec = c(0.95, 0.90),
+  surv_dist = "gompertz",
+  shape = 0.2,
+  rate = 0.10,
+  t_censor = 10,
+  seed = 301
+)
 
+# 2. Compare Population-level vs Individual-level Latent-Class Coupling (K = 1 vs K = 2)
+fit_pop_k1 <- evidsynth_fit(
+  prevalence_data = sim_k2$prevalence_data,
+  progression_data = sim_k2$progression_data[, c("t", "d", "x1")],
+  model = "joint",
+  coupling = "population",
+  imperfect_test = TRUE,
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 301
+)
 
-plot_dat <-
-  stan_output$S_pred %>%
-  as.data.frame() %>%
-  mutate(sim = 1:n()) %>%
-  melt(id.vars = "sim",
-       variable.name = "time") %>%
-  mutate(time = as.numeric(gsub("V", "", time))) %>%
-  group_by(time) %>%
-  summarise(median = median(value),
-            mean = mean(value),
-            lower50 = quantile(value, probs = 0.25),
-            upper50 = quantile(value, probs = 0.75),
-            lower95 = quantile(value, probs = 0.025),
-            upper95 = quantile(value, probs = 0.975))
+fit_lc_k1 <- evidsynth_fit(
+  prevalence_data = sim_k2$prevalence_data,
+  progression_data = sim_k2$progression_data[, c("t", "d", "x1")],
+  model = "joint",
+  coupling = "latent_class",
+  imperfect_test = TRUE,
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 301
+)
 
-ggplot(plot_dat, aes(time, median)) +
-  geom_line() +
-  geom_line(aes(y = mean), linetype = 2) +
-  ylab("Survival") +
-  geom_ribbon(aes(x = time, ymin = lower95, ymax = upper95),
-              linetype = 0,
-              alpha = 0.2) +
-  geom_ribbon(aes(x = time, ymin = lower50, ymax = upper50),
-              linetype = 0,
-              alpha = 0.2) +
-  ylim(0, 1)
+fit_lc_k2 <- evidsynth_fit(
+  prevalence_data = sim_k2$prevalence_data,
+  progression_data = sim_k2$progression_data[, c("t", "d", "x1", "x2")],
+  model = "joint",
+  coupling = "latent_class",
+  imperfect_test = TRUE,
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 301
+)
 
+comp_coupling <- structure(
+  list(
+    fits = list(
+      pop_1test = fit_pop_k1,
+      latent_class_1test = fit_lc_k1,
+      latent_class_2tests = fit_lc_k2
+    ),
+    summary_table = bind_rows(
+      mutate(fit_pop_k1$summary, model = "pop_1test"),
+      mutate(fit_lc_k1$summary, model = "latent_class_1test"),
+      mutate(fit_lc_k2$summary, model = "latent_class_2tests")
+    )
+  ),
+  class = "evidsynth_comparison"
+)
 
-# LTBI prevalence
+cat("=== Coupling & Multi-Test Recovery ===\n")
+print(evaluate_comparison(comp_coupling, truth = sim_k2$truth)$parameter_metrics)
+print(diagnose_feedback(comp_coupling))
 
-hist(stan_output$prev_cf, breaks = 40)
-hist(stan_output$prev_diag, breaks = 40)
-hist(stan_output$prev_mean, breaks = 40)
-hist(1/(1 + exp(-stan_output$prev_mean)), breaks = 40)
-hist(stan_output$sens, breaks = 40)
-hist(stan_output$spec, breaks = 40)
+# 3. Test-Positive Subgroup Follow-Up (cohort_type = "pos_only", uncured fraction = PPV)
+sim_pos <- create_fake_data(
+  N_surv = 800,
+  n_survey = 1500,
+  p_ltbi = 0.30,
+  sens = 0.85,
+  spec = 0.92,
+  surv_dist = "gompertz",
+  shape = 0.15,
+  rate = 0.10,
+  cohort_type = "pos_only",
+  seed = 302
+)
 
-plot(flexsurv::pgompertz(q = 0:20, shape = 0.5, rate = 0.1, lower.tail = FALSE),
-      type = "l")
+comp_pos <- compare_evidsynth(
+  prevalence_data = sim_pos$prevalence_data,
+  progression_data = sim_pos$progression_data[, c("t", "d")],
+  models = c("joint", "cut", "elastic"),
+  cohort_type = "pos_only",
+  imperfect_test = TRUE,
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 302
+)
 
+cat("=== Test-Positive Subgroup Cohort (PPV Cure Fraction) ===\n")
+print(evaluate_comparison(comp_pos, truth = sim_pos$truth)$parameter_metrics)
+plot_model_comparison(
+  comp_pos,
+  variables = c("prev_diag", "ppv_cf", "lambda", "shape"),
+  truth = c(
+    prev_diag = sim_pos$truth$p_ltbi,
+    ppv_cf = sim_pos$truth$ppv_surv,
+    lambda = sim_pos$truth$rate,
+    shape = sim_pos$truth$shape
+  )
+)

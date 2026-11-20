@@ -2,6 +2,8 @@
 
 export(compare_evidsynth)
 export(create_fake_data)
+export(diagnose_feedback)
+export(evaluate_comparison)
 export(evidsynth_fit)
 export(load_abubakar_2018)
 export(load_predict_migrant)

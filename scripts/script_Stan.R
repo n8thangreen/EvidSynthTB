@@ -1,115 +1,47 @@
+# Reconstructed Abubakar (2018) UK PREDICT-TB Evidence Synthesis Analysis
+# Combines baseline IGRA test positivity (1444 / 6380) with the digitized
+# Kaplan-Meier individual participant survival data (raw-data/IPDdata.txt)
+# across synthesis strategies and parametric survival families.
 
-# Evidence synthesis LTBI screening: Stan
-# with real data
-
-
-library(rstan)
-library(shinystan)
-library(purrr)
-library(readr)
+library(EvidSynthTB)
 library(dplyr)
-
-rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
-
-
-edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
-load("data input/cleaned_migrant_predict_data.RData")
-
-pos_dat <-
-  select(dat_m, pos, age, ethnicity) %>%
-  mutate(age = as.numeric(age)) %>%
-  na.omit()
-
-dummy_dat <- model.matrix(~ age + ethnicity, data = pos_dat)
-
-predicttb <-
-  filter(dat_m, pos == TRUE) %>%
-  mutate(time = as.numeric(time))
-
-dat_input <-
-  list(
-    N = nrow(predicttb),
-    N_cens = sum(!predicttb$status),
-    N_uncens = sum(predicttb$status),
-    t_cens = predicttb$time[predicttb$status == 0],
-    t_uncens = predicttb$time[predicttb$status == 1],
-    ## normal priors
-    mu_gamma = -0.8481,  # shape
-    sigma_gamma = 0.1,
-    ## gamma priors
-    a_lambda = 0.1, # rate
-    b_lambda = 1,
-    t_lim = 20)
-
-params <- c(
-  "ppred",
-  "lambda",
-  "gamma")
-
-n_iter <- 10e3
-n_burnin <- 3e1
-n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
-
-
-##############
-## run MCMC ##
-##############
-
-out <- stan(data = dat_input,
-            pars = params,
-            file = here::here("BUGS", "Stan_code_predicttb.stan"),
-            chains = 1,
-            iter = n_iter,
-            warmup = n_burnin,
-            thin = n_thin,
-            control = list(adapt_delta = 0.99,
-                           max_treedepth = 20))
-
-stan_output <- extract(out)
-
-save(stan_output, file = here::here("data output", "stan_output.RData"))
-
-# flexsurv:
-# shape       rate
-# 0.42823033 0.02314312
-
-mean(stan_output$lambda)
-mean(stan_output$gamma)
-
-
-###########
-# plot
-
-library(reshape2)
 library(ggplot2)
 
-# base R
-stan_output$ppred %>%
-  as.data.frame %>%
-  summarise_all(mean) %>%
-  unlist() %>%
-  plot(ylim = c(0.8, 1), type = "l")
+abub <- load_abubakar_2018()
 
+# 1. Compare synthesis strategies with imperfect IGRA sensitivity and specificity
+comp_abub <- compare_evidsynth(
+  prevalence_data = abub$prevalence_data,
+  progression_data = abub$progression_data,
+  models = c("cut", "joint", "independent", "melding", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  surv_dist = "gompertz",
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 501
+)
 
-plot_dat <-
-  stan_output$ppred %>%
-  as.data.frame() %>%
-  mutate(sim = 1:n()) %>%
-  melt(id.vars = "sim",
-       variable.name = "time") %>%
-  mutate(time = as.numeric(gsub("V", "", time))) %>%
-  group_by(time) %>%
-  summarise(mean = mean(value),
-            lower = quantile(value, probs = 0.025),
-            upper = quantile(value, probs = 0.975))
+cat("=== Abubakar (2018) Synthesis Model Summary ===\n")
+print(comp_abub$summary_table)
 
-ggplot(plot_dat, aes(time, mean)) +
-  geom_line() +
-  ylab("Survival") +
-  geom_ribbon(aes(x = time, ymin = lower, ymax = upper),
-              linetype = 0,
-              alpha = 0.2) +
-  ylim(0, 1)
+cat("=== Abubakar (2018) Inter-Module Feedback & Conflict Diagnostics ===\n")
+print(diagnose_feedback(comp_abub))
 
+# 2. Save fitted output for downstream ETS projection scripts
+fit_cut <- comp_abub$fits$cut
+s_cols <- grep("^S_pred\\[", names(fit_cut$draws), value = TRUE)
+stan_output <- list(
+  ppred = as.matrix(as.data.frame(fit_cut$draws)[, s_cols, drop = FALSE]),
+  lambda = as.numeric(fit_cut$draws$lambda),
+  gamma = as.numeric(fit_cut$draws$shape),
+  prev_cf = as.numeric(fit_cut$draws$prev_cf)
+)
+if (dir.exists("data output")) {
+  save(stan_output, comp_abub, file = file.path("data output", "stan_output.RData"))
+}
 
+# 3. Plots
+plot_model_comparison(comp_abub, variables = c("prev_diag", "prev_cf", "lambda", "shape"))
+plot_survival_comparison(comp_abub, type = "uncured")
+plot_survival_comparison(comp_abub, type = "population")

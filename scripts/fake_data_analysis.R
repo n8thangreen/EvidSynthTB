@@ -1,141 +1,55 @@
+# Covariate-Adjusted Mixture Cure Model Analysis (Simulated Data)
+# Simulates LTBI prevalence varying by standardized age (age_z) and high-incidence
+# origin (high_inc_origin), and compares synthesis strategies with covariates.
 
-# Fit mixture cure model
-# simulates artificial ltbi and tb data
-
-library(rstan)
-library(shinystan)
-library(purrr)
-library(readr)
+library(EvidSynthTB)
 library(dplyr)
-
-# sample size
-N <- 100
-
-# covariates
-ids <- sample(1:3, size = N, replace = TRUE)
-
-rdat <-
-  data.frame(
-    age =  rep(50, N),
-    ethnicity = c("White", "China", "Other")[ids],
-    t = round(flexsurv::rgompertz(N, shape = 1, rate = 0.1), 3),
-    probs = c(0.1, 0.5, 0.8)[ids]) |>
-    mutate(x = rbinom(n = N, size = 1, prob = probs),
-           d = sample(c(0,1), size = N, replace = TRUE),
-           d = ifelse(x == 0, 0, d))
-
-rdat
-
-# for (i in prob) {
-#   x[i] <- purrr::rbernoulli(1, p = i)
-# }
-
-# rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
-
-
-dat_input <-
-  list(
-    N = nrow(rdat),
-    t = as.numeric(rdat$t),
-    d = as.numeric(rdat$d),
-    pos = rdat$x,
-    age = as.numeric(rdat$age) - mean(rdat$age, na.rm = TRUE),
-    ethnicity =  as.numeric(as.factor(rdat$ethnicity)),
-    n_eth = length(unique(rdat$ethnicity)),
-    t_lim = 20,
-    scale_alpha = 10,
-    scale_beta = 10,
-    a_eth = 0.01,
-    b_eth = 0.01,
-    ## normal priors
-    mu_shape = 1,
-    sigma_shape = 1,
-    ## gamma priors
-    a_lambda = 0.01, # rate
-    b_lambda = 0.01)
-
-params <- c(
-  "S_pred",
-  "cf", "alpha",
-  "beta_age", "beta_eth",
-  "lambda", "shape")
-
-n_iter <- 10e3
-n_burnin <- 3e1
-n_thin <- 2e1 #floor((n_iter - n_burnin)/500)
-
-###########
-# run MCMC
-###########
-
-out <- stan(data = dat_input,
-            pars = params,
-            file = here::here("BUGS", "Stan_code_mixture_cure_model.stan"),
-            chains = 1,
-            iter = n_iter,
-            warmup = n_burnin,
-            thin = n_thin,
-            control = list(adapt_delta = 0.99,
-                           max_treedepth = 20))
-
-stan_output <- extract(out)
-
-mean(stan_output$lambda)
-mean(stan_output$shape)
-
-
-#######
-# plot
-#######
-
-library(reshape2)
 library(ggplot2)
 
-# base R
-stan_output$S_pred %>%
-  as.data.frame %>%
-  summarise(across(.fns = ~ mean(.x, na.rm = TRUE ))) %>%
-  # summarise(across(.fns = ~ median(.x, na.rm = TRUE ))) %>%
-  unlist() %>%
-  plot(ylim = c(0.5, 1), type = "l")
+# 1. Simulate linked cohort with baseline covariates on logit(p_ltbi)
+sim_cov <- create_fake_data(
+  N_surv = 500,
+  n_survey = 1000,
+  p_ltbi = 0.30,
+  sens = 0.88,
+  spec = 0.96,
+  surv_dist = "gompertz",
+  shape = 0.15,
+  rate = 0.10,
+  include_covariates = TRUE,
+  beta_cov = c(0.45, 0.70),
+  seed = 401
+)
 
+# 2. Fit Joint (Latent-Class), Joint (Population), Cut, and Elastic models with covariates
+comp_cov <- compare_evidsynth(
+  prevalence_data = sim_cov$prevalence_data,
+  progression_data = sim_cov$progression_data,
+  models = c("joint", "cut", "elastic", "tempered"),
+  coupling = "latent_class",
+  imperfect_test = TRUE,
+  covariates = c("age_z", "high_inc_origin"),
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 401
+)
 
-plot_dat <-
-  stan_output$S_pred %>%
-  as.data.frame() %>%
-  mutate(sim = 1:n()) %>%
-  melt(id.vars = "sim",
-       variable.name = "time") %>%
-  mutate(time = as.numeric(gsub("V", "", time))) %>%
-  group_by(time) %>%
-  summarise(median = median(value),
-            mean = mean(value),
-            lower50 = quantile(value, probs = 0.25),
-            upper50 = quantile(value, probs = 0.75),
-            lower95 = quantile(value, probs = 0.025),
-            upper95 = quantile(value, probs = 0.975))
+print(comp_cov$summary_table)
+print(evaluate_comparison(comp_cov, truth = sim_cov$truth)$parameter_metrics)
+print(diagnose_feedback(comp_cov))
 
-ggplot(plot_dat, aes(time, median)) +
-  geom_line() +
-  geom_line(aes(y = mean), linetype = 2) +
-  ylab("Survival") +
-  geom_ribbon(aes(x = time, ymin = lower95, ymax = upper95),
-              linetype = 0,
-              alpha = 0.2) +
-  geom_ribbon(aes(x = time, ymin = lower50, ymax = upper50),
-              linetype = 0,
-              alpha = 0.2) +
-  ylim(0, 1)
+# Inspect covariate regression coefficients beta_cov[1] and beta_cov[2]
+posterior::summarise_draws(
+  posterior::subset_draws(
+    comp_cov$fits$joint$draws,
+    variable = c("beta_cov[1]", "beta_cov[2]", "prev_cf", "lambda", "shape")
+  )
+)
 
-
-# LTBI prevalence
-
-for (i in 1:ncol(stan_output$beta_eth)) {
-
-  lrg <- stan_output$alpha + stan_output$beta_eth[, i]
-  print(summary(1/(1 + exp(-lrg))))
-  hist(1/(1 + exp(-lrg)), breaks = 40)
-}
-
-
+plot_model_comparison(
+  comp_cov,
+  variables = c("prev_cf", "prev_diag", "lambda", "shape"),
+  truth = c(prev_cf = 0.30, prev_diag = 0.30, lambda = 0.10, shape = 0.15)
+)
+plot_survival_comparison(comp_cov, type = "uncured")

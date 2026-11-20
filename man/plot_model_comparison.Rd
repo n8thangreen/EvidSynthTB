@@ -25,7 +25,7 @@ overlay as vertical dashed reference lines.}
 A `ggplot2` object.
 }
 \description{
-Creates a faceted density or interval plot comparing the posterior
-distributions of key parameters (`prev_cf`, `prev_diag`, `lambda`, `shape`,
-`sens[1]`, `spec[1]`) across synthesis strategies.
+Creates a faceted density plot comparing the posterior distributions of key
+parameters (`prev_cf`, `prev_diag`, `lambda`, `shape`, `sens[1]`, `spec[1]`)
+across synthesis strategies.
 }

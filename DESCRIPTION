@@ -9,6 +9,8 @@ Description: Bayesian Multi-Parameter Evidence Synthesis (MPES) linking latent
     progression survival data using mixture cure models, imperfect diagnostic
     test models, and modular/cut inference in Stan.
 License: MIT + file LICENSE
+URL: https://n8thangreen.github.io/EvidSynthTB/, https://github.com/n8thangreen/EvidSynthTB
+BugReports: https://github.com/n8thangreen/EvidSynthTB/issues
 Encoding: UTF-8
 Depends:
     R (>= 4.1.0)
@@ -24,6 +26,9 @@ Imports:
     tools,
     utils
 Suggests:
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.1.0

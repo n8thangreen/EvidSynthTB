@@ -4,250 +4,185 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What the Package Does (Title Case) • EvidSynthTB</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="What the Package Does (Title Case)">
-<meta property="og:description" content="More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Bayesian Multi-Parameter Evidence Synthesis for TB Epidemiology • EvidSynthTB</title>
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Bayesian Multi-Parameter Evidence Synthesis for TB Epidemiology">
+<meta name="description" content="Bayesian Multi-Parameter Evidence Synthesis (MPES) linking latent tuberculosis infection (LTBI) diagnostic survey data with active TB progression survival data using mixture cure models, imperfect diagnostic test models, and modular/cut inference in Stan.">
+<meta property="og:description" content="Bayesian Multi-Parameter Evidence Synthesis (MPES) linking latent tuberculosis infection (LTBI) diagnostic survey data with active TB progression survival data using mixture cure models, imperfect diagnostic test models, and modular/cut inference in Stan.">
 </head>
-<body data-spy="scroll" data-target="#toc">
-    
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">EvidSynthTB</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
-      </span>
-    </div>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="reference/index.html">Reference</a>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
+    <a class="navbar-brand me-2" href="index.html">EvidSynthTB</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
+<li><a class="dropdown-item" href="articles/model-comparison-simulation.html">1. Comparing Synthesis Models: Cut, Joint, Melding, Elastic &amp; Tempered</a></li>
+    <li><a class="dropdown-item" href="articles/imperfect-tests-and-coupling.html">2. Imperfect Diagnostic Tests, Latent-Class Coupling &amp; Subgroup Cohorts</a></li>
+    <li><a class="dropdown-item" href="articles/predict-tb-case-studies.html">3. UK PREDICT-TB Case Studies: Reconstructed Survival &amp; Migrant Cohort</a></li>
+  </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/n8thangreen/EvidSynthTB/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-      
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div class="section level1">
-<div class="page-header"><h1 id="evidsynthtb-evidence-synthesis-of-tb-data">EvidSynthTB: Evidence synthesis of TB data<a class="anchor" aria-label="anchor" href="#evidsynthtb-evidence-synthesis-of-tb-data"></a>
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="evidsynthtb-bayesian-evidence-synthesis-of-ltbi-and-tb-progression-data">EvidSynthTB: Bayesian Evidence Synthesis of LTBI and TB Progression Data<a class="anchor" aria-label="anchor" href="#evidsynthtb-bayesian-evidence-synthesis-of-ltbi-and-tb-progression-data"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of EvidSynthTB is to use Bayesian Multi-Parameter Evidence Synthesis (MPES) to estimate TB epidemiological parameters LTBI prevalence and active TB progression rate.</p>
+<p>The goal of <code>EvidSynthTB</code> is to use Bayesian Multi-Parameter Evidence Synthesis (MPES) in CmdStan to jointly or modularly estimate latent tuberculosis infection (LTBI) prevalence (<span class="math inline">\(\pi\)</span>), imperfect diagnostic test sensitivity and specificity (<span class="math inline">\(\text{sens}, \text{spec}\)</span>), and active TB progression hazard rates (<span class="math inline">\(\lambda, \text{shape}\)</span>) via parametric mixture cure models.</p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="model-structure">Model Structure<a class="anchor" aria-label="anchor" href="#model-structure"></a>
 </h2>
-<p>You can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>The framework links two core epidemiological modules:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Starting state occupancy &amp; imperfect diagnostic testing (<span class="math inline">\(M_1\)</span>):</strong> True baseline LTBI status <span class="math inline">\(Z_i \sim \text{Bernoulli}(\pi_i)\)</span> is observed only through <span class="math inline">\(K \ge 1\)</span> imperfect diagnostic tests (e.g., IGRA, TST) with sensitivity <span class="math inline">\(\text{sens}_k\)</span> and specificity <span class="math inline">\(\text{spec}_k\)</span>: <span class="math display">\[p_{\text{pos}, i, k} = \pi_i \, \text{sens}_k + (1 - \pi_i)(1 - \text{spec}_k)\]</span>
+</li>
+<li>
+<strong>Active TB progression mixture cure model (<span class="math inline">\(M_2\)</span>):</strong> Only truly infected individuals (<span class="math inline">\(Z_i = 1\)</span>, uncured fraction <span class="math inline">\(\pi_i\)</span>, or positive predictive value <span class="math inline">\(\text{PPV}_i\)</span> in a test-positive follow-up cohort) are at risk of progressing to active TB with uncured survival <span class="math inline">\(S_u(t)\)</span> and density <span class="math inline">\(f_u(t)\)</span> (<code>"gompertz"</code>, <code>"weibull"</code>, or <code>"exponential"</code>): <span class="math display">\[L_{\text{surv}, i} = \left[ \tilde{\pi}_i f_u(t_i) \right]^{d_i} \left[ (1 - \tilde{\pi}_i) + \tilde{\pi}_i S_u(t_i) \right]^{1 - d_i}\]</span>
+</li>
+</ol>
+<figure><img src="reference/figures/flowdiagram.png" alt="Two-module LTBI and active TB progression model flow diagram"><figcaption aria-hidden="true">
+Two-module LTBI and active TB progression model flow diagram
+</figcaption></figure><div class="section level3">
+<h3 id="six-synthesis--modular-feedback-strategies">Six Synthesis &amp; Modular Feedback Strategies<a class="anchor" aria-label="anchor" href="#six-synthesis--modular-feedback-strategies"></a>
+</h3>
+<p><code><a href="reference/evidsynth_fit.html">evidsynth_fit()</a></code> and <code><a href="reference/compare_evidsynth.html">compare_evidsynth()</a></code> support six ways of sharing or cutting information between the LTBI diagnostic module and the active TB progression module:</p>
+<ul>
+<li>
+<strong><code>"joint"</code></strong>: Full joint likelihood (<span class="math inline">\(\pi_{\text{diag}} = \pi_{\text{surv}}\)</span>), supporting both <code>"population"</code> coupling and individual-level <code>"latent_class"</code> marginalization over <span class="math inline">\(Z_i \in \{0, 1\}\)</span>.</li>
+<li>
+<strong><code>"cut"</code></strong>: True two-stage Bayesian cut model (Plummer 2015). Stage 1 fits <code>ltbi_module.stan</code> on diagnostic/survey data alone; Stage 2 propagates Stage 1 posterior draws into the progression mixture cure model while blocking feedback from survival data back into LTBI prevalence.</li>
+<li>
+<strong><code>"independent"</code></strong>: Separate unlinked prevalence parameters <span class="math inline">\(\pi_{\text{diag}}\)</span> and <span class="math inline">\(\pi_{\text{surv}}\)</span>.</li>
+<li>
+<strong><code>"melding"</code></strong>: Two-stage normal portal plug-in (<span class="math inline">\(\hat{\mu}, \hat{\sigma}\)</span> on <span class="math inline">\(\text{logit}(\pi)\)</span>).</li>
+<li>
+<strong><code>"elastic"</code></strong>: Hierarchical coupling <span class="math inline">\(\text{logit}(\pi_{\text{surv}}) \sim \mathcal{N}(\text{logit}(\pi_{\text{diag}}), \tau^2)\)</span> with tuneable <code>tau_couple</code>.</li>
+<li>
+<strong><code>"tempered"</code></strong>: Power-likelihood tempering weighting the survival contribution by <code>w_temper</code> <span class="math inline">\(\in [0, 1]\)</span>.</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
+<div class="section level3">
+<h3 id="id_1-simulated-conflict-scenario-imperfect-tests--cut-vs-joint-models">1. Simulated Conflict Scenario (Imperfect Tests + Cut vs. Joint Models)<a class="anchor" aria-label="anchor" href="#id_1-simulated-conflict-scenario-imperfect-tests--cut-vs-joint-models"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"n8thangreen/EvidSynthTB"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://n8thangreen.github.io/EvidSynthTB/">EvidSynthTB</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Simulate survey with true LTBI prevalence = 0.25, but a progression cohort</span></span>
+<span><span class="co"># with selection bias (true LTBI prevalence = 0.65) and imperfect IGRA test</span></span>
+<span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/create_fake_data.html">create_fake_data</a></span><span class="op">(</span></span>
+<span>  N_surv <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  n_survey <span class="op">=</span> <span class="fl">1500</span>,</span>
+<span>  p_ltbi <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  p_ltbi_surv <span class="op">=</span> <span class="fl">0.65</span>,</span>
+<span>  sens <span class="op">=</span> <span class="fl">0.85</span>,</span>
+<span>  spec <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  surv_dist <span class="op">=</span> <span class="st">"gompertz"</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  rate <span class="op">=</span> <span class="fl">0.12</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">42</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare_evidsynth.html">compare_evidsynth</a></span><span class="op">(</span></span>
+<span>  prevalence_data <span class="op">=</span> <span class="va">sim</span><span class="op">$</span><span class="va">prevalence_data</span>,</span>
+<span>  progression_data <span class="op">=</span> <span class="va">sim</span><span class="op">$</span><span class="va">progression_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"t"</span>, <span class="st">"d"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"joint"</span>, <span class="st">"cut"</span>, <span class="st">"independent"</span>, <span class="st">"elastic"</span>, <span class="st">"tempered"</span><span class="op">)</span>,</span>
+<span>  imperfect_test <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">comp</span><span class="op">$</span><span class="va">summary_table</span></span>
+<span><span class="fu"><a href="reference/plot_model_comparison.html">plot_model_comparison</a></span><span class="op">(</span><span class="va">comp</span>, truth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>prev_diag <span class="op">=</span> <span class="fl">0.25</span>, lambda <span class="op">=</span> <span class="fl">0.12</span>, shape <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_survival_comparison.html">plot_survival_comparison</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="general-model-structure">General model structure<a class="anchor" aria-label="anchor" href="#general-model-structure"></a>
-</h2>
-<p>The framework provided by this package is more general that just applied to TB and can be generally thought of as consisting of two key components. The first is the uncertain starting state occupancy distribution. We assume that we do not directly observed the proportion of individuals in each state at time 0. The second is the uncertain probability of transition from the latent infection state to the active disease state. This is unknown because of the starting state distribution and other survival analysis uncertainty including right censored times.,</p>
-<p>The diagram below depicts this model structure.</p>
-<p><img src="reference/figures/flowdiagram.png"></p>
-</div>
-<div class="section level2">
-<h2 id="mathematical-formalisation">Mathematical formalisation<a class="anchor" aria-label="anchor" href="#mathematical-formalisation"></a>
-</h2>
-<p>More formally, the two components can be thought of as two parts of a likelihood.</p>
-<ul>
-<li>A mixture cure model</li>
-<li>The starting state occupancy is represented by a binomial cure fraction model</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="joint-independent-and-cut-models">Joint, independent and cut models<a class="anchor" aria-label="anchor" href="#joint-independent-and-cut-models"></a>
-</h2>
-<ul>
-<li>Joint model</li>
-</ul>
-<p>Free flow between components</p>
-<p><span class="math display"><em>L</em><sub>0</sub> = [(1−<em>π</em>)<em>f</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup><em>d</em><sub><em>i</em></sub></sup>[<em>π</em>+(1−<em>π</em>)<em>S</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup>1 − <em>d</em><sub><em>i</em></sub></sup></span></p>
-<p>where <span class="math inline"><em>π</em></span> is the cure fraction, <span class="math inline"><em>d</em><sub><em>i</em></sub></span> are the censoring identifiers, <span class="math inline"><em>S</em><sub><em>u</em></sub></span> is the uncured survival function, <span class="math inline"><em>f</em><sub><em>u</em></sub></span> is the uncured density function, and <span class="math inline"><em>t</em><sub><em>i</em></sub></span> is the event time of either progression or end of follow up.</p>
-<p><span class="math display"><em>L</em><sub><em>π</em></sub> = Bin(<em>x</em>∣<em>μ</em>,<em>σ</em><sup>2</sup>)</span></p>
-<ul>
-<li>Independent model</li>
-</ul>
-<p>Disjoint models fit separately so that two probability of latent infection probabilities are inferred <span class="math inline"><em>π</em></span> and <span class="math inline"><em>π</em><sub>0</sub></span>.</p>
-<p><span class="math display"><em>L</em><sub>0</sub> = [(1−<em>π</em><sub>0</sub>)<em>f</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup><em>d</em><sub><em>i</em></sub></sup>[<em>π</em><sub>0</sub>+(1−<em>π</em><sub>0</sub>)<em>S</em><sub><em>u</em></sub>(<em>t</em><sub><em>i</em></sub>)]<sup>1 − <em>d</em><sub><em>i</em></sub></sup></span></p>
-<p><span class="math display"><em>L</em><sub><em>π</em></sub> = Bin(<em>x</em>∣<em>μ</em>,<em>σ</em><sup>2</sup>)</span></p>
-<ul>
-<li>Cut-point model</li>
-</ul>
-<p>[ref]</p>
-<p>The idea is to cut feedback from the active disease progression component to the latent infection/state occupancy component.</p>
-<p><span class="math display"><em>L</em><sub><em>π</em></sub> = <em>ϕ</em>(<em>μ̂</em>∣logit(<em>π</em>),<em>σ̂</em><sup>2</sup>)</span></p>
-</div>
-<div class="section level2">
-<h2 id="tb-data">TB data<a class="anchor" aria-label="anchor" href="#tb-data"></a>
-</h2>
-<p>Input data sets used in this analysis are:</p>
-<ul>
-<li>Enhanced TB Surveillance (ETS)</li>
-<li>PREDICT-TB</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="general-tb-model">General TB model<a class="anchor" aria-label="anchor" href="#general-tb-model"></a>
-</h2>
-<p>We want to obtain posterior distributions for LTBI prevalence, <code>pl</code>, and active TB activation rate, <code>lambda</code>. The other model parameters are:</p>
-<ul>
-<li>
-<code>Xm1</code>: Cohort size (observed)</li>
-<li>
-<code>Xp1</code>: Number positive test results (observed)</li>
-<li>
-<code>Xl1</code>: Number latent TB (unobserved)</li>
-<li>
-<code>XTB1</code>: Number active TB (observed)</li>
-<li>
-<code>Xm2</code>: Cohort size (observed)</li>
-<li>
-<code>XTB2</code>: Number active TB (observed)</li>
-<li>
-<code>p_pos</code>: Test positivity (functional)</li>
-<li>
-<code>pTB</code>: Probability active TB (functional)</li>
-<li>
-<code>sens</code>, <code>spec</code>: Test sensitivity and specificity (prior)</li>
-</ul>
-<p>A Directed Acyclic Graph of the model is given below.</p>
-<p><img src="reference/figures/DAG-full_model.PNG"></p>
-</div>
-<div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
-</h2>
-<p>This is a basic example which shows you how to solve a common problem. Fit markov melding model using Stan with simulated artificial LTBI and TB progression data without covariate (age or ethnicity).</p>
+<div class="section level3">
+<h3 id="id_2-reconstructed-abubakar-2018-uk-predict-tb-data">2. Reconstructed Abubakar (2018) UK PREDICT-TB Data<a class="anchor" aria-label="anchor" href="#id_2-reconstructed-abubakar-2018-uk-predict-tb-data"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/shinystan/" class="external-link">shinystan</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">EvidSynthTB</span><span class="op">)</span></span></code></pre></div>
-<p>We generate some fake data.</p>
+<code class="sourceCode R"><span><span class="va">abub</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_abubakar_2018.html">load_abubakar_2018</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit_abub</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/evidsynth_fit.html">evidsynth_fit</a></span><span class="op">(</span></span>
+<span>  prevalence_data <span class="op">=</span> <span class="va">abub</span><span class="op">$</span><span class="va">prevalence_data</span>,</span>
+<span>  progression_data <span class="op">=</span> <span class="va">abub</span><span class="op">$</span><span class="va">progression_data</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"cut"</span>,</span>
+<span>  imperfect_test <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit_abub</span><span class="op">$</span><span class="va">summary</span></span>
+<span><span class="fu"><a href="reference/plot_progression.html">plot_progression</a></span><span class="op">(</span><span class="va">fit_abub</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="id_3-individual-level-linked-predict-tb-migrant-cohort">3. Individual-Level Linked PREDICT-TB Migrant Cohort<a class="anchor" aria-label="anchor" href="#id_3-individual-level-linked-predict-tb-migrant-cohort"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># sample size</span></span>
-<span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
+<code class="sourceCode R"><span><span class="va">migrant</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_predict_migrant.html">load_predict_migrant</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># disease-free censoring additional time</span></span>
-<span><span class="va">t_offset</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
+<span><span class="va">fit_migrant</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/evidsynth_fit.html">evidsynth_fit</a></span><span class="op">(</span></span>
+<span>  prevalence_data <span class="op">=</span> <span class="va">migrant</span><span class="op">$</span><span class="va">prevalence_data</span>,</span>
+<span>  progression_data <span class="op">=</span> <span class="va">migrant</span><span class="op">$</span><span class="va">progression_data</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"joint"</span>,</span>
+<span>  coupling <span class="op">=</span> <span class="st">"latent_class"</span>,</span>
+<span>  imperfect_test <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="st">"age_z"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># prevalence of ltbi</span></span>
-<span><span class="va">p_ltbi</span> <span class="op">&lt;-</span> <span class="fl">0.3</span></span>
-<span></span>
-<span><span class="va">shape0</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
-<span><span class="va">rate0</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
-<span></span>
-<span><span class="co"># progression from LTBI to active tb times</span></span>
-<span><span class="va">progression_dat</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">flexsurv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/flexsurv/man/Gompertz.html" class="external-link">rgompertz</a></span><span class="op">(</span><span class="va">N</span>, shape <span class="op">=</span> <span class="va">shape0</span>, rate <span class="op">=</span> <span class="va">rate0</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">N</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="va">p_ltbi</span><span class="op">)</span>,   <span class="co"># ltbi status</span></span>
-<span>           <span class="co">## observe all progression times</span></span>
-<span>           d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,                     <span class="co"># censoring status</span></span>
-<span>           <span class="co"># d = sample(c(0,1), size = N, replace = TRUE),</span></span>
-<span>           <span class="co"># d = ifelse(x == 0, 0, d),</span></span>
-<span>           t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="fl">0</span>, <span class="va">t</span> <span class="op">+</span> <span class="va">t_offset</span>, <span class="va">t</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span>       <span class="co"># time</span></span>
-<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># prevalence of LTBI</span></span>
-<span><span class="va">prevalence_dat</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>mu_hat <span class="op">=</span> <span class="fu">boot</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/logit.html" class="external-link">logit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, mean <span class="op">=</span> <span class="fl">0.3</span>, sd <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>             sigma_hat <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></code></pre></div>
-<p>We can now use the prevalence data and progression data to obtain posterior distributions.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/evidsynth_fit.html">evidsynth_fit</a></span><span class="op">(</span><span class="va">prevalence_dat</span>, <span class="va">progression_dat</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; SAMPLING FOR MODEL 'stan_output_fake_markov_melding' NOW (CHAIN 1).</span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000409 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.09 seconds.</span></span>
-<span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: WARNING: There aren't enough warmup iterations to fit the</span></span>
-<span><span class="co">#&gt; Chain 1:          three stages of adaptation as currently configured.</span></span>
-<span><span class="co">#&gt; Chain 1:          Reducing each adaptation stage to 15%/75%/10% of</span></span>
-<span><span class="co">#&gt; Chain 1:          the given number of warmup iterations:</span></span>
-<span><span class="co">#&gt; Chain 1:            init_buffer = 15</span></span>
-<span><span class="co">#&gt; Chain 1:            adapt_window = 75</span></span>
-<span><span class="co">#&gt; Chain 1:            term_buffer = 10</span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:  101 / 2000 [  5%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:  300 / 2000 [ 15%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:  500 / 2000 [ 25%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:  700 / 2000 [ 35%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration:  900 / 2000 [ 45%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 1100 / 2000 [ 55%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 1300 / 2000 [ 65%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 1500 / 2000 [ 75%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 1700 / 2000 [ 85%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 1900 / 2000 [ 95%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.315 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                40.803 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                41.118 seconds (Total)</span></span>
-<span><span class="co">#&gt; Chain 1:</span></span>
-<span><span class="co">#&gt; Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See</span></span>
-<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low</span></span>
-<span><span class="co">#&gt; Warning: Examine the pairs() plot to diagnose sampling problems</span></span></code></pre></div>
-<p>We can view the output.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hadley/reshape" class="external-link">reshape2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/plot_progression.html">plot_progression</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-plots-1.png" width="100%"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># LTBI prevalence</span></span>
-<span><span class="va">stan_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">fit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">stan_output</span><span class="op">$</span><span class="va">prev_cf</span>, breaks <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-plots-2.png" width="100%"></p>
+<span><span class="va">fit_migrant</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
 </div>
 </div>
-  </div>
+</div>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/n8thangreen/EvidSynthTB/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/n8thangreen/EvidSynthTB/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>What license is it under?</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
@@ -262,7 +197,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>The package maintainer <br><small class="roles"> Maintainer </small>  </li>
+<li>Nathan Green <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -273,27 +208,24 @@
 </ul>
 </div>
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by The package maintainer.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Nathan Green.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
-  
 
 
-  
+
 
   </body>
 </html>

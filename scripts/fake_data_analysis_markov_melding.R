@@ -1,155 +1,84 @@
+# Modular Synthesis, Cut Models, and Markov Melding Analysis (Simulated Data)
+# Compares all 6 synthesis strategies under:
+#   (A) Datasets in Agreement (p_ltbi = 0.30, p_ltbi_surv = 0.30)
+#   (B) Datasets in Conflict / Selection Bias (p_ltbi = 0.25, p_ltbi_surv = 0.65)
+# Demonstrates how Cut, Elastic, and Tempered models control feedback from a
+# biased progression cohort into LTBI prevalence estimates.
 
-# Fit markov melding model using Stan
-# with simulated artificial ltbi and tb progression data
-# without covariate (age or ethnicity)
-
-##TODO: why is flexsurv (shape, rate) the other way around to wikipedia?
-
-library(rstan)
-library(shinystan)
-library(purrr)
-library(readr)
+library(EvidSynthTB)
 library(dplyr)
-
-
-# sample size
-N <- 500
-
-# disease-free censoring additional time
-t_offset <- 10
-
-# prevalence of ltbi
-p_ltbi <- 0.3
-
-shape0 <- 0.1
-rate0 <- 0.1
-
-# progression from ltbi to active tb times
-progression_dat <-
-  data.frame(
-    t = round(flexsurv::rgompertz(N, shape = shape0, rate = rate0), 3)) |>
-    mutate(x = rbinom(n = N, size = 1, prob = p_ltbi),   # ltbi status
-           ## observe all progression times
-           d = ifelse(x == 1, 1, 0),                     # censoring status
-           # d = sample(c(0,1), size = N, replace = TRUE),
-           # d = ifelse(x == 0, 0, d),
-           t = ifelse(x == 0, t + t_offset, t)) |>       # time
-  as_tibble()
-
-prevalence_dat <-
-  data.frame(mu_hat = boot::logit(rnorm(n = 10, mean = 0.3, sd = 0.05)),
-             sigma_hat = 0.01)
-
-# rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
-
-dat_input <-
-  list(
-    N = nrow(progression_dat),
-    M = nrow(prevalence_dat),
-    t = as.numeric(progression_dat$t),
-    d = as.numeric(progression_dat$d),
-    pos = progression_dat$x,
-    t_lim = 20,              # maximum time
-    ## normal prior on shape
-    mu_shape = 0.1,
-    sigma_shape = 0.05,
-    ## gamma prior on rate
-    a_lambda = 0.2,
-    b_lambda = 0.2,
-    mu_hat = prevalence_dat$mu_hat,
-    sigma_hat = prevalence_dat$sigma_hat,
-    # mu_hat = array(prevalence_dat$mu_hat, 1),      # for single data point
-    # sigma_hat = array(prevalence_dat$sigma_hat, 1),
-    ## normal prior on linear transformed cure fraction
-    mu_cf = boot::logit(0.3),
-    sigma_cf = 0.2)
-
-params <- c(
-  "S_pred",          # generated values
-  "prev_cf",          # ltbi prevalence
-  "lambda", "shape")
-
-n_iter <- 2e3
-n_burnin <- 100
-n_thin <- 10  #floor((n_iter - n_burnin)/500)
-
-###########
-# run MCMC
-###########
-
-out <- stan(data = dat_input,
-            pars = params,
-            model_name = "stan_output_fake_markov_melding",
-            # init = ,
-            file = here::here("stan", "Stan_code_markov_melding.stan"),
-            chains = 1,
-            iter = n_iter,
-            warmup = n_burnin,
-            thin = n_thin,
-            control = list(adapt_delta = 0.99,
-                           max_treedepth = 20))
-
-stan_output <- extract(out)
-
-save(stan_output, file = here::here("data output", "stan_output_fake_markov_melding.RData"))
-
-mean(stan_output$lambda)
-mean(stan_output$shape)
-
-# out2 <- evidsynth_fit(prevalence_dat, progression_dat)
-
-#######
-# plot
-#######
-
-library(reshape2)
 library(ggplot2)
 
-# base R
-stan_output$S_pred %>%
-  as.data.frame %>%
-  summarise(across(.fns = ~ mean(.x, na.rm = TRUE ))) %>%
-  # summarise(across(.fns = ~ median(.x, na.rm = TRUE ))) %>%
-  unlist() %>%
-  plot(type = "l")
+# --- Scenario A: Datasets in Agreement ---
+sim_agree <- create_fake_data(
+  N_surv = 500,
+  n_survey = c(1000, 1000),
+  p_ltbi = 0.30,
+  p_ltbi_surv = 0.30,
+  sens = 0.85,
+  spec = 0.95,
+  surv_dist = "gompertz",
+  shape = 0.1,
+  rate = 0.12,
+  seed = 202
+)
 
-plot_dat <-
-  stan_output$S_pred %>%
-  as.data.frame() %>%
-  mutate(sim = 1:n()) %>%
-  melt(id.vars = "sim",
-       variable.name = "time") %>%
-  mutate(time = as.numeric(gsub("V", "", time))) %>%
-  group_by(time) %>%
-  summarise(median = median(value),
-            mean = mean(value),
-            lower50 = quantile(value, probs = 0.25),
-            upper50 = quantile(value, probs = 0.75),
-            lower95 = quantile(value, probs = 0.025),
-            upper95 = quantile(value, probs = 0.975))
+comp_agree <- compare_evidsynth(
+  prevalence_data = sim_agree$prevalence_data,
+  progression_data = sim_agree$progression_data[, c("t", "d")],
+  models = c("joint", "cut", "independent", "melding", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 202
+)
 
-ggplot(plot_dat, aes(time, median)) +
-  geom_line() +
-  geom_line(aes(y = mean), linetype = 2) +
-  ylab("Survival") +
-  geom_ribbon(aes(x = time, ymin = lower95, ymax = upper95),
-              linetype = 0,
-              alpha = 0.2) +
-  geom_ribbon(aes(x = time, ymin = lower50, ymax = upper50),
-              linetype = 0,
-              alpha = 0.2) +
-  ylim(0, 1)
+cat("=== Scenario A (Agreement): Feedback & Conflict Diagnostics ===\n")
+print(diagnose_feedback(comp_agree))
+print(evaluate_comparison(comp_agree, truth = sim_agree$truth)$parameter_metrics)
 
-# plot_progression(out2)
+# --- Scenario B: Datasets in Conflict (Biased Progression Cohort) ---
+sim_conflict <- create_fake_data(
+  N_surv = 500,
+  n_survey = c(1000, 1000),
+  p_ltbi = 0.25,
+  p_ltbi_surv = 0.65,
+  sens = 0.85,
+  spec = 0.95,
+  surv_dist = "gompertz",
+  shape = 0.1,
+  rate = 0.12,
+  seed = 203
+)
 
-# LTBI prevalence
-hist(stan_output$prev_cf, breaks = 40)
+comp_conflict <- compare_evidsynth(
+  prevalence_data = sim_conflict$prevalence_data,
+  progression_data = sim_conflict$progression_data[, c("t", "d")],
+  models = c("joint", "cut", "independent", "melding", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 203
+)
 
-# plot_prevalence()
+cat("=== Scenario B (Conflict): Feedback & Conflict Diagnostics ===\n")
+print(diagnose_feedback(comp_conflict))
+print(evaluate_comparison(comp_conflict, truth = sim_conflict$truth)$parameter_metrics)
 
+# Save output and plot posterior comparisons
+if (dir.exists("data output")) {
+  save(
+    comp_agree,
+    comp_conflict,
+    file = file.path("data output", "stan_output_fake_markov_melding.RData")
+  )
+}
 
-## check
-plot(flexsurv::pgompertz(q = 0:20, shape = shape0, rate = rate0, lower.tail = FALSE),
-      type = "l", col = "red", ylab = "S")
-
+plot_model_comparison(
+  comp_conflict,
+  variables = c("prev_diag", "prev_cf", "lambda", "shape"),
+  truth = c(prev_diag = 0.25, prev_cf = 0.65, lambda = 0.12, shape = 0.10)
+)
+plot_survival_comparison(comp_conflict, type = "uncured")
