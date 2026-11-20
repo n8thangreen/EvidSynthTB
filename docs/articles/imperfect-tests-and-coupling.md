@@ -214,20 +214,20 @@ knitr::kable(
 
 | model | variable | truth | post_mean | post_median | post_sd | bias | rmse | cov_95 | width_95 |
 |:---|:---|---:|---:|---:|---:|---:|---:|:---|---:|
-| population_1test | prev_diag | 0.300 | 0.295 | 0.296 | 0.028 | -0.005 | 0.028 | TRUE | 0.104 |
-| population_1test | prev_cf | 0.300 | 0.295 | 0.296 | 0.028 | -0.005 | 0.028 | TRUE | 0.104 |
-| population_1test | ppv_cf | 0.879 | 0.881 | 0.890 | 0.061 | 0.001 | 0.061 | TRUE | 0.211 |
-| population_1test | lambda | 0.100 | 0.088 | 0.084 | 0.023 | -0.012 | 0.026 | TRUE | 0.087 |
-| population_1test | shape | 0.150 | 0.157 | 0.159 | 0.072 | 0.007 | 0.072 | TRUE | 0.269 |
-| population_1test | sens\[1\] | 0.850 | 0.847 | 0.844 | 0.039 | -0.003 | 0.039 | TRUE | 0.166 |
-| population_1test | spec\[1\] | 0.950 | 0.953 | 0.956 | 0.022 | 0.003 | 0.023 | TRUE | 0.080 |
-| latent_class_2tests | prev_diag | 0.300 | 0.305 | 0.306 | 0.022 | 0.005 | 0.023 | TRUE | 0.084 |
-| latent_class_2tests | prev_cf | 0.300 | 0.305 | 0.306 | 0.022 | 0.005 | 0.023 | TRUE | 0.084 |
-| latent_class_2tests | ppv_cf | 0.879 | 0.881 | 0.888 | 0.040 | 0.001 | 0.039 | TRUE | 0.153 |
-| latent_class_2tests | lambda | 0.100 | 0.093 | 0.090 | 0.024 | -0.007 | 0.025 | TRUE | 0.107 |
-| latent_class_2tests | shape | 0.150 | 0.148 | 0.148 | 0.059 | -0.002 | 0.059 | TRUE | 0.238 |
-| latent_class_2tests | sens\[1\] | 0.850 | 0.822 | 0.824 | 0.030 | -0.028 | 0.041 | TRUE | 0.116 |
-| latent_class_2tests | spec\[1\] | 0.950 | 0.951 | 0.954 | 0.015 | 0.001 | 0.015 | TRUE | 0.058 |
+| population_1test | prev_diag | 0.300 | 0.292 | 0.291 | 0.024 | -0.008 | 0.026 | TRUE | 0.094 |
+| population_1test | prev_cf | 0.300 | 0.292 | 0.291 | 0.024 | -0.008 | 0.026 | TRUE | 0.094 |
+| population_1test | ppv_cf | 0.879 | 0.874 | 0.881 | 0.049 | -0.005 | 0.049 | TRUE | 0.196 |
+| population_1test | lambda | 0.100 | 0.095 | 0.094 | 0.024 | -0.005 | 0.025 | TRUE | 0.092 |
+| population_1test | shape | 0.150 | 0.156 | 0.153 | 0.067 | 0.006 | 0.067 | TRUE | 0.254 |
+| population_1test | sens\[1\] | 0.850 | 0.848 | 0.856 | 0.041 | -0.002 | 0.041 | TRUE | 0.151 |
+| population_1test | spec\[1\] | 0.950 | 0.950 | 0.952 | 0.019 | 0.000 | 0.019 | TRUE | 0.074 |
+| latent_class_2tests | prev_diag | 0.300 | 0.305 | 0.306 | 0.020 | 0.005 | 0.020 | TRUE | 0.083 |
+| latent_class_2tests | prev_cf | 0.300 | 0.305 | 0.306 | 0.020 | 0.005 | 0.020 | TRUE | 0.083 |
+| latent_class_2tests | ppv_cf | 0.879 | 0.885 | 0.889 | 0.041 | 0.006 | 0.042 | TRUE | 0.158 |
+| latent_class_2tests | lambda | 0.100 | 0.091 | 0.090 | 0.019 | -0.009 | 0.021 | TRUE | 0.080 |
+| latent_class_2tests | shape | 0.150 | 0.153 | 0.152 | 0.050 | 0.003 | 0.050 | TRUE | 0.180 |
+| latent_class_2tests | sens\[1\] | 0.850 | 0.825 | 0.826 | 0.031 | -0.025 | 0.040 | TRUE | 0.117 |
+| latent_class_2tests | spec\[1\] | 0.950 | 0.953 | 0.955 | 0.016 | 0.003 | 0.016 | TRUE | 0.061 |
 
 ### Example 2: Test-Positive Follow-Up Cohort (`cohort_type = "pos_only"`)
 
@@ -272,13 +272,13 @@ knitr::kable(
 
 | model | variable  | truth | post_mean | post_median | post_sd |   bias |  rmse | cov_95 | width_95 |
 |:------|:----------|------:|----------:|------------:|--------:|-------:|------:|:-------|---------:|
-| joint | prev_diag |  0.30 |     0.340 |       0.342 |   0.030 |  0.040 | 0.050 | TRUE   |    0.115 |
-| joint | prev_cf   |  0.30 |     0.340 |       0.342 |   0.030 |  0.040 | 0.050 | TRUE   |    0.115 |
-| joint | ppv_cf    |  0.82 |     0.890 |       0.902 |   0.051 |  0.070 | 0.086 | TRUE   |    0.195 |
-| joint | lambda    |  0.12 |     0.112 |       0.109 |   0.023 | -0.008 | 0.024 | TRUE   |    0.086 |
-| joint | shape     |  0.10 |     0.022 |       0.023 |   0.058 | -0.078 | 0.097 | TRUE   |    0.227 |
-| joint | sens\[1\] |  0.85 |     0.848 |       0.848 |   0.033 | -0.002 | 0.033 | TRUE   |    0.115 |
-| joint | spec\[1\] |  0.92 |     0.947 |       0.952 |   0.022 |  0.027 | 0.034 | TRUE   |    0.087 |
+| joint | prev_diag |  0.30 |     0.332 |       0.335 |   0.033 |  0.032 | 0.046 | TRUE   |    0.120 |
+| joint | prev_cf   |  0.30 |     0.332 |       0.335 |   0.033 |  0.032 | 0.046 | TRUE   |    0.120 |
+| joint | ppv_cf    |  0.82 |     0.873 |       0.885 |   0.070 |  0.053 | 0.087 | TRUE   |    0.261 |
+| joint | lambda    |  0.12 |     0.116 |       0.112 |   0.025 | -0.004 | 0.025 | TRUE   |    0.093 |
+| joint | shape     |  0.10 |     0.022 |       0.021 |   0.055 | -0.078 | 0.096 | TRUE   |    0.225 |
+| joint | sens\[1\] |  0.85 |     0.855 |       0.855 |   0.034 |  0.005 | 0.034 | TRUE   |    0.137 |
+| joint | spec\[1\] |  0.92 |     0.939 |       0.942 |   0.030 |  0.019 | 0.036 | TRUE   |    0.110 |
 | cut   | prev_diag |  0.30 |     0.344 |       0.336 |   0.022 |  0.044 | 0.049 | FALSE  |    0.063 |
 | cut   | prev_cf   |  0.30 |     0.344 |       0.336 |   0.022 |  0.044 | 0.049 | FALSE  |    0.063 |
 | cut   | ppv_cf    |  0.82 |     0.907 |       0.916 |   0.032 |  0.087 | 0.093 | FALSE  |    0.106 |
@@ -325,9 +325,9 @@ knitr::kable(diagnose_feedback(comp_families), digits = 3)
 
 | model | prev_diag_mean | prev_diag_sd | prev_cf_mean | prev_cf_sd | feedback_shift | conflict_diff_median | conflict_prob_pos | waic_surv | elpd_waic | p_waic |
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| gompertz | 0.295 | 0.028 | 0.295 | 0.028 | 0.000 | 0 | 0 | 593.798 | -296.899 | 2.132 |
-| weibull | 0.290 | 0.016 | 0.290 | 0.016 | -0.006 | 0 | 0 | 595.003 | -297.501 | 1.639 |
-| exponential | 0.296 | 0.014 | 0.296 | 0.014 | 0.001 | 0 | 0 | 597.090 | -298.545 | 0.594 |
+| gompertz | 0.292 | 0.024 | 0.292 | 0.024 | 0.000 | 0 | 0 | 593.593 | -296.796 | 2.013 |
+| weibull | 0.290 | 0.016 | 0.290 | 0.016 | -0.003 | 0 | 0 | 595.003 | -297.501 | 1.639 |
+| exponential | 0.297 | 0.014 | 0.297 | 0.014 | 0.004 | 0 | 0 | 597.373 | -298.687 | 0.702 |
 
 ``` r
 

@@ -1,177 +1,65 @@
+# UKHSA / ETS Annual Surveillance Interval & Published KM Table Analysis
+# Combines published LTBI survey tables with:
+#   1. Annual active TB counts by year since UK entry (UKHSA / ETS style report)
+#   2. Published Kaplan-Meier interval life tables (load_abubakar_km())
+# across Cut, Joint, Independent, Melding, Elastic, and Tempered synthesis models.
 
-# combine tb data sets
-#
-# want to take progression rate from predict-tb
-# and denominators from e-detect
-# to then estimate number of expected cases by
-# groups for each year after entry
-# then we can compare with ETS
-#
-# ETS/e-detect: migrant numbers by age, ethnicity
-# PREDICT: prevalence, progression rate
-#          by age, contact/migrant, ethnicity
-#
-#
-# 5 year age groups
-# start at different years for each country because PES different
-#   Bangladeshi: 2011
-#   Black African: 2014
-#   Indian: 2015
-#   Pakistani: 2011
-
-
-##TODO: need to filter each ethnic group by
-##      range of year; different for different ethnicity
-##      matched for ETS and edetecttb
-
-library(readr)
+library(EvidSynthTB)
 library(dplyr)
-library(stringr)
-
-ETS <- read_csv("../../data/ETS_for_PREDICT_comparison_new.csv")
-edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
-
-# predict-tb model fit stats
-load("~/R/EvidSynthTB/data output/brms_pltbi.RData")   # Stan output
-load("~/R/EvidSynthTB/data output/p_ltbi_brms.RData")
-# active tb survival
-load("~/R/EvidSynthTB/data output/stan_output.RData")  # gompertz
-
-# aggregate ethnicity into 5 yr age groups
-pltbi_agegrp <-
-  p_ltbi_brms %>%
-  mutate(age_grp = cut(age, breaks = seq(0, 95, 5), right = FALSE)) %>%
-  group_by(age_grp, ethnicity) %>%
-  summarise(mean_pltbi = mean(prob_ltbi.Estimate),
-            low_pltbi = mean(prob_ltbi.Q2.5),
-            upp_pltbi = mean(prob_ltbi.Q97.5))  ##TODO: how to best aggregate this statistic?
-
-## clean EDETECT data
-# total numbers screened per age group, ethnicity
-edetecttb_a <-
-  edetecttb %>%
-  mutate(region = replace(region, region == "Sub_Saharan_Africa", "Black African"),
-         region = replace(region, region == "Bangladesh", "Bangladeshi"),
-         region = replace(region, region == "India", "Indian"),
-         region = replace(region, region == "Pakistan", "Pakistani")) %>%
-  ## filter each ethnicity by different calendar years
-  filter(year %in% 2015:2018) %>%
-  ## different aggregations
-  # group_by(sex, age_grp, year, visa_type, region) %>%  # non-aggregated
-  # group_by(age_grp, year, region) %>%                  # with calendar time
-  group_by(age_grp, region) %>%                         # without calendar time
-  summarise(n_screened = sum(n_screened)) %>%
-  rename(ethnicity = region)
-
-# combine data and estimate number ltbi
-edetecttb_a <-
-  edetecttb_a %>%
-  left_join(pltbi_agegrp, by = c("age_grp", "ethnicity")) %>%
-  mutate(n_ltbi = n_screened*mean_pltbi,
-         n_ltbi_low = n_screened*low_pltbi,
-         n_ltbi_upp = n_screened*upp_pltbi) %>%
-  full_join(data.frame(time = 1:10), by = character()) %>%
-  na.omit()
-
-##TODO: how to do this for posterior samples?
-##      assume p tb is small so point estimate?
-
-# fitted values
-ppred <- stan_output$ppred
-
-S_m <-
-  data.frame(time = 0:ncol(ppred),
-             est = c(1, colMeans(ppred))) %>%
-  ##TODO: is this the right stat to use?
-  mutate(diff = lag(est) - est)
-
-edetecttb_with_est <-
-  full_join(edetecttb_a, S_m, by = "time") %>%
-  mutate(n_tb = round(n_ltbi*diff, 2),
-         n_tb_low = round(n_ltbi_low*diff, 2),
-         n_tb_upp = round(n_ltbi_upp*diff, 2))
-
-save(edetecttb_with_est, file = "edetecttb_with_estimates.RData")
-write.csv(edetecttb_with_est, file = "edetecttb_with_estimates.csv")
-
-
-######################
-# compare with ETS
-
-library(readr)
-library(reshape2)
-
-ETS <- read_csv("../../data/ETS_for_PREDICT_comparison_new.csv")
-
-# clean ETS data
-ETSm <-
-  melt(ETS,
-       id.vars = c("age_grp_at_entry", "ethgrp", "entry_year"),
-       variable.name = "time",
-       value.name = "n_tb_ETS") %>%
-  mutate(time = str_remove(str_remove(time, "(\\[|\\().,"), "\\]")) %>%
-  rename(age_grp = "age_grp_at_entry",
-         year = "entry_year",
-         ethnicity = "ethgrp") %>%
-  filter(year != "< 2000") %>%
-  mutate(year = as.numeric(year),
-         time = as.numeric(time),
-         ethnicity = replace(ethnicity, ethnicity == "Black-African", "Black African"),
-         ethnicity = replace(ethnicity, ethnicity == "White", "Europe")) %>%
-  ## filter each ethnicity by different calendar years
-  filter(year %in% 2015:2018) %>%
-  # aggregate over calendar time
-  group_by(age_grp, ethnicity, time) %>%
-  summarise(n_tb_ETS = sum(n_tb_ETS, na.rm = TRUE))
-
-
-combined_dat <-
-  inner_join(edetecttb_with_est, ETSm,
-             by = c("time", "age_grp", "ethnicity"))     # aggregated over calendar year
-             # by = c("time", "age_grp", "year", "ethnicity"))
-
-save(combined_dat, file = "combined_dat.RData")
-
-
-##########
-# plots
-
 library(ggplot2)
 
-ggdat <-
-  melt(combined_dat, measure.vars = c("n_tb", "n_tb_ETS")) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) #%>%
-  ## single age easier to read
-  # filter(age_grp == "[40,45)")
+# 1. Published Kaplan-Meier Interval Table from Abubakar et al. (2018)
+abub_km <- load_abubakar_km()
+print(head(abub_km$progression_data))
 
-ggplot(ggdat, aes(time, value, col = variable, linetype = ethnicity)) +
-  geom_line() +
-  theme_bw() +
-  geom_ribbon(data = combined_dat, aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity), inherit.aes = FALSE,
-              linetype = 0,
-              alpha = 0.1) +
-  facet_wrap(vars(age_grp), scales = "free_y")
+comp_km <- compare_evidsynth(
+  prevalence_data = abub_km$prevalence_data,
+  progression_data = abub_km$progression_data,
+  models = c("cut", "joint", "independent", "melding", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  surv_dist = "gompertz",
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 901
+)
 
+cat("=== Abubakar (2018) Published KM Interval Table Synthesis ===\n")
+print(comp_km$summary_table)
+print(diagnose_feedback(comp_km))
 
-## aggregate all ages
+# 2. UKHSA / ETS Annual Surveillance Report Synthesis (Year 1 to Year 5 post-entry)
+pub_sim <- create_fake_published_data(
+  n_groups = 6,
+  n_per_group = 600,
+  n_surveillance = 5000,
+  p_ltbi = 0.28,
+  p_ltbi_surv = 0.28,
+  sens = 0.85,
+  spec = 0.95,
+  surv_dist = "gompertz",
+  shape = -0.35,
+  rate = 0.05,
+  t_horizon = 5,
+  seed = 902
+)
 
-combined_agg <-
-  combined_dat %>%
-  group_by(ethnicity, time) %>%
-  summarise(n_tb_ETS = sum(n_tb_ETS),
-            n_tb_low = sum(n_tb_low),
-            n_tb_upp = sum(n_tb_upp),
-            n_tb = sum(n_tb))
-ggdat <-
-  melt(combined_agg, measure.vars = c("n_tb", "n_tb_ETS")) %>%
-  mutate(value = ifelse(is.na(value), 0, value)) #%>%
-## single age easier to read
-# filter(age_grp == "[40,45)")
+print(pub_sim$interval_table)
 
-ggplot(ggdat, aes(time, value, col = variable, linetype = ethnicity)) +
-  geom_line() +
-  theme_bw() +
-  geom_ribbon(data = combined_agg, aes(x = time, ymin = n_tb_low, ymax = n_tb_upp, group = ethnicity), inherit.aes = FALSE,
-              linetype = 0,
-              alpha = 0.1) +
-facet_wrap(vars(ethnicity), scales = "free_y")
+comp_ukhsa <- compare_evidsynth(
+  prevalence_data = pub_sim$prevalence_data,
+  progression_data = pub_sim$interval_table,
+  models = c("cut", "joint", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  surv_dist = "gompertz",
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 902
+)
+
+cat("=== UKHSA / ETS Annual Interval Table Recovery ===\n")
+print(evaluate_comparison(comp_ukhsa, truth = pub_sim$truth)$parameter_metrics)
+print(diagnose_feedback(comp_ukhsa))
+
+plot_survival_comparison(comp_ukhsa, type = "uncured")

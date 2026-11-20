@@ -6,16 +6,20 @@
     }
   };
 </script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Fit Bayesian Multi-Parameter Evidence Synthesis Model for LTBI and TB Progression — evidsynth_fit"><meta name="description" content='Links latent tuberculosis infection (LTBI) diagnostic test / survey data with
-active TB progression time-to-event data using a parametric mixture cure
-model in CmdStan. Supports imperfect diagnostic tests (`sens`, `spec`),
-multiple tests per person, linked or unlinked datasets, and six modular
-synthesis strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
-`"elastic"`, `"tempered"`).'><meta property="og:description" content='Links latent tuberculosis infection (LTBI) diagnostic test / survey data with
-active TB progression time-to-event data using a parametric mixture cure
-model in CmdStan. Supports imperfect diagnostic tests (`sens`, `spec`),
-multiple tests per person, linked or unlinked datasets, and six modular
-synthesis strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
-`"elastic"`, `"tempered"`).'></head><body>
+active TB progression data using a parametric mixture cure model in CmdStan.
+Supports both **published aggregate / surveillance report tables** (cumulative
+subgroup counts, UKHSA/ETS annual interval counts, and digitized Kaplan-Meier
+life tables) and **individual-level survival / linked test data**, with
+imperfect diagnostic tests (`sens`, `spec`) and six modular synthesis
+strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`, `"elastic"`,
+`"tempered"`).'><meta property="og:description" content='Links latent tuberculosis infection (LTBI) diagnostic test / survey data with
+active TB progression data using a parametric mixture cure model in CmdStan.
+Supports both **published aggregate / surveillance report tables** (cumulative
+subgroup counts, UKHSA/ETS annual interval counts, and digitized Kaplan-Meier
+life tables) and **individual-level survival / linked test data**, with
+imperfect diagnostic tests (`sens`, `spec`) and six modular synthesis
+strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`, `"elastic"`,
+`"tempered"`).'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -37,6 +41,7 @@ synthesis strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
   <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/model-comparison-simulation.html">1. Comparing Synthesis Models: Cut, Joint, Melding, Elastic &amp; Tempered</a></li>
     <li><a class="dropdown-item" href="../articles/imperfect-tests-and-coupling.html">2. Imperfect Diagnostic Tests, Latent-Class Coupling &amp; Subgroup Cohorts</a></li>
     <li><a class="dropdown-item" href="../articles/predict-tb-case-studies.html">3. UK PREDICT-TB Case Studies: Reconstructed Survival &amp; Migrant Cohort</a></li>
+    <li><a class="dropdown-item" href="../articles/published-and-surveillance-data.html">4. Published Summary Tables &amp; UKHSA Surveillance Reports</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -57,11 +62,13 @@ synthesis strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
 
     <div class="ref-description section level2">
     <p>Links latent tuberculosis infection (LTBI) diagnostic test / survey data with
-active TB progression time-to-event data using a parametric mixture cure
-model in CmdStan. Supports imperfect diagnostic tests (`sens`, `spec`),
-multiple tests per person, linked or unlinked datasets, and six modular
-synthesis strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
-`"elastic"`, `"tempered"`).</p>
+active TB progression data using a parametric mixture cure model in CmdStan.
+Supports both **published aggregate / surveillance report tables** (cumulative
+subgroup counts, UKHSA/ETS annual interval counts, and digitized Kaplan-Meier
+life tables) and **individual-level survival / linked test data**, with
+imperfect diagnostic tests (`sens`, `spec`) and six modular synthesis
+strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`, `"elastic"`,
+`"tempered"`).</p>
     </div>
 
     <div class="section level2">
@@ -75,6 +82,7 @@ synthesis strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
 <span>  surv_dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gompertz"</span>, <span class="st">"weibull"</span>, <span class="st">"exponential"</span><span class="op">)</span>,</span>
 <span>  imperfect_test <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  t_horizon <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  tau_couple <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  w_temper <span class="op">=</span> <span class="fl">0.5</span>,</span>
@@ -95,17 +103,28 @@ synthesis strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
 
 <dl><dt id="arg-prevalence-data">prevalence_data<a class="anchor" aria-label="anchor" href="#arg-prevalence-data"></a></dt>
 <dd><p>Data frame or tibble of aggregate LTBI survey data
-(columns `y` and `n`, and optional `test_id`) and/or normal logit plug-in
-summaries (`mu_hat` and `sigma_hat`). Can be `NULL` when individual-level
-diagnostic test results `x` (`x1`, `x2`, ...) are present in
-`progression_data`.</p></dd>
+(columns `y` or `ltbi`/`n_pos` and `n` or `pop`/`n_migrant`, plus optional
+`test_id` and covariates) and/or normal logit plug-in summaries (`mu_hat`
+and `sigma_hat`). Can be `NULL` when `progression_data` already contains
+group-level LTBI counts (`y` / `ltbi` / `n_pos`) or individual-level test
+results (`x` / `x1`, `x2`, ...).</p></dd>
 
 
 <dt id="arg-progression-data">progression_data<a class="anchor" aria-label="anchor" href="#arg-progression-data"></a></dt>
-<dd><p>Data frame or tibble of time-to-event follow-up data
-with columns `t` (follow-up time `&gt; 0`) and `d` (`1` = active TB
-progression, `0` = right-censored), plus optional individual diagnostic
-test columns (`x` or `x1`, `x2`, ...) and covariates.</p></dd>
+<dd><p>Data frame or tibble of active TB progression data in
+one of four formats:</p><ol><li><p>**Published cumulative subgroup summary table:** columns `n` (or
+    `pop` / `n_migrant`), `d` (or `tb` / `n_tb`), optional `y` (or `ltbi` /
+    `n_pos`), optional `t_end` (follow-up duration, defaulting to
+    `t_horizon`), and optional subgroup covariates.</p></li>
+<li><p>**UKHSA / ETS annual or interval surveillance table:** columns
+    `t_start` (`t0`), `t_end` (`t1`), `d` (`tb` / `n_tb` / `n.event`), and
+    `n` (`pop` / `n_migrant`, initial cohort denominator).</p></li>
+<li><p>**Published Kaplan-Meier life table:** columns `t_start`/`t_end`
+    (or `time`), `n_risk` (`n.risk`), and `d` (`n.event`).</p></li>
+<li><p>**Individual-level survival data (IPD):** columns `t` (follow-up
+    time `&gt; 0`) and `d` (`1` = active TB progression, `0` = right-censored),
+    plus optional individual diagnostic test columns (`x` or `x1`, `x2`, ...).</p></li>
+</ol></dd>
 
 
 <dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
@@ -168,8 +187,14 @@ and specificity (`spec`) with `Beta(a_sens, b_sens)` and
 
 
 <dt id="arg-covariates">covariates<a class="anchor" aria-label="anchor" href="#arg-covariates"></a></dt>
-<dd><p>Optional character vector of covariate column names in
-`progression_data` to include in the linear predictor for `logit(pi_i)`.</p></dd>
+<dd><p>Optional character vector of covariate column names to
+include in the linear predictor for `logit(pi)`.</p></dd>
+
+
+<dt id="arg-t-horizon">t_horizon<a class="anchor" aria-label="anchor" href="#arg-t-horizon"></a></dt>
+<dd><p>Numeric (`&gt; 0`). Default follow-up duration (in years) for
+published cumulative subgroup summary tables when `t_end` is not explicitly
+provided as a column. Default is `5`.</p></dd>
 
 
 <dt id="arg-priors">priors<a class="anchor" aria-label="anchor" href="#arg-priors"></a></dt>
@@ -229,8 +254,8 @@ printing). Default is `0`.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An S3 list object of class `"evidsynth_fit"` containing:</p><dl><dt>`draws`</dt>
 <dd><p>A `posterior::draws_df` data frame of posterior samples for
-    `prev_cf`, `prev_diag`, `ppv_cf`, `sens`, `spec`, `lambda`, `shape`, and
-    `S_pred[1:t_lim]`.</p></dd>
+    `prev_cf`, `prev_diag`, `ppv_cf`, `sens`, `spec`, `lambda`, `shape`,
+    `S_pred[1:t_lim]`, `S_pop_pred[1:t_lim]`, and `log_lik_surv`.</p></dd>
 
   <dt>`summary`</dt>
 <dd><p>Posterior summary table produced by

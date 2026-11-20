@@ -11,10 +11,12 @@
   [`plot_survival_comparison()`](https://n8thangreen.github.io/EvidSynthTB/reference/plot_survival_comparison.md)
   added to fit and compare multiple synthesis strategies side-by-side.
 - [`create_fake_data()`](https://n8thangreen.github.io/EvidSynthTB/reference/create_fake_data.md)
-  implemented to simulate linked or unlinked LTBI diagnostic and active
-  TB progression survival cohorts with imperfect tests (`sens`, `spec`),
-  multiple tests per person, `pos_only` subgroup follow-up, covariates,
-  and prior/data conflict scenarios.
+  and
+  [`create_fake_published_data()`](https://n8thangreen.github.io/EvidSynthTB/reference/create_fake_published_data.md)
+  implemented to simulate individual-level cohorts, published subgroup
+  summary tables, and UKHSA-style annual surveillance progression tables
+  with imperfect tests (`sens`, `spec`), covariates, and prior/data
+  conflict scenarios.
 - [`diagnose_feedback()`](https://n8thangreen.github.io/EvidSynthTB/reference/diagnose_feedback.md)
   and
   [`evaluate_comparison()`](https://n8thangreen.github.io/EvidSynthTB/reference/evaluate_comparison.md)
@@ -22,16 +24,20 @@
   the cut model, survival WAIC, parameter bias/RMSE/coverage, and
   survival curve integrated absolute error.
 - [`evidsynth_fit()`](https://n8thangreen.github.io/EvidSynthTB/reference/evidsynth_fit.md)
-  expanded to support six modular synthesis strategies (`"joint"`,
-  `"cut"`, `"independent"`, `"melding"`, `"elastic"`, `"tempered"`),
-  both `"population"` and `"latent_class"` coupling, `"all"` and
-  `"pos_only"` progression cohorts, and `"gompertz"`, `"weibull"`, and
-  `"exponential"` survival distributions.
-- [`load_abubakar_2018()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_abubakar_2018.md)
+  expanded to natively accept both published aggregate/interval/KM
+  tables and individual-level survival data across six modular synthesis
+  strategies (`"joint"`, `"cut"`, `"independent"`, `"melding"`,
+  `"elastic"`, `"tempered"`), `"population"` and `"latent_class"`
+  coupling, `"all"` and `"pos_only"` progression cohorts, and
+  `"gompertz"`, `"weibull"`, and `"exponential"` survival distributions.
+- [`load_abubakar_km()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_abubakar_km.md),
+  [`load_predict_aggregated()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_predict_aggregated.md),
+  [`load_abubakar_2018()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_abubakar_2018.md),
   and
   [`load_predict_migrant()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_predict_migrant.md)
-  added to load the reconstructed UK PREDICT-TB Kaplan-Meier dataset and
-  cleaned migrant cohort dataset.
+  added to load published Kaplan-Meier interval tables, multi-stratum
+  contingency tables, reconstructed IPD, and linked migrant cohort
+  datasets.
 - [`plot_progression()`](https://n8thangreen.github.io/EvidSynthTB/reference/plot_progression.md)
   updated to support both uncured (`"uncured"`) and population mixture
   (`"population"`) survival curves from

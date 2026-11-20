@@ -4,6 +4,7 @@
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/articles/index.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/articles/model-comparison-simulation.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/articles/predict-tb-case-studies.html</loc></url>
+<url><loc>https://n8thangreen.github.io/EvidSynthTB/articles/published-and-surveillance-data.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/authors.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/index.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/LICENSE-text.html</loc></url>
@@ -11,12 +12,15 @@
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/news/index.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/compare_evidsynth.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/create_fake_data.html</loc></url>
+<url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/create_fake_published_data.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/diagnose_feedback.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/evaluate_comparison.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/EvidSynthTB-package.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/evidsynth_fit.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/index.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/load_abubakar_2018.html</loc></url>
+<url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/load_abubakar_km.html</loc></url>
+<url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/load_predict_aggregated.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/load_predict_migrant.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/plot_model_comparison.html</loc></url>
 <url><loc>https://n8thangreen.github.io/EvidSynthTB/reference/plot_progression.html</loc></url>

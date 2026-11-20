@@ -2,10 +2,13 @@
 
 export(compare_evidsynth)
 export(create_fake_data)
+export(create_fake_published_data)
 export(diagnose_feedback)
 export(evaluate_comparison)
 export(evidsynth_fit)
 export(load_abubakar_2018)
+export(load_abubakar_km)
+export(load_predict_aggregated)
 export(load_predict_migrant)
 export(plot_model_comparison)
 export(plot_progression)

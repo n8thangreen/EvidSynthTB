@@ -10,3 +10,6 @@
 - [3. UK PREDICT-TB Case Studies: Reconstructed Survival & Linked
   Migrant
   Cohort](https://n8thangreen.github.io/EvidSynthTB/articles/predict-tb-case-studies.md):
+- [4. Evidence Synthesis from Published Summary Tables and UKHSA
+  Surveillance
+  Reports](https://n8thangreen.github.io/EvidSynthTB/articles/published-and-surveillance-data.md):

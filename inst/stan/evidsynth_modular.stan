@@ -1,20 +1,12 @@
 // Unified Bayesian Multi-Parameter Evidence Synthesis Model for EvidSynthTB
-// Supports:
-// - model_type:
-//   1 = Joint (shared logit prevalence alpha_surv = alpha_diag)
-//   2 = Independent (unlinked alpha_surv and alpha_diag)
-//   3 = Cut Stage 2 (alpha_diag, beta_cov, sens, spec fixed from Stage 1 draw)
-//   4 = Melding / Normal plug-in (mu_hat, sigma_hat on alpha_diag = alpha_surv)
-//   5 = Elastic / Hierarchical coupling (alpha_surv ~ Normal(alpha_diag, tau_couple))
-//   6 = Tempered / Power-likelihood (survival likelihood weighted by w_temper)
-// - coupling:
-//   1 = Population-level modular coupling
-//   2 = Individual-level latent-class coupling (when is_linked == 1)
-// - cohort_type:
-//   1 = All screened individuals (uncured fraction = pi_i)
-//   2 = Test-positive subgroup only (uncured fraction = PPV_i)
-// - surv_dist:
-//   1 = Gompertz, 2 = Weibull (PH), 3 = Exponential
+// Supports both:
+//   - Published / Aggregate / Surveillance Report Data:
+//     * Cumulative subgroup summary tables (N_g, y_g, d_g over [0, T_g])
+//     * UKHSA / ETS annual / interval progression counts (d_g in [t0_g, t1_g] out of cohort N_g)
+//     * Published Kaplan-Meier life-table intervals (d_g in [t0_g, t1_g] out of risk set R_g)
+//   - Individual-Level Survival & Linked Diagnostic Data (t_i, d_i, x_i)
+// And all 6 synthesis strategies:
+//   1 = Joint, 2 = Independent, 3 = Cut Stage 2, 4 = Melding, 5 = Elastic, 6 = Tempered
 
 functions {
 #include distributions.stan
@@ -27,27 +19,35 @@ data {
   int<lower=1, upper=2> cohort_type;
   int<lower=1, upper=3> surv_dist;
   int<lower=0, upper=1> imperfect_test;
+  int<lower=1> t_lim;
+  int<lower=0> P_cov;
 
-  // Survival cohort data (Module 2)
-  int<lower=1> N_surv;
+  // Individual-level survival cohort data (Module 2a; N_surv = 0 if aggregate only)
+  int<lower=0> N_surv;
   vector<lower=0>[N_surv] t;
   vector<lower=0, upper=1>[N_surv] d;
-  int<lower=1> t_lim;
-
-  // Covariates on logit(pi_i)
-  int<lower=0> P_cov;
   matrix[N_surv, P_cov] X_surv;
+
+  // Aggregate / interval / KM progression data (Module 2b; G_surv = 0 if IPD only)
+  int<lower=0> G_surv;
+  vector<lower=0>[G_surv] t0_agg;
+  vector<lower=0>[G_surv] t1_agg;
+  array[G_surv] int<lower=0> d_agg;
+  array[G_surv] int<lower=1> n_risk_agg;
+  array[G_surv] int<lower=0, upper=1> is_conditional_risk;
+  matrix[G_surv, P_cov] X_surv_agg;
 
   // Diagnostic tests configuration
   int<lower=1> K_tests;
   int<lower=0, upper=1> is_linked;
   array[N_surv, K_tests] int<lower=0, upper=1> x_linked;
 
-  // Unlinked aggregate survey data (Module 1a)
+  // Aggregate survey LTBI testing data (Module 1a)
   int<lower=0> M_agg;
   array[M_agg] int<lower=0> y_agg;
   array[M_agg] int<lower=1> n_agg;
   array[M_agg] int<lower=1, upper=K_tests> test_id_agg;
+  matrix[M_agg, P_cov] X_agg;
 
   // Unlinked individual-level diagnostic data (Module 1b)
   int<lower=0> N_ind;
@@ -95,6 +95,7 @@ transformed data {
   int est_sens_spec = (model_type != 3 && imperfect_test == 1);
   int est_beta = (model_type != 3 && P_cov > 0);
   int est_shape = (surv_dist != 3);           // Exponential has no shape parameter
+  int N_ll_total = N_surv + G_surv;
 }
 
 parameters {
@@ -150,10 +151,8 @@ transformed parameters {
   if (surv_dist == 3) {
     shape = 0.0;
   } else if (surv_dist == 2) {
-    // Weibull shape must be positive; parameterize on log-scale or positive normal
     shape = exp(shape_raw[1]);
   } else {
-    // Gompertz shape can be real
     shape = shape_raw[1];
   }
 
@@ -181,22 +180,26 @@ model {
     }
   }
 
-  // Separate or elastic prior on alpha_surv
   if (model_type == 2) {
-    // Independent model: separate prior on alpha_surv
     alpha_surv_raw[1] ~ normal(mu_alpha, sigma_alpha);
   } else if (model_type == 5) {
-    // Elastic / hierarchical coupling: alpha_surv centered at alpha_diag
     alpha_surv_raw[1] ~ normal(alpha_diag, tau_couple);
   }
 
   // --- Module 1: LTBI Diagnostic / Prevalence Likelihood (when model_type != 3) ---
   if (model_type != 3) {
-    // 1a. Aggregate binomial survey counts
-    for (m in 1:M_agg) {
-      int k = test_id_agg[m];
-      real p_pos = prev_diag * sens[k] + (1.0 - prev_diag) * (1.0 - spec[k]);
-      y_agg[m] ~ binomial(n_agg[m], p_pos);
+    // 1a. Aggregate binomial survey counts (with optional group covariates X_agg)
+    if (M_agg > 0) {
+      vector[M_agg] eta_agg = rep_vector(alpha_diag, M_agg);
+      if (P_cov > 0) {
+        eta_agg += X_agg * beta_cov;
+      }
+      for (m in 1:M_agg) {
+        int k = test_id_agg[m];
+        real pi_m = inv_logit(eta_agg[m]);
+        real p_pos = pi_m * sens[k] + (1.0 - pi_m) * (1.0 - spec[k]);
+        y_agg[m] ~ binomial(n_agg[m], p_pos);
+      }
     }
 
     // 1b. Unlinked individual diagnostic test results
@@ -223,8 +226,8 @@ model {
     }
   }
 
-  // --- Module 2: Progression Mixture Cure Likelihood (& Linked Tests) ---
-  {
+  // --- Module 2A: Individual-Level Progression Mixture Cure Likelihood ---
+  if (N_surv > 0) {
     real w = (model_type == 6) ? w_temper : 1.0;
     vector[N_surv] eta_surv = rep_vector(alpha_surv, N_surv);
     vector[N_surv] eta_diag_surv = rep_vector(alpha_diag, N_surv);
@@ -233,8 +236,6 @@ model {
       eta_diag_surv += X_surv * beta_cov;
     }
 
-    // If linked data with population-level modular coupling (coupling == 1),
-    // the diagnostic tests x_linked belong to Module 1 (governed by eta_diag_surv)
     if (is_linked == 1 && coupling == 1 && model_type != 3) {
       for (i in 1:N_surv) {
         real pi_diag_i = inv_logit(eta_diag_surv[i]);
@@ -248,14 +249,12 @@ model {
       }
     }
 
-    // Progression survival likelihood
     for (i in 1:N_surv) {
       real pi_surv_i = inv_logit(eta_surv[i]);
       real log_f = dispatch_lpdf(t[i] | surv_dist, shape, lambda);
       real log_S = dispatch_log_S(t[i], surv_dist, shape, lambda);
 
       if (is_linked == 1 && coupling == 2 && cohort_type == 1) {
-        // Exact individual-level latent-class coupling over Z_i in {0, 1}
         real lp_x_z1 = 0.0;
         real lp_x_z0 = 0.0;
         for (k in 1:K_tests) {
@@ -263,16 +262,13 @@ model {
           lp_x_z0 += bernoulli_lpmf(x_linked[i, k] | 1.0 - spec[k]);
         }
         if (d[i] == 1) {
-          // Progressed to active TB -> must be Z_i = 1
           if (model_type == 3) {
             target += log(pi_surv_i) + log_f;
           } else {
             target += lp_x_z1 + w * (log(pi_surv_i) + log_f);
           }
         } else {
-          // Censored -> either Z_i = 0 (cured) or Z_i = 1 and survived past t[i]
           if (model_type == 3) {
-            // Condition on observed test x_linked[i] via posterior PPV(x_linked[i])
             real log_num = log(pi_surv_i) + lp_x_z1;
             real log_den = log_sum_exp(log1m(pi_surv_i) + lp_x_z0, log_num);
             real ppv_i = exp(log_num - log_den);
@@ -285,10 +281,8 @@ model {
           }
         }
       } else {
-        // Population-level coupling (or test-positive subgroup cohort_type == 2)
         real pi_eff;
         if (cohort_type == 2) {
-          // Only test-positives (k = 1) are followed up -> uncured fraction is PPV
           real p_pos_i = pi_surv_i * sens[1] + (1.0 - pi_surv_i) * (1.0 - spec[1]);
           pi_eff = (pi_surv_i * sens[1]) / p_pos_i;
         } else {
@@ -303,49 +297,116 @@ model {
       }
     }
   }
+
+  // --- Module 2B: Published Aggregate / Interval / KM Table Likelihood ---
+  if (G_surv > 0) {
+    real w = (model_type == 6) ? w_temper : 1.0;
+    vector[G_surv] eta_agg_surv = rep_vector(alpha_surv, G_surv);
+    if (P_cov > 0) {
+      eta_agg_surv += X_surv_agg * beta_cov;
+    }
+
+    for (g in 1:G_surv) {
+      real pi_surv_g = inv_logit(eta_agg_surv[g]);
+      real pi_eff;
+      if (cohort_type == 2) {
+        real p_pos_g = pi_surv_g * sens[1] + (1.0 - pi_surv_g) * (1.0 - spec[1]);
+        pi_eff = (pi_surv_g * sens[1]) / p_pos_g;
+      } else {
+        pi_eff = pi_surv_g;
+      }
+
+      real S0 = (t0_agg[g] <= 0.0) ? 1.0 : dispatch_Surv(t0_agg[g], surv_dist, shape, lambda);
+      real S1 = dispatch_Surv(t1_agg[g], surv_dist, shape, lambda);
+      real delta_S = fmax(S0 - S1, 1e-12);
+      real prob_event;
+
+      if (is_conditional_risk[g] == 1) {
+        // Denominator is conditional risk set R_g at t0_agg[g] (e.g., KM life table)
+        real S_pop_0 = (1.0 - pi_eff) + pi_eff * S0;
+        prob_event = (pi_eff * delta_S) / fmax(S_pop_0, 1e-12);
+      } else {
+        // Denominator is initial cohort size N_g (e.g., cumulative table or UKHSA annual counts)
+        prob_event = pi_eff * delta_S;
+      }
+      prob_event = fmin(fmax(prob_event, 1e-12), 1.0 - 1e-12);
+      target += w * binomial_lpmf(d_agg[g] | n_risk_agg[g], prob_event);
+    }
+  }
 }
 
 generated quantities {
   vector[t_lim] S_pred;                       // Uncured survival S_u(t)
   vector[t_lim] S_pop_pred;                   // Population mixture survival (1 - prev_cf) + prev_cf * S_u(t)
-  vector[N_surv] log_lik_surv;                // Pointwise survival log-likelihood for WAIC/LOO
+  vector[N_ll_total] log_lik_surv;            // Pointwise survival log-likelihood for WAIC/LOO
   real<lower=0, upper=1> ppv_cf;
 
   {
     real p_pos1 = prev_cf * sens[1] + (1.0 - prev_cf) * (1.0 - spec[1]);
     ppv_cf = (prev_cf * sens[1]) / p_pos1;
 
-    vector[N_surv] eta_surv_gq = rep_vector(alpha_surv, N_surv);
-    if (P_cov > 0) {
-      eta_surv_gq += X_surv * beta_cov;
-    }
-    for (i in 1:N_surv) {
-      real pi_surv_i = inv_logit(eta_surv_gq[i]);
-      real log_f = dispatch_lpdf(t[i] | surv_dist, shape, lambda);
-      real log_S = dispatch_log_S(t[i], surv_dist, shape, lambda);
-      real pi_eff;
-
-      if (is_linked == 1 && coupling == 2 && cohort_type == 1) {
-        real lp_x_z1 = 0.0;
-        real lp_x_z0 = 0.0;
-        for (k in 1:K_tests) {
-          lp_x_z1 += bernoulli_lpmf(x_linked[i, k] | sens[k]);
-          lp_x_z0 += bernoulli_lpmf(x_linked[i, k] | 1.0 - spec[k]);
-        }
-        real log_num = log(pi_surv_i) + lp_x_z1;
-        real log_den = log_sum_exp(log1m(pi_surv_i) + lp_x_z0, log_num);
-        pi_eff = exp(log_num - log_den);
-      } else if (cohort_type == 2) {
-        real p_pos_i = pi_surv_i * sens[1] + (1.0 - pi_surv_i) * (1.0 - spec[1]);
-        pi_eff = (pi_surv_i * sens[1]) / p_pos_i;
-      } else {
-        pi_eff = pi_surv_i;
+    if (N_surv > 0) {
+      vector[N_surv] eta_surv_gq = rep_vector(alpha_surv, N_surv);
+      if (P_cov > 0) {
+        eta_surv_gq += X_surv * beta_cov;
       }
+      for (i in 1:N_surv) {
+        real pi_surv_i = inv_logit(eta_surv_gq[i]);
+        real log_f = dispatch_lpdf(t[i] | surv_dist, shape, lambda);
+        real log_S = dispatch_log_S(t[i], surv_dist, shape, lambda);
+        real pi_eff;
 
-      if (d[i] == 1) {
-        log_lik_surv[i] = log(pi_eff) + log_f;
-      } else {
-        log_lik_surv[i] = log_sum_exp(log1m(pi_eff), log(pi_eff) + log_S);
+        if (is_linked == 1 && coupling == 2 && cohort_type == 1) {
+          real lp_x_z1 = 0.0;
+          real lp_x_z0 = 0.0;
+          for (k in 1:K_tests) {
+            lp_x_z1 += bernoulli_lpmf(x_linked[i, k] | sens[k]);
+            lp_x_z0 += bernoulli_lpmf(x_linked[i, k] | 1.0 - spec[k]);
+          }
+          real log_num = log(pi_surv_i) + lp_x_z1;
+          real log_den = log_sum_exp(log1m(pi_surv_i) + lp_x_z0, log_num);
+          pi_eff = exp(log_num - log_den);
+        } else if (cohort_type == 2) {
+          real p_pos_i = pi_surv_i * sens[1] + (1.0 - pi_surv_i) * (1.0 - spec[1]);
+          pi_eff = (pi_surv_i * sens[1]) / p_pos_i;
+        } else {
+          pi_eff = pi_surv_i;
+        }
+
+        if (d[i] == 1) {
+          log_lik_surv[i] = log(pi_eff) + log_f;
+        } else {
+          log_lik_surv[i] = log_sum_exp(log1m(pi_eff), log(pi_eff) + log_S);
+        }
+      }
+    }
+
+    if (G_surv > 0) {
+      vector[G_surv] eta_agg_gq = rep_vector(alpha_surv, G_surv);
+      if (P_cov > 0) {
+        eta_agg_gq += X_surv_agg * beta_cov;
+      }
+      for (g in 1:G_surv) {
+        real pi_surv_g = inv_logit(eta_agg_gq[g]);
+        real pi_eff;
+        if (cohort_type == 2) {
+          real p_pos_g = pi_surv_g * sens[1] + (1.0 - pi_surv_g) * (1.0 - spec[1]);
+          pi_eff = (pi_surv_g * sens[1]) / p_pos_g;
+        } else {
+          pi_eff = pi_surv_g;
+        }
+        real S0 = (t0_agg[g] <= 0.0) ? 1.0 : dispatch_Surv(t0_agg[g], surv_dist, shape, lambda);
+        real S1 = dispatch_Surv(t1_agg[g], surv_dist, shape, lambda);
+        real delta_S = fmax(S0 - S1, 1e-12);
+        real prob_event;
+        if (is_conditional_risk[g] == 1) {
+          real S_pop_0 = (1.0 - pi_eff) + pi_eff * S0;
+          prob_event = (pi_eff * delta_S) / fmax(S_pop_0, 1e-12);
+        } else {
+          prob_event = pi_eff * delta_S;
+        }
+        prob_event = fmin(fmax(prob_event, 1e-12), 1.0 - 1e-12);
+        log_lik_surv[N_surv + g] = binomial_lpmf(d_agg[g] | n_risk_agg[g], prob_event);
       }
     }
   }

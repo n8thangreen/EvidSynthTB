@@ -30,11 +30,20 @@ shift, and plot posterior comparisons.
 
 ## Data Simulation & Real TB Datasets
 
-Simulate synthetic LTBI/TB datasets with imperfect tests or conflict,
-and load UK PREDICT-TB datasets.
+Simulate synthetic LTBI/TB datasets (IPD or published tables) and load
+UK PREDICT-TB datasets.
 
 - [`create_fake_data()`](https://n8thangreen.github.io/EvidSynthTB/reference/create_fake_data.md)
   : Simulate synthetic LTBI diagnostic and TB progression survival data
+- [`create_fake_published_data()`](https://n8thangreen.github.io/EvidSynthTB/reference/create_fake_published_data.md)
+  : Simulate published summary tables and UKHSA-style annual
+  surveillance tables
+- [`load_abubakar_km()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_abubakar_km.md)
+  : Load published Kaplan-Meier interval life table from Abubakar et al.
+  (2018)
+- [`load_predict_aggregated()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_predict_aggregated.md)
+  : Load published-style aggregated PREDICT-TB subgroup contingency
+  table
 - [`load_abubakar_2018()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_abubakar_2018.md)
   : Load reconstructed Abubakar (2018) UK PREDICT-TB data
 - [`load_predict_migrant()`](https://n8thangreen.github.io/EvidSynthTB/reference/load_predict_migrant.md)

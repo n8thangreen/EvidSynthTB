@@ -27,6 +27,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/model-comparison-simulation.html">1. Comparing Synthesis Models: Cut, Joint, Melding, Elastic &amp; Tempered</a></li>
     <li><a class="dropdown-item" href="../articles/imperfect-tests-and-coupling.html">2. Imperfect Diagnostic Tests, Latent-Class Coupling &amp; Subgroup Cohorts</a></li>
     <li><a class="dropdown-item" href="../articles/predict-tb-case-studies.html">3. UK PREDICT-TB Case Studies: Reconstructed Survival &amp; Migrant Cohort</a></li>
+    <li><a class="dropdown-item" href="../articles/published-and-surveillance-data.html">4. Published Summary Tables &amp; UKHSA Surveillance Reports</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -50,13 +51,13 @@
 <li>
 <code><a href="../reference/compare_evidsynth.html">compare_evidsynth()</a></code>, <code><a href="../reference/plot_model_comparison.html">plot_model_comparison()</a></code>, and <code><a href="../reference/plot_survival_comparison.html">plot_survival_comparison()</a></code> added to fit and compare multiple synthesis strategies side-by-side.</li>
 <li>
-<code><a href="../reference/create_fake_data.html">create_fake_data()</a></code> implemented to simulate linked or unlinked LTBI diagnostic and active TB progression survival cohorts with imperfect tests (<code>sens</code>, <code>spec</code>), multiple tests per person, <code>pos_only</code> subgroup follow-up, covariates, and prior/data conflict scenarios.</li>
+<code><a href="../reference/create_fake_data.html">create_fake_data()</a></code> and <code><a href="../reference/create_fake_published_data.html">create_fake_published_data()</a></code> implemented to simulate individual-level cohorts, published subgroup summary tables, and UKHSA-style annual surveillance progression tables with imperfect tests (<code>sens</code>, <code>spec</code>), covariates, and prior/data conflict scenarios.</li>
 <li>
 <code><a href="../reference/diagnose_feedback.html">diagnose_feedback()</a></code> and <code><a href="../reference/evaluate_comparison.html">evaluate_comparison()</a></code> added to quantify inter-module conflict, feedback shift relative to the cut model, survival WAIC, parameter bias/RMSE/coverage, and survival curve integrated absolute error.</li>
 <li>
-<code><a href="../reference/evidsynth_fit.html">evidsynth_fit()</a></code> expanded to support six modular synthesis strategies (<code>"joint"</code>, <code>"cut"</code>, <code>"independent"</code>, <code>"melding"</code>, <code>"elastic"</code>, <code>"tempered"</code>), both <code>"population"</code> and <code>"latent_class"</code> coupling, <code>"all"</code> and <code>"pos_only"</code> progression cohorts, and <code>"gompertz"</code>, <code>"weibull"</code>, and <code>"exponential"</code> survival distributions.</li>
+<code><a href="../reference/evidsynth_fit.html">evidsynth_fit()</a></code> expanded to natively accept both published aggregate/interval/KM tables and individual-level survival data across six modular synthesis strategies (<code>"joint"</code>, <code>"cut"</code>, <code>"independent"</code>, <code>"melding"</code>, <code>"elastic"</code>, <code>"tempered"</code>), <code>"population"</code> and <code>"latent_class"</code> coupling, <code>"all"</code> and <code>"pos_only"</code> progression cohorts, and <code>"gompertz"</code>, <code>"weibull"</code>, and <code>"exponential"</code> survival distributions.</li>
 <li>
-<code><a href="../reference/load_abubakar_2018.html">load_abubakar_2018()</a></code> and <code><a href="../reference/load_predict_migrant.html">load_predict_migrant()</a></code> added to load the reconstructed UK PREDICT-TB Kaplan-Meier dataset and cleaned migrant cohort dataset.</li>
+<code><a href="../reference/load_abubakar_km.html">load_abubakar_km()</a></code>, <code><a href="../reference/load_predict_aggregated.html">load_predict_aggregated()</a></code>, <code><a href="../reference/load_abubakar_2018.html">load_abubakar_2018()</a></code>, and <code><a href="../reference/load_predict_migrant.html">load_predict_migrant()</a></code> added to load published Kaplan-Meier interval tables, multi-stratum contingency tables, reconstructed IPD, and linked migrant cohort datasets.</li>
 <li>
 <code><a href="../reference/plot_progression.html">plot_progression()</a></code> updated to support both uncured (<code>"uncured"</code>) and population mixture (<code>"population"</code>) survival curves from <code><a href="https://mc-stan.org/posterior/reference/draws_df.html" class="external-link">posterior::draws_df</a></code> output.</li>
 </ul></div>

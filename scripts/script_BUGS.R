@@ -1,79 +1,40 @@
+# Published Subgroup Summary Table Evidence Synthesis Analysis
+# Replaces legacy JAGS/BUGS group-level count analysis with CmdStan mixture
+# cure synthesis on published contingency tables (load_predict_aggregated()
+# and raw-data/PREDICT_dummy.csv) without requiring individual-level data.
 
-# Evidence synthesis LTBI screening: jags
-# with real data
+library(EvidSynthTB)
+library(dplyr)
+library(ggplot2)
 
+# 1. Published multi-stratum PREDICT-TB contingency table (aggregated_data.csv)
+pred_agg <- load_predict_aggregated(
+  collapse_by = c("reasonforscreening", "inc_cob_participant2", "age_grp"),
+  t_horizon = 5
+)
 
-library(R2jags)
-library(R2WinBUGS)
-library(purrr)
-library(readr)
+print(head(pred_agg$summary_table))
 
+# Fit and compare Cut, Joint, Elastic, and Tempered models directly on the
+# published subgroup count table (n = pop, y = ltbi, d = tb) with covariates
+comp_agg <- compare_evidsynth(
+  prevalence_data = pred_agg$summary_table,
+  progression_data = pred_agg$summary_table,
+  models = c("cut", "joint", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  covariates = c("reasonforscreening", "inc_cob_participant2"),
+  surv_dist = "exponential",
+  chains = 2,
+  n_iter = 800,
+  n_burnin = 300,
+  seed = 801
+)
 
-edetecttb <- read_csv("../../data/clean_edetecttb_11oct_withregionMAR.csv")
-predicttb <-
-  read.csv("E:/DIDE-PC_2019/NIHR_HTA_LTBI_project/data/UK-PREDICT-TB/041120-Rishi/PREDICT_data_for_NG.csv")
+cat("=== Published Subgroup Table Synthesis Summary ===\n")
+print(comp_agg$summary_table)
+print(diagnose_feedback(comp_agg))
 
-
-
-jags_dat_input <-
-  list(
-    len_gp = nrow(dat),                   # number of groups
-    Xm  = dat$n_migrant,                  # number of migrants
-    Xp  = dat$n_pos,                      # number of positive test results
-    # Xn  = dat$n_migrant - dat$n_pos,      # number of negative test results
-    Xtb = dat$n_tb                        # number of observed active tb cases
-  )
-
-params <-
-  c("sens", "spec",
-    "lambda",
-    "p_latent"
-    # "delta",
-    # "pred_p", "pred_tb", "pred_latent",
-    # "OR"
-    # "ppost",
-    # "delta_c",
-    # "thresh"
-  )
-
-# inits <- function(){
-#   list(
-#     sens = ,
-#     spec = ,
-#     delta =
-#   )
-# }
-
-
-#test
-# n_iter <- 10000
-# n_burnin <- 100
-# n_thin <- 10
-
-n_iter <- 1e6
-n_burnin <- 1e3
-n_thin <- 1e2 #floor((n_iter - n_burnin)/500)
-
-
-##############
-## run MCMC ##
-##############
-
-out <- jags(jags_dat_input,
-            parameters.to.save = params,
-            model.file = here::here("scripts", "BUGS_code.txt"),
-            n.chains = 2,
-            n.iter = n_iter,
-            n.burnin = n_burnin,
-            n.thin = n_thin,
-            DIC = TRUE,
-            working.directory = here::here("scripts"),
-            progress.bar = "text")
-
-BUGSoutput <- out$BUGSoutput
-
-folder_nm <- "BUGSoutput"
-dir.create(here::here("data output", folder_nm), showWarnings = FALSE)
-
-save(BUGSoutput, file = here::here(folder_nm, "BUGSoutput.RData"))
-save(jags_dat_input, file = here::here(folder_nm, "jags_dat_input.RData"))
+plot_model_comparison(
+  comp_agg,
+  variables = c("prev_diag", "prev_cf", "lambda", "sens[1]", "spec[1]")
+)

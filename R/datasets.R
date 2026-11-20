@@ -101,3 +101,132 @@ load_predict_migrant <- function() {
     prevalence_data = prevalence_data
   )
 }
+
+#' Load published Kaplan-Meier interval life table from Abubakar et al. (2018)
+#'
+#' Loads the digitized Kaplan-Meier interval table (`KMdata.txt`, containing 69
+#' time intervals with `n_risk` and `d` progression events) together with the
+#' published aggregate baseline IGRA positivity count (`y = 1444` positive out
+#' of `n = 6380` tested). Fitting [evidsynth_fit()] to this published life table
+#' runs orders of magnitude faster than fitting to 6,380 reconstructed
+#' individual rows.
+#'
+#' @return A list with `progression_data` (tibble with `t_start`, `t_end`,
+#'   `n_risk`, `d`, `n_censored`) and `prevalence_data` (tibble with `y = 1444L`,
+#'   `n = 6380L`, `test_id = 1L`, `mu_hat`, `sigma_hat`).
+#' @export
+load_abubakar_km <- function() {
+  km_path <- system.file("extdata", "KMdata.txt", package = "EvidSynthTB")
+  if (!nzchar(km_path) || !file.exists(km_path)) {
+    km_path <- "raw-data/KMdata.txt"
+  }
+  if (!file.exists(km_path)) {
+    stop("Could not locate `KMdata.txt`.", call. = FALSE)
+  }
+
+  raw_km <- utils::read.table(km_path, header = TRUE)
+  nr <- nrow(raw_km)
+  t0 <- pmax(as.numeric(raw_km$time), 0.0)
+  t1 <- c(t0[-1], t0[nr] + 0.25)
+
+  progression_data <- tibble::tibble(
+    t_start = t0,
+    t_end = pmax(t1, t0 + 1e-4),
+    n_risk = as.integer(raw_km$n.risk),
+    d = as.integer(raw_km$n.event),
+    n_censored = as.integer(raw_km$n.censored)
+  )
+
+  y <- 1444L
+  n <- 6380L
+  p_hat <- y / n
+  prevalence_data <- tibble::tibble(
+    y = y,
+    n = n,
+    test_id = 1L,
+    mu_hat = stats::qlogis(p_hat),
+    sigma_hat = sqrt(1 / y + 1 / (n - y))
+  )
+
+  list(
+    progression_data = progression_data,
+    prevalence_data = prevalence_data
+  )
+}
+
+#' Load published-style aggregated PREDICT-TB subgroup contingency table
+#'
+#' Loads the grouped contingency table (`aggregated_data.csv`) summarizing
+#' sample size (`pop`), positive LTBI test counts (`ltbi`), and cumulative
+#' active TB progression counts (`tb`) stratified by `age_grp`, `sex`,
+#' `ethnicity`, TB incidence in country of birth (`inc_cob_participant2`),
+#' years since UK entry (`yearssinceentry_grp`), prior BCG vaccination
+#' (`prevbcg`), and `reasonforscreening` (`"Contact"` vs `"Migrant"`).
+#'
+#' @param collapse_by Optional character vector of grouping columns to collapse
+#'   over (summing `pop`, `ltbi`, and `tb`). Defaults to
+#'   `c("reasonforscreening", "inc_cob_participant2", "age_grp")`. Set to `NULL`
+#'   to return all raw cells.
+#' @param t_horizon Numeric (`> 0`). Cumulative follow-up horizon in years
+#'   assigned to `t_end`. Default is `5`.
+#'
+#' @return A list with `summary_table` (tibble with `n`, `y`, `d`, `t_start`,
+#'   `t_end`, and grouping covariates) and `prevalence_data` (same table ready
+#'   for [evidsynth_fit()]).
+#' @export
+load_predict_aggregated <- function(
+  collapse_by = c("reasonforscreening", "inc_cob_participant2", "age_grp"),
+  t_horizon = 5
+) {
+  agg_path <- system.file("extdata", "aggregated_data.csv", package = "EvidSynthTB")
+  if (!nzchar(agg_path) || !file.exists(agg_path)) {
+    agg_path <- "raw-data/aggregated_data.csv"
+  }
+  if (!file.exists(agg_path)) {
+    stop("Could not locate `aggregated_data.csv`.", call. = FALSE)
+  }
+
+  raw_df <- utils::read.csv(agg_path, stringsAsFactors = FALSE)
+  if ("X" %in% names(raw_df)) {
+    raw_df$X <- NULL
+  }
+
+  for (col in intersect(
+    c("age_grp", "sex", "ethnicity", "inc_cob_participant2", "yearssinceentry_grp", "prevbcg", "reasonforscreening"),
+    names(raw_df)
+  )) {
+    val <- as.character(raw_df[[col]])
+    val[is.na(val) | val == "" | val == "NA"] <- "Missing"
+    raw_df[[col]] <- as.factor(val)
+  }
+
+  if (!is.null(collapse_by) && length(collapse_by) > 0L) {
+    summary_df <- raw_df |>
+      dplyr::group_by(dplyr::across(dplyr::all_of(collapse_by))) |>
+      dplyr::summarise(
+        n = as.integer(sum(.data$pop, na.rm = TRUE)),
+        y = as.integer(sum(.data$ltbi, na.rm = TRUE)),
+        d = as.integer(sum(.data$tb, na.rm = TRUE)),
+        .groups = "drop"
+      )
+  } else {
+    summary_df <- tibble::as_tibble(raw_df) |>
+      dplyr::mutate(
+        n = as.integer(.data$pop),
+        y = as.integer(.data$ltbi),
+        d = as.integer(.data$tb)
+      )
+  }
+
+  summary_df <- summary_df |>
+    dplyr::filter(.data$n > 0L) |>
+    dplyr::mutate(
+      t_start = 0.0,
+      t_end = as.numeric(t_horizon)
+    )
+
+  list(
+    summary_table = summary_df,
+    prevalence_data = summary_df
+  )
+}

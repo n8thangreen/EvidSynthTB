@@ -1,11 +1,14 @@
 # Fit Bayesian Multi-Parameter Evidence Synthesis Model for LTBI and TB Progression
 
 Links latent tuberculosis infection (LTBI) diagnostic test / survey data
-with active TB progression time-to-event data using a parametric mixture
-cure model in CmdStan. Supports imperfect diagnostic tests (\`sens\`,
-\`spec\`), multiple tests per person, linked or unlinked datasets, and
-six modular synthesis strategies (\`"joint"\`, \`"cut"\`,
-\`"independent"\`, \`"melding"\`, \`"elastic"\`, \`"tempered"\`).
+with active TB progression data using a parametric mixture cure model in
+CmdStan. Supports both \*\*published aggregate / surveillance report
+tables\*\* (cumulative subgroup counts, UKHSA/ETS annual interval
+counts, and digitized Kaplan-Meier life tables) and \*\*individual-level
+survival / linked test data\*\*, with imperfect diagnostic tests
+(\`sens\`, \`spec\`) and six modular synthesis strategies (\`"joint"\`,
+\`"cut"\`, \`"independent"\`, \`"melding"\`, \`"elastic"\`,
+\`"tempered"\`).
 
 ## Usage
 
@@ -19,6 +22,7 @@ evidsynth_fit(
   surv_dist = c("gompertz", "weibull", "exponential"),
   imperfect_test = FALSE,
   covariates = NULL,
+  t_horizon = 5,
   priors = list(),
   tau_couple = 0.5,
   w_temper = 0.5,
@@ -37,18 +41,38 @@ evidsynth_fit(
 
 - prevalence_data:
 
-  Data frame or tibble of aggregate LTBI survey data (columns \`y\` and
-  \`n\`, and optional \`test_id\`) and/or normal logit plug-in summaries
-  (\`mu_hat\` and \`sigma_hat\`). Can be \`NULL\` when individual-level
-  diagnostic test results \`x\` (\`x1\`, \`x2\`, ...) are present in
-  \`progression_data\`.
+  Data frame or tibble of aggregate LTBI survey data (columns \`y\` or
+  \`ltbi\`/\`n_pos\` and \`n\` or \`pop\`/\`n_migrant\`, plus optional
+  \`test_id\` and covariates) and/or normal logit plug-in summaries
+  (\`mu_hat\` and \`sigma_hat\`). Can be \`NULL\` when
+  \`progression_data\` already contains group-level LTBI counts (\`y\` /
+  \`ltbi\` / \`n_pos\`) or individual-level test results (\`x\` /
+  \`x1\`, \`x2\`, ...).
 
 - progression_data:
 
-  Data frame or tibble of time-to-event follow-up data with columns
-  \`t\` (follow-up time \`\> 0\`) and \`d\` (\`1\` = active TB
-  progression, \`0\` = right-censored), plus optional individual
-  diagnostic test columns (\`x\` or \`x1\`, \`x2\`, ...) and covariates.
+  Data frame or tibble of active TB progression data in one of four
+  formats:
+
+  1.  \*\*Published cumulative subgroup summary table:\*\* columns \`n\`
+      (or \`pop\` / \`n_migrant\`), \`d\` (or \`tb\` / \`n_tb\`),
+      optional \`y\` (or \`ltbi\` / \`n_pos\`), optional \`t_end\`
+      (follow-up duration, defaulting to \`t_horizon\`), and optional
+      subgroup covariates.
+
+  2.  \*\*UKHSA / ETS annual or interval surveillance table:\*\* columns
+      \`t_start\` (\`t0\`), \`t_end\` (\`t1\`), \`d\` (\`tb\` / \`n_tb\`
+      / \`n.event\`), and \`n\` (\`pop\` / \`n_migrant\`, initial cohort
+      denominator).
+
+  3.  \*\*Published Kaplan-Meier life table:\*\* columns
+      \`t_start\`/\`t_end\` (or \`time\`), \`n_risk\` (\`n.risk\`), and
+      \`d\` (\`n.event\`).
+
+  4.  \*\*Individual-level survival data (IPD):\*\* columns \`t\`
+      (follow-up time \`\> 0\`) and \`d\` (\`1\` = active TB
+      progression, \`0\` = right-censored), plus optional individual
+      diagnostic test columns (\`x\` or \`x1\`, \`x2\`, ...).
 
 - model:
 
@@ -116,9 +140,14 @@ evidsynth_fit(
 
 - covariates:
 
-  Optional character vector of covariate column names in
-  \`progression_data\` to include in the linear predictor for
-  \`logit(pi_i)\`.
+  Optional character vector of covariate column names to include in the
+  linear predictor for \`logit(pi)\`.
+
+- t_horizon:
+
+  Numeric (\`\> 0\`). Default follow-up duration (in years) for
+  published cumulative subgroup summary tables when \`t_end\` is not
+  explicitly provided as a column. Default is \`5\`.
 
 - priors:
 
@@ -181,7 +210,8 @@ An S3 list object of class \`"evidsynth_fit"\` containing:
 
   A \`posterior::draws_df\` data frame of posterior samples for
   \`prev_cf\`, \`prev_diag\`, \`ppv_cf\`, \`sens\`, \`spec\`,
-  \`lambda\`, \`shape\`, and \`S_pred\[1:t_lim\]\`.
+  \`lambda\`, \`shape\`, \`S_pred\[1:t_lim\]\`,
+  \`S_pop_pred\[1:t_lim\]\`, and \`log_lik_surv\`.
 
 - \`summary\`:
 

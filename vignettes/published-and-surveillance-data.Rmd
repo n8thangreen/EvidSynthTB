@@ -1,0 +1,197 @@
+---
+title: "4. Evidence Synthesis from Published Summary Tables and UKHSA Surveillance Reports"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{4. Evidence Synthesis from Published Summary Tables and UKHSA Surveillance Reports}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Overview
+
+In most evidence synthesis applications for tuberculosis (TB), researchers do **not** have access to linked individual participant data (IPD). Instead, evidence must be synthesized from published literature and routine public health reports:
+
+1. **LTBI Testing Data ($M_1$, from published summary tables):**
+   Tables in screening papers report subgroup sample sizes $N_g$, positive test counts $y_g$, and group-level risk factors $\mathbf{x}_g$ (e.g., age group, TB incidence in country of birth, reason for screening).
+2. **Active TB Progression Data ($M_2$, from papers or UKHSA / ETS reports):**
+   Published progression evidence typically arrives in one of three aggregate formats:
+   - **Format A — Cumulative Subgroup Case Counts:** Number of active TB cases $d_g$ out of cohort size $N_g$ over a cumulative follow-up window $[0, T_g]$ (as in `load_predict_aggregated()` / `raw-data/aggregated_data.csv`).
+   - **Format B — Annual / Interval Surveillance Counts by Time Since Entry:** Active TB notifications $d_g$ occurring in time interval $[t_{0,g}, t_{1,g}]$ (e.g., Year 0–1, Year 1–2, ..., Year 4–5 after UK arrival in UKHSA Enhanced TB Surveillance reports) out of an initial entry cohort $N_g$.
+   - **Format C — Published Kaplan-Meier Life Tables:** Digitized survival intervals $[t_{0,g}, t_{1,g}]$ with number at risk $R_g$ (`n_risk`) and interval event counts $d_g$ (`d`), as in `load_abubakar_km()` (`raw-data/KMdata.txt`).
+
+`evidsynth_fit()` and `compare_evidsynth()` accept all three published data formats directly in `progression_data`—without requiring any individual-level rows—and support all six synthesis strategies (`"cut"`, `"joint"`, `"independent"`, `"melding"`, `"elastic"`, and `"tempered"`).
+
+---
+
+## Mathematical Formulation for Published Aggregate & Interval Data
+
+For any published stratum or time interval $g = 1, \dots, G_{\text{surv}}$ spanning time window $[t_{0,g}, t_{1,g}]$ with group covariate vector $\mathbf{x}_g$:
+
+### 1. Module 1: Subgroup LTBI Positivity Table
+
+Let $\pi_{\text{diag}, m} = \text{logit}^{-1}(\alpha_{\text{diag}} + \mathbf{x}_m^\top \boldsymbol{\beta})$ denote the true LTBI prevalence in published stratum $m = 1, \dots, M_{\text{agg}}$. With test sensitivity $\text{sens}_k$ and specificity $\text{spec}_k$:
+
+$$
+y_m \sim \text{Binomial}(N_m, \, p_{\text{pos}, m}), \qquad p_{\text{pos}, m} = \pi_{\text{diag}, m} \, \text{sens}_k + (1 - \pi_{\text{diag}, m})(1 - \text{spec}_k).
+$$
+
+### 2. Module 2: Unified Mixture Cure Interval Likelihood
+
+Let $\pi_{\text{surv}, g} = \text{logit}^{-1}(\alpha_{\text{surv}} + \mathbf{x}_g^\top \boldsymbol{\beta})$ denote the survival module's baseline LTBI prevalence in group $g$, and let $\tilde{\pi}_g$ denote the effective uncured fraction ($\tilde{\pi}_g = \pi_{\text{surv}, g}$ for an unselected cohort `cohort_type = "all"`, or $\tilde{\pi}_g = \text{PPV}_g$ for a test-positive cohort `cohort_type = "pos_only"`).
+
+Under the mixture cure model with uncured survival function $S_u(t \mid \lambda, \gamma)$, the population survival at time $t$ is:
+
+$$
+S_{\text{pop}, g}(t) = (1 - \tilde{\pi}_g) + \tilde{\pi}_g \, S_u(t \mid \lambda, \gamma).
+$$
+
+The probability that an infected individual progresses to active TB during interval $[t_{0,g}, t_{1,g}]$ is $\tilde{\pi}_g \left[ S_u(t_{0,g}) - S_u(t_{1,g}) \right]$. This yields exact Binomial likelihoods for all three published formats:
+
+#### Format A: Cumulative Subgroup Table over $[0, T_g]$ ($t_{0,g} = 0, t_{1,g} = T_g$, Denominator = Cohort Size $N_g$)
+Since $S_u(0) = 1$, the cumulative probability of active TB over $[0, T_g]$ in group $g$ is:
+
+$$
+p_g = \tilde{\pi}_g \left[ 1 - S_u(T_g \mid \lambda, \gamma) \right], \qquad d_g \sim \text{Binomial}(N_g, \, p_g).
+$$
+
+*(Note: In earlier BUGS/JAGS implementations, the latent integer count $X_{\text{latent}, g} = \lfloor \pi_g N_g \rfloor$ had to be truncated to pass as a binomial denominator for $X_{\text{TB}, g} \sim \text{Binomial}(X_{\text{latent}, g}, \lambda)$. Marginalizing over the latent binomial count $X_{\text{latent}, g} \sim \text{Binomial}(N_g, \tilde{\pi}_g)$ yields the exact analytical binomial distribution $\text{Binomial}(N_g, \tilde{\pi}_g [1 - S_u(T_g)])$ with smooth HMC gradients!)*
+
+#### Format B: UKHSA / ETS Annual Surveillance Counts in $[t_{0,g}, t_{1,g}]$ (Denominator = Initial Entry Cohort $N_g$)
+When a surveillance report tabulates annual active TB cases $d_g$ in Year 0–1 ($[0,1]$), Year 1–2 ($[1,2]$), ..., Year $L-1$ to $L$ ($[L-1, L]$) relative to the initial entry cohort denominator $N_g$:
+
+$$
+p_g = S_{\text{pop}, g}(t_{0,g}) - S_{\text{pop}, g}(t_{1,g}) = \tilde{\pi}_g \left[ S_u(t_{0,g} \mid \lambda, \gamma) - S_u(t_{1,g} \mid \lambda, \gamma) \right], \qquad d_g \sim \text{Binomial}(N_g, \, p_g).
+$$
+
+#### Format C: Published Kaplan-Meier Life Table in $[t_{0,g}, t_{1,g}]$ (Denominator = Risk Set $R_g$ at $t_{0,g}$)
+When a digitized Kaplan-Meier curve or life table reports the number still at risk $R_g$ (`n_risk`) at the start of interval $t_{0,g}$, we condition on survival up to $t_{0,g}$ ($T > t_{0,g}$):
+
+$$
+q_g = P(T \in (t_{0,g}, t_{1,g}] \mid T > t_{0,g}) = \frac{\tilde{\pi}_g \left[ S_u(t_{0,g} \mid \lambda, \gamma) - S_u(t_{1,g} \mid \lambda, \gamma) \right]}{(1 - \tilde{\pi}_g) + \tilde{\pi}_g \, S_u(t_{0,g} \mid \lambda, \gamma)}, \qquad d_g \sim \text{Binomial}(R_g, \, q_g).
+$$
+
+---
+
+## Worked Examples
+
+```{r setup-pkg}
+library(EvidSynthTB)
+library(dplyr)
+library(ggplot2)
+```
+
+### Example 1: Published Kaplan-Meier Life Table (`load_abubakar_km()`)
+
+Instead of reconstructing 6,380 pseudo-individual rows (`load_abubakar_2018()`), `load_abubakar_km()` loads the 69 published Kaplan-Meier intervals (`t_start`, `t_end`, `n_risk`, `d`) alongside the aggregate IGRA count ($y = 1444, n = 6380$). Because Stan evaluates 69 binomial interval terms rather than 6,380 individual rows, all 6 synthesis models fit in seconds on the exact published data:
+
+```{r fit-km}
+abub_km <- load_abubakar_km()
+head(abub_km$progression_data)
+
+comp_km <- compare_evidsynth(
+  prevalence_data = abub_km$prevalence_data,
+  progression_data = abub_km$progression_data,
+  models = c("cut", "joint", "independent", "melding", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  surv_dist = "gompertz",
+  t_lim = 10,
+  chains = 1,
+  n_iter = 400,
+  n_burnin = 200,
+  n_cut_subsamples = 10,
+  seed = 401
+)
+
+knitr::kable(comp_km$summary_table, digits = 3)
+knitr::kable(diagnose_feedback(comp_km), digits = 3)
+plot_survival_comparison(comp_km, type = "uncured")
+```
+
+### Example 2: UKHSA / ETS Annual Surveillance Counts by Year Since Entry
+
+Next, consider combining a published LTBI survey ($y$ positive out of $n$ tested) with an annual surveillance report (such as UKHSA Enhanced TB Surveillance linked to migrant entry denominators) reporting active TB cases in Years 1 through 5 after entry:
+
+```{r fit-ukhsa}
+pub_sim <- create_fake_published_data(
+  n_groups = 6,
+  n_per_group = 500,
+  n_surveillance = 5000,
+  p_ltbi = 0.28,
+  p_ltbi_surv = 0.28,
+  sens = 0.85,
+  spec = 0.95,
+  surv_dist = "gompertz",
+  shape = -0.35,
+  rate = 0.06,
+  t_horizon = 5,
+  seed = 402
+)
+
+knitr::kable(pub_sim$interval_table)
+
+comp_ukhsa <- compare_evidsynth(
+  prevalence_data = pub_sim$prevalence_data,
+  progression_data = pub_sim$interval_table,
+  models = c("cut", "joint", "elastic", "tempered"),
+  imperfect_test = TRUE,
+  surv_dist = "gompertz",
+  t_lim = 10,
+  chains = 1,
+  n_iter = 400,
+  n_burnin = 200,
+  n_cut_subsamples = 10,
+  seed = 402
+)
+
+knitr::kable(
+  evaluate_comparison(comp_ukhsa, truth = pub_sim$truth)$parameter_metrics,
+  digits = 3
+)
+plot_model_comparison(
+  comp_ukhsa,
+  variables = c("prev_diag", "prev_cf", "lambda", "shape"),
+  truth = c(prev_diag = 0.28, prev_cf = 0.28, lambda = 0.06, shape = -0.35)
+)
+```
+
+### Example 3: Published Multi-Stratum Contingency Table (`load_predict_aggregated()`)
+
+Finally, when a publication reports a subgroup contingency table containing cohort sizes (`n`), positive LTBI tests (`y`), and cumulative active TB cases (`d`) stratified by covariates (such as `reasonforscreening` and country-of-birth TB incidence `inc_cob_participant2`), we can pass the summary table directly to `evidsynth_fit()` or `compare_evidsynth()`:
+
+```{r fit-agg-table}
+pred_agg <- load_predict_aggregated(
+  collapse_by = c("reasonforscreening", "inc_cob_participant2"),
+  t_horizon = 5
+)
+
+knitr::kable(pred_agg$summary_table)
+
+comp_table <- compare_evidsynth(
+  prevalence_data = pred_agg$summary_table,
+  progression_data = pred_agg$summary_table,
+  models = c("cut", "joint", "elastic"),
+  imperfect_test = TRUE,
+  covariates = "reasonforscreening",
+  surv_dist = "exponential",
+  t_lim = 10,
+  chains = 1,
+  n_iter = 400,
+  n_burnin = 200,
+  n_cut_subsamples = 10,
+  seed = 403
+)
+
+knitr::kable(comp_table$summary_table, digits = 3)
+knitr::kable(diagnose_feedback(comp_table), digits = 3)
+```

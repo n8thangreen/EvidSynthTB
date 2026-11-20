@@ -1,23 +1,24 @@
 // Stage 1 LTBI Prevalence and Imperfect Diagnostic Test Module
 // Supports:
-// - Aggregate binomial survey data (M_agg studies/groups)
+// - Aggregate binomial survey data (M_agg studies/groups, with optional X_agg covariates)
 // - Individual-level binary test data (N_ind individuals x K_tests tests)
 // - Multiple diagnostic tests (latent class analysis when K_tests >= 2)
-// - Optional covariates X_ind on logit(pi_i)
+// - Optional covariates X_agg / X_ind on logit(pi)
 // - Imperfect or fixed sensitivity and specificity
 
 data {
   int<lower=1> K_tests;                       // Number of diagnostic tests
+  int<lower=0> P_cov;                         // Number of covariates
 
   // Aggregate survey data
   int<lower=0> M_agg;
   array[M_agg] int<lower=0> y_agg;
   array[M_agg] int<lower=1> n_agg;
   array[M_agg] int<lower=1, upper=K_tests> test_id_agg;
+  matrix[M_agg, P_cov] X_agg;
 
   // Individual-level diagnostic data
   int<lower=0> N_ind;
-  int<lower=0> P_cov;
   matrix[N_ind, P_cov] X_ind;
   array[N_ind, K_tests] int<lower=0, upper=1> x_ind;
 
@@ -71,10 +72,17 @@ model {
   }
 
   // 1. Aggregate survey likelihood
-  for (m in 1:M_agg) {
-    int k = test_id_agg[m];
-    real p_pos = prev_diag * sens[k] + (1.0 - prev_diag) * (1.0 - spec[k]);
-    y_agg[m] ~ binomial(n_agg[m], p_pos);
+  if (M_agg > 0) {
+    vector[M_agg] eta_agg = rep_vector(alpha_diag, M_agg);
+    if (P_cov > 0) {
+      eta_agg += X_agg * beta_cov;
+    }
+    for (m in 1:M_agg) {
+      int k = test_id_agg[m];
+      real pi_m = inv_logit(eta_agg[m]);
+      real p_pos = pi_m * sens[k] + (1.0 - pi_m) * (1.0 - spec[k]);
+      y_agg[m] ~ binomial(n_agg[m], p_pos);
+    }
   }
 
   // 2. Individual-level test likelihood (marginalizing over latent status Z_i)

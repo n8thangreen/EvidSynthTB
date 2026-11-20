@@ -8,6 +8,15 @@
 \description{
 Bayesian Multi-Parameter Evidence Synthesis (MPES) linking latent tuberculosis infection (LTBI) diagnostic survey data with active TB progression survival data using mixture cure models, imperfect diagnostic test models, and modular/cut inference in Stan.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://n8thangreen.github.io/EvidSynthTB/}
+  \item \url{https://github.com/n8thangreen/EvidSynthTB}
+  \item Report bugs at \url{https://github.com/n8thangreen/EvidSynthTB/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Nathan Green \email{n.green@ucl.ac.uk}
 
